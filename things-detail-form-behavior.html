@@ -42,8 +42,7 @@ Things.DetailFormBehavior = {
      * Resource Id
      */
     resourceId: {
-      type: String,
-      observer: '_resourceIdChanged'
+      type: String
     },
 
     /**
@@ -90,15 +89,19 @@ Things.DetailFormBehavior = {
      */
   },
 
+  observers: [
+    '_resourceIdAndUrlChange(resourceUrl, resourceId)'
+  ],
+
   /**
    * resourceId가 변경될 때 
    *
    * @param {String} newVal New resourceId
    * @param {String} oldVal Old resourceId
    */
-  _resourceIdChanged: function(newVal, oldVal) {
-    if(newVal != oldVal) {
-      this.findResource(newVal);
+  _resourceIdAndUrlChange: function(resourceUrl, resourceId) {
+    if(resourceUrl && resourceId) {
+      this.findResource(resourceId);
     }
   },
 
@@ -163,7 +166,12 @@ Things.DetailFormBehavior = {
    */
   saveResource: function() {
     var saveAjax = document.createElement('things-ajax');
-    saveAjax.resourceUrl = this.resourceUrl;
+    if(this.resourceUrl.indexOf('/:id') >= 0) {
+      saveAjax.resourceUrl = this.resourceUrl;  
+    } else {
+      saveAjax.resourceUrl = this.resourceUrl + '/:id';
+    }
+    
     saveAjax.resourceId = this.resource.id;
     saveAjax.resourceAction = this.resource.id ? 'update' : 'create';
 
@@ -189,7 +197,13 @@ Things.DetailFormBehavior = {
    */
   findResource: function(resourceId) {
     var getAjax = document.createElement('things-ajax');
-    getAjax.resourceUrl = this.resourceUrl;
+
+    if(this.resourceUrl.indexOf('/:id') >= 0) {
+      getAjax.resourceUrl = this.resourceUrl; 
+    } else {
+      getAjax.resourceUrl = this.resourceUrl + '/:id';
+    }
+    
     getAjax.resourceId = this.resourceId;
     getAjax.resourceAction = 'find';
 

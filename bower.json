@@ -46,7 +46,7 @@
     "things-tristate-checkbox": "ThingsElements/things-tristate-checkbox#^0.0.1",
     "things-fullscreen": "ThingsElements/things-fullscreen",
     "things-ajax": "ThingsElements/things-ajax",
-    "things-input-field": "ThingsElements/things-input-field"
+    "things-input-field": "ThingsElements/things-input-field#^0.0.1"
   },
   "devDependencies": {
     "iron-component-page": "PolymerElements/iron-component-page#^1.0.0",
