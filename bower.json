@@ -40,12 +40,13 @@
     "things-button": "ThingsElements/things-button#^0.0.1",
     "things-msg-box-behavior": "ThingsElements/things-msg-box-behavior#^0.0.1",
     "things-spinner": "ThingsElements/things-spinner#^0.0.1",
-    "things-global-behavior": "ThingsElements/things-global-behavior#^0.0.3",
+    "things-global-behavior": "ThingsElements/things-global-behavior#^0.0.4",
     "things-date-picker": "ThingsElements/things-date-picker#^0.0.1",
     "things-resource-combo": "ThingsElements/things-resource-combo#^0.0.3",
     "things-tristate-checkbox": "ThingsElements/things-tristate-checkbox#^0.0.1",
     "things-fullscreen": "ThingsElements/things-fullscreen",
-    "things-ajax": "ThingsElements/things-ajax"
+    "things-ajax": "ThingsElements/things-ajax",
+    "things-input-field": "ThingsElements/things-input-field"
   },
   "devDependencies": {
     "iron-component-page": "PolymerElements/iron-component-page#^1.0.0",
