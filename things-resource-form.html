@@ -1,0 +1,305 @@
+<link rel="import" href="../polymer/polymer.html">
+<link rel="import" href="../iron-flex-layout/iron-flex-layout.html">
+<link rel="import" href="../iron-flex-layout/iron-flex-layout-classes.html">
+<link rel="import" href="../iron-form/iron-form.html">
+<link rel="import" href="../iron-icon/iron-icon.html">
+<link rel="import" href="../iron-icons/iron-icons.html">
+<link rel="import" href="../iron-iconset/iron-iconset.html">
+<link rel="import" href="../iron-input/iron-input.html">
+
+<link rel="import" href="../things-button/things-button.html">
+<link rel="import" href="../paper-checkbox/paper-checkbox.html">
+<link rel="import" href="../paper-dropdown-menu/paper-dropdown-menu.html">
+<link rel="import" href="../paper-fullscreen-dialog/paper-fullscreen-dialog.html">
+<link rel="import" href="../paper-input/paper-input.html">
+<link rel="import" href="../paper-input/paper-textarea.html">
+<link rel="import" href="../paper-material/paper-material.html">
+<link rel="import" href="../paper-radio-group/paper-radio-group.html">
+<link rel="import" href="../paper-radio-button/paper-radio-button.html">
+<link rel="import" href="../paper-tabs/paper-tab.html">
+<link rel="import" href="../paper-tabs/paper-tabs.html">
+<link rel="import" href="../paper-tooltip/paper-tooltip.html">
+
+<link rel="import" href="../things-content/things-load-view-behavior.html">
+<link rel="import" href="../things-msg-box-behavior/things-msg-box-behavior.html">
+<link rel="import" href="../things-spinner/things-spinner-behavior.html">
+
+<link rel="import" href="./things-form-behavior.html">
+<link rel="import" href="./things-detail-form-behavior.html">
+
+<!--
+Resource Form Element. 
+
+설정한 form-fields를 바탕으로 리소스 폼을 생성해주고 설정한 resource-url로 데이터를 조회/수정한다.
+
+form-fields는 Form의 child element들을 구성하기 위한 meta data이고 field 명, 표시를 위한 label, element(view) type 그리고 element view가 추가로 필요한 attribute로 구성된다. form-fields는 다음과 같은 형식으로 설정하거나 서버로 부터 조회한다.
+
+  Form Fields Example:
+
+    [ {
+      "name" : "id",
+      "label" : "ID",
+      "type" : "number"
+    }, {
+      "name" : "name",
+      "label" : "Name",
+      "type" : "text"
+    }, {
+      "name" : "display",
+      "label" : "Display",
+      "type" : "text"
+    }, {
+      "name" : "description",
+      "label" : "Description",
+      "type" : "text"
+    }, {
+      "name" : "locale",
+      "label" : "Locale",
+      "type" : "code-combo",
+      "codeName" : "LOCALE"
+    }, {
+      "name" : "category",
+      "label" : "Category",
+      "type" : "code-combo",
+      "codeName" : "TERMS_CATEGORY"
+    }, {
+      "name" : "creator_id",
+      "label" : "Created By",
+      "type" : "text"
+    }, {
+      "name" : "updater_id",
+      "label" : "Updated By",
+      "type" : "text"
+    }, {
+      "name" : "created_at",
+      "label" : "Created At",
+      "type" : "text"
+    }, {
+      "name" : "updated_at",
+      "label" : "Updated At",
+      "type" : "text"
+    } ]
+
+아래 Example은 서버로 부터 form-fields meta data를 조회해서 동적으로 리소스 폼을 구성하는 샘플이다.
+things-resource로 부터 위와 같은 형식의 form-fields meta data를 조회하여 things-resource-form으로 바인딩한다.
+
+폼 데이터를 조회할 때는 url : terminologies/:id, method : get 으로,
+폼 데이터를 업데이트할 때는  url : terminologies/:id, method : put 으로 한다.
+업데이트 후에는 last-response로 결과를 얻을 수 있다.
+
+폼이 오픈될 때 things-resource-form-opened 이벤트가 발생하고 
+조회 things-resource-form-read 이벤트가, 업데이트 성공시 things-resource-form-saved 에러 발생시 things-resource-form-error가 발생되므로 성공/실패시 custom action을 구성할 수 있다.
+
+  Resource Form Example:
+
+    <things-ajax 
+      auto
+      method="GET"
+      resource-url="diy_services/ElidomResourceFormFields/query.json" 
+      last-response="{{formFields}}">
+    </things-ajax>
+
+    <things-resource-form 
+      id="resource-form"
+      title="Item Detail"
+      form-fields="[[formFields]]" 
+      resource-url="terminologies/:id"
+      last-response="{{lastResponse}}">
+    </things-resource-form>
+
+
+@demo demo/demo-things-resource-form.html
+-->
+
+<dom-module id="things-resource-form">
+
+  <template>
+    <style is="custom-style" include="iron-flex iron-flex-alignment"></style>
+    <style>
+      :host {
+        display: block;
+        box-sizing: border-box;
+        /*text-align: center;*/
+        /*margin: 100px auto;*/
+        height: 90%;
+        width: 90%;
+      }
+
+      :host .resource-form {
+        padding: 10px 15px 10px 15px;
+      }
+
+      :host .fields {
+        padding: 10px;
+      }
+    </style>
+      
+    <paper-toolbar>
+      <span class="title">[[title]]</span>
+      <things-button color='green' id='save-btn' on-tap='submitMyForm'>
+        <things-i18n-msg msgid="button.save">
+          <things-i18n-msg msgid="button.save">Save</things-i18n-msg>
+        </things-i18n-msg>
+      </things-button>
+    </paper-toolbar>
+
+    <form
+      is="iron-form" 
+      id="resource-form" 
+      action=[[action]]
+      headers="[[headers]]"
+      content-type="[[contentType]]"
+      method="[[method]]"
+      with-credentials="[[withCredentials]]"
+      last-response="{{lastResponse}}">
+      <div class="layout horizontal flex">
+        <div id="left-fields" class="layout vertical flex fields"></div>
+        <div id="right-fields" class="layout vertical flex fields"></div>
+      </div>
+    </form>
+
+  </template>
+
+  <script>
+    Polymer({
+      is: 'things-resource-form',
+      
+      properties: {
+        /**
+         * 폼 타이틀 
+         */
+        title: {
+          type: String,
+          value: 'Detail Form',
+          computed: '_computeTitle(resourceType)'
+        }
+      },
+
+      behaviors: [
+        Things.FormBehavior,
+        Things.DetailFormBehavior,
+        Things.SpinnerBehavior,
+        Things.MsgBoxBehavior
+      ],
+
+      listeners : {
+        'iron-form-response' :'_successResponseHandler',
+        'iron-form-error' : '_errorResponseHandler',
+        'things-detail-form-read-success' : '_successResponseHandler',
+        'things-detail-form-read-error' : '_errorResponseHandler',      
+        'things-detail-form-save-success' : '_successResponseHandler',
+        'things-detail-form-save-error' : '_errorResponseHandler'
+      },
+
+      /**
+       * Compute title
+       */
+      _computeTitle: function(resourceType) {
+        return resourceType + ' Detail';
+      },
+
+      /**
+       * 리소스 폼이 이미 구성되었는지 여부 
+       */
+      isFormConfigured: function() {
+        return this.$['left-fields'].childNodes.length > 0 || this.$['right-fields'].childNodes.length > 0;
+      },
+
+      /**
+       * 리소스 폼 화면을 구성. formFields 정보로 동적으로 폼 하위 엘리먼트를 생성하여 폼을 구성한다. 
+       */
+      reconfigureMyForm: function() {
+        if(this.isFormConfigured()) return;
+        
+        for(index in this.formFields) {
+          var field = this.formFields[index];
+          var newElement = this._createFormElement(field);
+          if(!newElement) continue;
+
+          if((index % 2) == 0) {
+            this.$['left-fields'].appendChild(newElement);
+          } else {
+            this.$['right-fields'].appendChild(newElement);
+          }
+        }
+      },
+
+      /**
+       * Save Form
+       *
+       * @param {Object} e 버튼 클릭 이벤트 
+       */
+      submitMyForm: function(e) {
+        this.startSpinner();
+        this.saveResourceForm();
+      },
+
+      /**
+       * Successful response handler After form submits.
+       * this fires a 'things-form-submit-success' in this function
+       *
+       * @param {Object} event Successful response event
+       */
+      _successResponseHandler: function(event) {
+        this.stopSpinner();
+
+        var method = typeof(event.detail === 'string') ? event.detail : event.srcElement.method.toUpperCase();
+        this.handleSuccessResponse(method);
+      },
+
+      /**
+       * Error response handler After form submits.
+       * this fires a 'things-form-submit-error' in this function
+       *
+       * @param {Object} event Error response event
+       */
+      _errorResponseHandler: function(event) {
+        this.stopSpinner();
+
+        var response = event.detail.request.xhr.response;
+        if(response && response.status == 401) {
+          this.handleUnauthorized();
+        } else {
+          if(response) {
+            this.openResponseError(response);
+          } else {
+            response = event.detail.request;
+            this.openUnkownError(response);
+          }
+        }
+
+        this.handleErrorResponse(response);
+      },
+
+      /***************************************************************************************
+       *                            Start detail item view interface
+       ***************************************************************************************/
+
+      /**
+       * detail item view를 구성하기 위한 필수 함수 
+       * item view를 구성한다.
+       *
+       * @return {Object} resource 리소스 데이터 (Object) 혹은 리소스 아이디 (Number)
+       */
+      loadDetailData: function(resource) {
+        this.resource = resource;
+      },
+
+      /**
+       * detail item view를 구성하기 위한 필수 함수 
+       * data로 부터 item view의 데이터를 직접 로딩한다. 외부에서 직접 데이터를 설정한다.
+       *
+       * @param {Object} resource
+       */
+      loadDetailDataDirectly: function(resource) {
+        this.resource = resource;
+      },
+
+      /***************************************************************************************
+       *                            End detail item view interface
+       ***************************************************************************************/
+
+    });
+  </script>
+
+</dom-module>
