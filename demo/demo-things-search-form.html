@@ -102,7 +102,7 @@ subject to an additional IP rights grant found at https://github.com/ThingsEleme
         </template>
 
         <script>
-      Polymer({
+          Polymer({
             is: 'sample-search-form',
 
             listeners: {
@@ -112,7 +112,6 @@ subject to an additional IP rights grant found at https://github.com/ThingsEleme
             onItemsChanged: function(e) {
               this.$['items-target'].value = JSON.stringify(e.detail.items, null, 4);
             }
-
           });
         </script>
       </dom-module>

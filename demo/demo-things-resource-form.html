@@ -70,35 +70,59 @@ subject to an additional IP rights grant found at https://github.com/ThingsEleme
 <body unresolved>
   <demo-snippet class="centered-demo">
     <template>
-      <sample-resource-form></sample-resource-form>
+      <section onclick="clickSetting(event)">
+
+        <h3>Dynamic Resource Form</h3>
+
+        <paper-material class="Page-paper" elevation="1">
+          <things-setting id="setting"></things-setting>
+
+          <div class="buttons">
+            <things-button color="green" target-id="setting">Setting</things-button>
+          </div>
+
+          <paper-input id="data-id" value="{{dataId}}" label="Data ID"></paper-input>
+
+          <div class="buttons">
+            <things-button color="indigo" target-id="form">Open Form</things-button>
+          </div>
+
+          <sample-resource-form id="form"></sample-resource-form>
+
+        </paper-material>
+
+      </section>
 
       <dom-module id="sample-resource-form">
-        <template>
-          <div>
-            <things-ajax 
-              auto
-              method="GET"
-              resource-url="diy_services/ElidomResourceFormFields/query.json" 
-              last-response="{{formFields}}">
-            </things-ajax>
+        <div>
+          <things-ajax 
+            auto
+            method="GET"
+            resource-url="diy_services/ElidomResourceFormFields/query.json" 
+            last-response="{{formFields}}">
+          </things-ajax>
 
-            <things-resource-form 
-              id="resource-form"
-              title="Item Detail"
-              form-fields="[[formFields]]" 
-              resource-url="terminologies/:id"
-              last-response="{{lastResponse}}">
-            </things-resource-form>
-          </div>
+          <things-resource-form 
+            id="resource-form"
+            title="Item Detail"
+            form-fields="[[formFields]]" 
+            resource-url="terminologies/:id"
+            last-response="{{lastResponse}}">
+          </things-resource-form>
+        </div>
 
-          <div>
-            <paper-textarea id="item-target" value="{{response}}" label="Response"></paper-input>
-          </div>
+        <div>
+          <paper-textarea id="item-target" value="{{response}}" label="Response"></paper-input>
+        </div>
         </template>
 
         <script>
-      Polymer({
+          Polymer({
             is: 'sample-resource-form',
+
+            behaviors: [
+              Things.LoadViewBehavior
+            ],
 
             listeners: {
               'resource-form.things-resource-form-saved': 'onSaved'
@@ -109,13 +133,46 @@ subject to an additional IP rights grant found at https://github.com/ThingsEleme
             },
 
             open: function(evt) {
-              this.$['resource-form'].openResourceForm(evt.detail);
+              // TODO
+              /*this.$['resource-form'].resource = evt.detail;
+              this.openPopupView(this.$['resource-form'], true);
+
+              var me = this;
+              viewElement.addEventListener('things-resource-form-saved', function(e) {
+                me.closePopupView();
+                me.refreshGridData();
+              });*/
             }
 
           });
         </script>
       </dom-module>
     </template>
+
+    <script>
+      function clickSetting(e) {
+        var button = e.target;
+        while (!button.hasAttribute('target-id') && button !== document.body) {
+          button = button.parentElement;
+        }
+
+        if (!button.hasAttribute('target-id')) {
+          return;
+        }
+
+        var id = button.getAttribute('target-id');
+        var dialog = document.getElementById(id);
+
+        if(id == 'form') {
+          var el = document.querySelector('#data-id');
+          var evt = { detail : { id : el.value } };
+          dialog.open(evt);
+
+        } else if(id == 'setting') {
+          dialog.open();
+        }
+      }
+    </script>    
   </demo-snippet>
 
 </body>

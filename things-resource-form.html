@@ -1,4 +1,5 @@
 <link rel="import" href="../polymer/polymer.html">
+
 <link rel="import" href="../iron-flex-layout/iron-flex-layout.html">
 <link rel="import" href="../iron-flex-layout/iron-flex-layout-classes.html">
 <link rel="import" href="../iron-form/iron-form.html">
@@ -7,21 +8,20 @@
 <link rel="import" href="../iron-iconset/iron-iconset.html">
 <link rel="import" href="../iron-input/iron-input.html">
 
-<link rel="import" href="../things-button/things-button.html">
 <link rel="import" href="../paper-checkbox/paper-checkbox.html">
 <link rel="import" href="../paper-dropdown-menu/paper-dropdown-menu.html">
-<link rel="import" href="../paper-fullscreen-dialog/paper-fullscreen-dialog.html">
 <link rel="import" href="../paper-input/paper-input.html">
 <link rel="import" href="../paper-input/paper-textarea.html">
 <link rel="import" href="../paper-material/paper-material.html">
 <link rel="import" href="../paper-radio-group/paper-radio-group.html">
 <link rel="import" href="../paper-radio-button/paper-radio-button.html">
-<link rel="import" href="../paper-tabs/paper-tab.html">
 <link rel="import" href="../paper-tabs/paper-tabs.html">
+<link rel="import" href="../paper-tabs/paper-tab.html">
 <link rel="import" href="../paper-tooltip/paper-tooltip.html">
 
+<link rel="import" href="../things-button/things-button.html">
 <link rel="import" href="../things-content/things-load-view-behavior.html">
-<link rel="import" href="../things-msg-box-behavior/things-msg-box-behavior.html">
+<link rel="import" href="../things-msg-box-behavior.html/things-msg-box-behavior.html">
 <link rel="import" href="../things-spinner/things-spinner-behavior.html">
 
 <link rel="import" href="./things-form-behavior.html">
@@ -225,13 +225,25 @@ things-resource로 부터 위와 같은 형식의 form-fields meta data를 조�
       },
 
       /**
+       * 모든 Form Element를 리턴 
+       */
+      getFormElements: function() {
+        var leftElements = this.$['left-fields'].childNodes ? this.$['left-fields'].childNodes : [];
+        var rightElements = this.$['right-fields'].childNodes ? this.$['right-fields'].childNodes : [];
+        var formElements = [];
+        for(var i = 0 ; i < leftElements.length ; i++) { formElements.push(leftElements[i]); }
+        for(var i = 0 ; i < rightElements.length ; i++) { formElements.push(rightElements[i]); }
+        return formElements;
+      },
+
+      /**
        * Save Form
        *
        * @param {Object} e 버튼 클릭 이벤트 
        */
       submitMyForm: function(e) {
         this.startSpinner();
-        this.saveResourceForm();
+        this.saveResource();
       },
 
       /**
