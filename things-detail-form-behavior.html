@@ -1,5 +1,5 @@
-<link rel="import" href="../polymer/polymer.html">
-<link rel="import" href="../iron-form/iron-form.html">
+<link rel="import" href="../../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../../bower_components/iron-form/iron-form.html">
 
 <link rel="import" href="../things-ajax/things-ajax.html">
 <link rel="import" href="../things-global-behavior/things-global-behavior.html">
@@ -19,234 +19,234 @@ window.Things = window.Things || {};
  */
 Things.DetailFormBehavior = {
 
-  properties: {
+	properties: {
 
-    /**
-     * Resource Type
-     */
-    resourceType: {
-      type: String
-    },
+		/**
+		 * Resource Type
+		 */
+		resourceType: {
+			type: String
+		},
 
-    /**
-     * Resource Get/Update를 하기 위한 URL.
-     * 이 속성으로 아이디로 레코드를 조회하거나 레코드를 업데이트 혹은 생성하는데 사용된다.
-     * Resource URL은 보통 {복수 entity 명}/{:id} 형식이다. 
-     * ex) users/:id
-     */
-    resourceUrl: {
-      type: String
-    },
+		/**
+		 * Resource Get/Update를 하기 위한 URL.
+		 * 이 속성으로 아이디로 레코드를 조회하거나 레코드를 업데이트 혹은 생성하는데 사용된다.
+		 * Resource URL은 보통 {복수 entity 명}/{:id} 형식이다. 
+		 * ex) users/:id
+		 */
+		resourceUrl: {
+			type: String
+		},
 
-    /**
-     * Resource Id
-     */
-    resourceId: {
-      type: String
-    },
+		/**
+		 * Resource Id
+		 */
+		resourceId: {
+			type: String
+		},
 
-    /**
-     * 폼에 채우기 위한 리소스
-     * 최초 폼이 실행되는 시점에 서버에 요청하여 리턴받은 데이터
-     */
-    resource: {
-      type: Object,
-      observer: '_resourceChanged'
-    },
+		/**
+		 * 폼에 채우기 위한 리소스
+		 * 최초 폼이 실행되는 시점에 서버에 요청하여 리턴받은 데이터
+		 */
+		resource: {
+			type: Object,
+			observer: '_resourceChanged'
+		},
 
-    /**
-     * 폼에는 있지만 업데이트하기에 불필요한 필드를 삭제하기 위한 필드명
-     */
-    removeFieldsOnSave: {
-      type: Array,
-      value: ['domain_id', 'creator', 'updater', 'creator_id', 'updater_id', 'created_at', 'updated_at']
-    }
+		/**
+		 * 폼에는 있지만 업데이트하기에 불필요한 필드를 삭제하기 위한 필드명
+		 */
+		removeFieldsOnSave: {
+			type: Array,
+			value: ['domain_id', 'creator', 'updater', 'creator_id', 'updater_id', 'created_at', 'updated_at']
+		}
 
-    /**
-     * 폼이 오픈된 후 fire
-     *
-     * @event things-resource-form-opened
-     */
-    /**
-     * 리소스 조회 후 fire
-     *
-     * @event things-resource-form-read
-     */
-    /**
-     * 리소스 업데이트 후 fire
-     *
-     * @event things-resource-form-saved
-     */
-    /**
-     * 생성 후 fire
-     *
-     * @event things-resource-form-created
-     */
-    /**
-     * 조회/생성/업데이트 에러 발생 후 fire
-     *
-     * @event things-resource-form-error
-     */
-  },
+		/**
+		 * 폼이 오픈된 후 fire
+		 *
+		 * @event things-resource-form-opened
+		 */
+		/**
+		 * 리소스 조회 후 fire
+		 *
+		 * @event things-resource-form-read
+		 */
+		/**
+		 * 리소스 업데이트 후 fire
+		 *
+		 * @event things-resource-form-saved
+		 */
+		/**
+		 * 생성 후 fire
+		 *
+		 * @event things-resource-form-created
+		 */
+	  /**
+	   * 조회/생성/업데이트 에러 발생 후 fire
+	   *
+	   * @event things-resource-form-error
+	   */
+	},
 
-  observers: [
-    '_resourceIdAndUrlChange(resourceUrl, resourceId)'
-  ],
+	observers: [
+		'_resourceIdAndUrlChange(resourceUrl, resourceId)'
+	],
 
-  /**
-   * resourceId가 변경될 때 
-   *
-   * @param {String} newVal New resourceId
-   * @param {String} oldVal Old resourceId
-   */
-  _resourceIdAndUrlChange: function(resourceUrl, resourceId) {
-    if(resourceUrl && resourceId) {
-      this.findResource(resourceId);
-    }
-  },
+	/**
+	 * resourceId가 변경될 때 
+	 *
+	 * @param {String} newVal New resourceId
+	 * @param {String} oldVal Old resourceId
+	 */
+	_resourceIdAndUrlChange: function(resourceUrl, resourceId) {
+		if(resourceUrl && resourceId) {
+			this.findResource(resourceId);
+		}
+	},
 
-  /**
-   * Resource가 변경될 때 
-   *
-   * @param {Object} 리소스 
-   */
-  _resourceChanged: function(resource) {
-    this.reconfigureMyForm();
-    var formElements = this.getFormElements();
-    this._bindElementData(formElements, resource);
-    this.resourceId = resource.id;
-  },
+	/**
+	 * Resource가 변경될 때 
+	 *
+	 * @param {Object} 리소스 
+	 */
+	_resourceChanged: function(resource) {
+		this.reconfigureMyForm();
+		var formElements = this.getFormElements();
+		this._bindElementData(formElements, resource);
+		this.resourceId = resource.id;
+	},
 
-  /**
-   * Resource로 elements에 각각 바인딩한다.
-   *
-   * @param {Array} elements
-   * @param {Object} resource
-   */
-  _bindElementData: function(elements, resource) {
-    for(var i = 0 ; i < elements.length ; i++) {
-      var element = elements[i];
-      var val = resource ? resource[element.name] : null;
+	/**
+	 * Resource로 elements에 각각 바인딩한다.
+	 *
+	 * @param {Array} elements
+	 * @param {Object} resource
+	 */
+	_bindElementData: function(elements, resource) {
+		for(var i = 0 ; i < elements.length ; i++) {
+			var element = elements[i];
+			var val = resource ? resource[element.name] : null;
 
-      if(element.nodeName == 'THINGS-TRISTATE-CHECKBOX') {        
-        if(val === true)
-          element.state = 'on';
-        else if(val === false)
-          element.state = 'off';
-        else
-          element.state = null;
-      } else {
-        element.value = val;
-      }
-    }
-  },
+			if(element.nodeName == 'THINGS-TRISTATE-CHECKBOX') {				
+				if(val === true)
+					element.state = 'on';
+				else if(val === false)
+					element.state = 'off';
+				else
+					element.state = null;
+			} else {
+				element.value = val;
+			}
+		}
+	},
 
-  /**
-   * 서버에 저장 요청할 파라미터 중에서 Save 전에 저장에 불필요한 컬럼들을 필터링한다.
-   *
-   * @param {Object} params 서버에 저장 요청할 파라미터 
-   */
-  _filterResourceColumns: function(params) {
-    for(var name in params) {
-      if(this.removeFieldsOnSave.includes(name)) {
-        delete params[name];
-      } else {
-        var value = params[name];
-        if(typeof(value) === 'undefined') {
-          delete params[name];
-        }
-      }
-    }
+	/**
+	 * 서버에 저장 요청할 파라미터 중에서 Save 전에 저장에 불필요한 컬럼들을 필터링한다.
+	 *
+	 * @param {Object} params 서버에 저장 요청할 파라미터 
+	 */
+	_filterResourceColumns: function(params) {
+		for(var name in params) {
+			if(this.removeFieldsOnSave.includes(name)) {
+				delete params[name];
+			} else {
+				var value = params[name];
+				if(typeof(value) === 'undefined') {
+					delete params[name];
+				}
+			}
+		}
 
-    return params;
-  },
+		return params;
+	},
 
-  /**
-   * save data from resource detail screen
-   */
-  saveResource: function() {
-    var saveAjax = document.createElement('things-ajax');
-    if(this.resourceUrl.indexOf('/:id') >= 0) {
-      saveAjax.resourceUrl = this.resourceUrl;  
-    } else {
-      saveAjax.resourceUrl = this.resourceUrl + '/:id';
-    }
-    
-    saveAjax.resourceId = this.resource.id;
-    saveAjax.resourceAction = this.resource.id ? 'update' : 'create';
+	/**
+	 * save data from resource detail screen
+	 */
+	saveResource: function() {
+		var saveAjax = document.createElement('things-ajax');
+		if(this.resourceUrl.indexOf('/:id') >= 0) {
+			saveAjax.resourceUrl = this.resourceUrl;	
+		} else {
+			saveAjax.resourceUrl = this.resourceUrl + '/:id';
+		}
+		
+		saveAjax.resourceId = this.resource.id;
+		saveAjax.resourceAction = this.resource.id ? 'update' : 'create';
 
-    var params = this.serializeMyForm();
-    params = this._filterResourceColumns(params);
-    saveAjax.body = params;
+		var params = this.serializeMyForm();
+		params = this._filterResourceColumns(params);
+		saveAjax.body = params;
 
-    var me = this;
-    saveAjax.addEventListener('things-ajax-response', function(event) {
-      me.fire('things-detail-form-save-success', saveAjax.method);
-    });
+		var me = this;
+		saveAjax.addEventListener('things-ajax-response', function(event) {
+			me.fire('things-detail-form-save-success', saveAjax.method);
+		});
 
-    saveAjax.addEventListener('things-ajax-error', function(event) {
-      me.fire('things-detail-form-save-error', event.detail);
-    });
+		saveAjax.addEventListener('things-ajax-error', function(event) {
+			me.fire('things-detail-form-save-error', event.detail);
+		});
 
-    saveAjax.generateRequest();
-  },
+		saveAjax.generateRequest();
+	},
 
-  /**
-   * 리소스 아이디로 서버에 리소스를 조회 요청한다.
-   * @param {String} resourceId
-   */
-  findResource: function(resourceId) {
-    var getAjax = document.createElement('things-ajax');
+	/**
+	 * 리소스 아이디로 서버에 리소스를 조회 요청한다.
+	 * @param {String} resourceId
+	 */
+	findResource: function(resourceId) {
+		var getAjax = document.createElement('things-ajax');
 
-    if(this.resourceUrl.indexOf('/:id') >= 0) {
-      getAjax.resourceUrl = this.resourceUrl; 
-    } else {
-      getAjax.resourceUrl = this.resourceUrl + '/:id';
-    }
-    
-    getAjax.resourceId = this.resourceId;
-    getAjax.resourceAction = 'find';
+		if(this.resourceUrl.indexOf('/:id') >= 0) {
+			getAjax.resourceUrl = this.resourceUrl;	
+		} else {
+			getAjax.resourceUrl = this.resourceUrl + '/:id';
+		}
+		
+		getAjax.resourceId = this.resourceId;
+		getAjax.resourceAction = 'find';
 
-    var me = this;
-    getAjax.addEventListener('things-ajax-response', function(event) {
-      me.resource = event.detail;
-      me.fire('things-detail-form-read-success', getAjax.method);
-    });
+		var me = this;
+		getAjax.addEventListener('things-ajax-response', function(event) {
+			me.resource = event.detail;
+			me.fire('things-detail-form-read-success', getAjax.method);
+		});
 
-    getAjax.addEventListener('things-ajax-error', function(event) {
-      me.fire('things-detail-form-read-error', event.detail);
-    });
+		getAjax.addEventListener('things-ajax-error', function(event) {
+			me.fire('things-detail-form-read-error', event.detail);
+		});
 
-    getAjax.generateRequest();
-  },
+		getAjax.generateRequest();
+	},
 
-  /**
-   * Save 액션 성공 후 후처리 
-   * method가 GET인 경우 : things-resource-form-read 이벤트
-   * method가 PUT인 경우 : things-resource-form-saved 이벤트
-   * method가 POST인 경우 : things-resource-form-created 이벤트
-   */
-  handleSuccessResponse: function(method) {
-    if(method == 'GET') {
-      this.fire('things-resource-form-read', event.detail);
+	/**
+	 * Save 액션 성공 후 후처리 
+	 * method가 GET인 경우 : things-resource-form-read 이벤트
+	 * method가 PUT인 경우 : things-resource-form-saved 이벤트
+	 * method가 POST인 경우 : things-resource-form-created 이벤트
+	 */
+	handleSuccessResponse: function(method) {
+		if(method == 'GET') {
+			this.fire('things-resource-form-read', event.detail);
 
-    } else if(method == 'PUT') {
-      this.fire('things-resource-form-saved', event.detail);
+		} else if(method == 'PUT') {
+			this.fire('things-resource-form-saved', event.detail);
 
-    } else if(method == 'POST') {
-      this.fire('things-resource-form-created', event.detail);
-    }
-  },
+		} else if(method == 'POST') {
+			this.fire('things-resource-form-created', event.detail);
+		}
+	},
 
-  /**
-  * Error response handler After form submits.
-  * Fires a 'things-resource-form-error' in this function
-  *
-  * @param {Object} errorResponse
-  */
-  handleErrorResponse: function(errorResponse) {
-    this.fire('things-resource-form-error', errorResponse);
-  }
+	/**
+	* Error response handler After form submits.
+	* Fires a 'things-resource-form-error' in this function
+	*
+	* @param {Object} errorResponse
+	*/
+	handleErrorResponse: function(errorResponse) {
+		this.fire('things-resource-form-error', errorResponse);
+	}
 
 };
 

@@ -1,6 +1,6 @@
-<link rel="import" href="../polymer/polymer.html">
-<link rel="import" href="../things-ajax/things-resource-search-behavior.html">
+<link rel="import" href="../../../bower_components/polymer/polymer.html">
 
+<link rel="import" href="../things-ajax/things-resource-search-behavior.html">
 <link rel="import" href="./things-form-behavior.html">
 
 <script>
@@ -16,7 +16,7 @@ window.Things = window.Things || {};
  */
 Things.SearchFormBehaviorImpl = {
 
-  properties: {
+	properties: {
 
     /**
      * form이 active 상태인지 여부. active 상태인 경우에만 form submit이 가능하다.
@@ -70,11 +70,11 @@ Things.SearchFormBehaviorImpl = {
      *
      * @event things-form-submit-error
      */
-  },
+	},
 
   observers: [
-    '_pageChanged(page)',
-    '_perPageChanged(perPage)'
+  	'_pageChanged(page)',
+  	'_perPageChanged(perPage)'
   ],
 
   /**
@@ -94,7 +94,7 @@ Things.SearchFormBehaviorImpl = {
    * @param {Number} perPage 페이지 당 표시할 레코드 수 
    */
   _perPageChanged: function(perPage) {
-    this.limit = perPage;
+  	this.limit = perPage;
   },
 
   /**
@@ -103,26 +103,26 @@ Things.SearchFormBehaviorImpl = {
    * 
    * @param {Object} params
    */
-  _resetResourceSearchParams: function(params) {
-    this.queryFields = [];
-    if(!params) return;
+	_resetResourceSearchParams: function(params) {
+		this.queryFields = [];
+		if(!params) return;
 
-    for(prop in params) {
-      if(params[prop] && params[prop] != '') {
-        var fieldModels = this.formFields.filter(function(formField) { return formField.name == prop });
+		for(prop in params) {
+			if(params[prop] && params[prop] != '') {
+				var fieldModels = this.formFields.filter(function(formField) { return formField.name == prop });
 
-        if (fieldModels && fieldModels.length > 0) {
-          var fieldModel = fieldModels[0];
-          var query = { name : prop, operator : fieldModel.op };
-          if(!this.nonValueOpers.includes(fieldModel.op)) {
-            query.value = params[prop];
-          }
+				if (fieldModels && fieldModels.length > 0) {
+					var fieldModel = fieldModels[0];
+					var query = { name : prop, operator : fieldModel.op };
+					if(!this.nonValueOpers.includes(fieldModel.op)) {
+						query.value = params[prop];
+					}
 
-          this.queryFields.push(query);
-        }
-      }
-    }
-  }, 
+					this.queryFields.push(query);
+				}
+			}
+		}
+	}, 
 
   /**
    * Submit 전에 전처리 핸들
@@ -141,7 +141,7 @@ Things.SearchFormBehaviorImpl = {
 
     form.request.params || {};
     if(this.paramType == 'RESOURCE') {
-      this._resetResourceSearchParams(form.request.params);
+    	this._resetResourceSearchParams(form.request.params);
       form.request.params = this.handleRequestParams();
     }    
   },
@@ -169,8 +169,8 @@ Things.SearchFormBehaviorImpl = {
 };
 
 Things.SearchFormBehavior = [
-  Things.SearchFormBehaviorImpl,
-  Things.ResourceSearchBehavior
+	Things.SearchFormBehaviorImpl,
+	Things.ResourceSearchBehavior
 ];
 
 </script>
