@@ -37,21 +37,21 @@
     "paper-toolbar": "PolymerElements/paper-toolbar#^1.1.4",
     "paper-tooltip": "PolymerElements/paper-tooltip#^1.1.2",
     "paper-toggle-button": "PolymerElements/paper-toggle-button#^1.1.2",
-    "things-button": "ThingsElements/things-button#^0.0.1",
-    "things-msg-box-behavior": "ThingsElements/things-msg-box-behavior#^0.0.1",
-    "things-spinner": "ThingsElements/things-spinner#^0.0.1",
-    "things-global-behavior": "ThingsElements/things-global-behavior#^0.0.4",
-    "things-date-picker": "ThingsElements/things-date-picker#^0.0.1",
-    "things-resource-combo": "ThingsElements/things-resource-combo#^0.0.3",
-    "things-tristate-checkbox": "ThingsElements/things-tristate-checkbox#^0.0.1",
+    "things-button": "ThingsElements/things-button",
+    "things-msg-box-behavior": "ThingsElements/things-msg-box-behavior",
+    "things-spinner": "ThingsElements/things-spinner",
+    "things-global-behavior": "ThingsElements/things-global-behavior",
+    "things-date-picker": "ThingsElements/things-date-picker",
+    "things-resource-combo": "ThingsElements/things-resource-combo#",
+    "things-tristate-checkbox": "ThingsElements/things-tristate-checkbox",
     "things-fullscreen": "ThingsElements/things-fullscreen",
     "things-ajax": "ThingsElements/things-ajax",
-    "things-input-field": "ThingsElements/things-input-field#^0.0.1"
+    "things-input-field": "ThingsElements/things-input-field"
   },
   "devDependencies": {
     "iron-component-page": "PolymerElements/iron-component-page#^1.0.0",
     "iron-demo-helpers": "^1.2.3",
     "web-component-tester": "^4.0.0",
-    "things-setting": "ThingsElements/things-setting#^0.0.2"
+    "things-setting": "ThingsElements/things-setting"
   }
 }
