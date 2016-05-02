@@ -60,6 +60,14 @@ Things.DetailFormBehavior = {
 		removeFieldsOnSave: {
 			type: Array,
 			value: ['domain_id', 'creator', 'updater', 'creator_id', 'updater_id', 'created_at', 'updated_at']
+		},
+
+		/**
+		 * Time Stamp / User Stamp 필드 
+		 */
+		stampFields: {
+			type: Array,
+			value: ['creator', 'updater', 'creator_id', 'updater_id', 'created_at', 'updated_at']
 		}
 
 		/**
@@ -94,7 +102,7 @@ Things.DetailFormBehavior = {
 	],
 
 	/**
-	 * resourceId가 변경될 때 
+	 * ResourceId가 변경될 때 
 	 *
 	 * @param {String} newVal New resourceId
 	 * @param {String} oldVal Old resourceId
@@ -128,13 +136,17 @@ Things.DetailFormBehavior = {
 			var element = elements[i];
 			var val = resource ? resource[element.name] : null;
 
-			if(element.nodeName == 'THINGS-TRISTATE-CHECKBOX') {				
+			if(element.nodeName == 'THINGS-TRISTATE-CHECKBOX') {
 				if(val === true)
 					element.state = 'on';
 				else if(val === false)
 					element.state = 'off';
 				else
 					element.state = null;
+
+			} else if(element.nodeName == 'THINGS-STAMP') {
+				element.resource = resource;
+
 			} else {
 				element.value = val;
 			}
@@ -162,7 +174,7 @@ Things.DetailFormBehavior = {
 	},
 
 	/**
-	 * save data from resource detail screen
+	 * Save data from resource detail screen
 	 */
 	saveResource: function() {
 		var saveAjax = document.createElement('things-ajax');
@@ -193,6 +205,7 @@ Things.DetailFormBehavior = {
 
 	/**
 	 * 리소스 아이디로 서버에 리소스를 조회 요청한다.
+	 *
 	 * @param {String} resourceId
 	 */
 	findResource: function(resourceId) {
@@ -222,6 +235,7 @@ Things.DetailFormBehavior = {
 
 	/**
 	 * Save 액션 성공 후 후처리 
+	 *
 	 * method가 GET인 경우 : things-resource-form-read 이벤트
 	 * method가 PUT인 경우 : things-resource-form-saved 이벤트
 	 * method가 POST인 경우 : things-resource-form-created 이벤트

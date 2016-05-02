@@ -213,7 +213,8 @@ things-resource로 부터 위와 같은 형식의 form-fields meta data를 조�
 				for(index in this.formFields) {
 					var field = this.formFields[index];
 					var newElement = this._createFormElement(field);
-					if(!newElement) continue;
+
+					if(!newElement || this.stampFields.includes(newElement.name)) continue;
 
 					if((index % 2) == 0) {
 						this.$['left-fields'].appendChild(newElement);
@@ -221,6 +222,15 @@ things-resource로 부터 위와 같은 형식의 form-fields meta data를 조�
 						this.$['right-fields'].appendChild(newElement);
 					}
 				}
+
+				var stampables = this.formFields.filter(function(field) { 
+					return field.name == 'created_at' || field.name == 'updated_at'; 
+				});
+
+				if(stampables && stampables.length > 0) {
+					var stamp = this._createFormElement({ type : 'things-stamp' });
+					this.$['left-fields'].appendChild(stamp);
+				}				
 			},
 
 			/**

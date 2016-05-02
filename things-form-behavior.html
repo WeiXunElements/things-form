@@ -22,6 +22,7 @@
 <link rel="import" href="../things-resource-combo/things-code-combo.html">
 <link rel="import" href="../things-resource-selector/things-resource-selector.html">
 <link rel="import" href="../things-resource-selector/things-resource-field.html">
+<link rel="import" href="../things-stamp/things-stamp.html">
 <link rel="import" href="../things-tristate-checkbox/things-tristate-checkbox.html">
 
 <link rel="import" href="../things-global-behavior/things-global-behavior.html">
@@ -263,6 +264,11 @@ Things.FormBehaviorImpl = {
 
 			case 'template-editor':
 				break;
+
+			// user stamp & time stamp
+			case 'things-stamp':
+				newElement = document.createElement('things-stamp');
+				break;				
 
 			default:
 				newElement = document.createElement('things-input-field');
