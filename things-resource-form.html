@@ -208,7 +208,7 @@ things-resource로 부터 위와 같은 형식의 form-fields meta data를 조�
 			 * 리소스 폼 화면을 구성. formFields 정보로 동적으로 폼 하위 엘리먼트를 생성하여 폼을 구성한다. 
 			 */
 			reconfigureMyForm: function() {
-				if(this.isFormConfigured()) return;
+				if(this.isFormConfigured() || !this.formFields || this.formFields.length == 0) return;
 				
 				for(index in this.formFields) {
 					var field = this.formFields[index];
@@ -230,7 +230,7 @@ things-resource로 부터 위와 같은 형식의 form-fields meta data를 조�
 				if(stampables && stampables.length > 0) {
 					var stamp = this._createFormElement({ type : 'things-stamp' });
 					this.$['left-fields'].appendChild(stamp);
-				}				
+				}
 			},
 
 			/**
