@@ -26,6 +26,14 @@ Things.SearchFormBehaviorImpl = {
     },
 
     /**
+     * 현재 페이지
+     */
+    page: {
+      type: Number,
+      notify: true
+    },
+    
+    /**
      * TODO limit으로 변경. 현재는 perPage가 변경될 때 ResourceSearchBehavior의 limit변수를 변경해 줌 
      * Pagination을 위한 설정. 페이지에 표시할 데이터 개수
      */

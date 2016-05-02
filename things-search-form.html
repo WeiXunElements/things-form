@@ -91,7 +91,7 @@
       <paper-toolbar>
         <paper-icon-button icon="menu"></paper-icon-button>
         <span class="title">[[title]]</span>
-        <paper-icon-button icon="search" id="search-btn" on-tap="submitMyForm">
+        <paper-icon-button icon="search" id="search-btn" on-tap="_onSearchFormTap">
         </paper-icon-button>
         <paper-icon-button icon="refresh" id="reset-btn" on-tap="resetMyForm">
         </paper-icon-button>
@@ -181,13 +181,21 @@
     },
 
     /**
-    * Submits form
-    */
+     * 조회 버튼 클릭시 current page를 1로 리셋
+     *
+     * @param {Object} e 버튼 클릭 이벤트
+     */
+    _onSearchFormTap: function(e) {
+      if(this.page > 1) this.page = 1;
+      else this.submitMyForm();      
+    },
+
+    /**
+     * Submit Form. 검색 실행 
+     */
     submitMyForm: function() {
       this.startSpinner();
-
-      if(this.page > 1) this.page = 1;
-      else this.getMyForm().submit();
+      this.getMyForm().submit();
     },
 
     /**
