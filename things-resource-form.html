@@ -132,15 +132,6 @@ things-resource로 부터 위와 같은 형식의 form-fields meta data를 조�
 				padding: 10px;
 			}
 		</style>
-			
-		<paper-toolbar>
-			<span class="title">[[title]]</span>
-			<things-button color='green' id='save-btn' on-tap='submitMyForm'>
-				<things-i18n-msg msgid="button.save">
-					<things-i18n-msg msgid="button.save">Save</things-i18n-msg>
-				</things-i18n-msg>
-			</things-button>
-		</paper-toolbar>
 
 		<form
 			is="iron-form" 
@@ -156,7 +147,14 @@ things-resource로 부터 위와 같은 형식의 form-fields meta data를 조�
 				<div id="right-fields" class="layout vertical flex fields"></div>
 			</div>
 		</form>
-
+		<paper-toolbar>
+			<<!-- span class="title">[[title]]</span> -->
+			<things-button color='green' id='save-btn' on-tap='submitMyForm'>
+				<things-i18n-msg msgid="button.save">
+					<things-i18n-msg msgid="button.save">Save</things-i18n-msg>
+				</things-i18n-msg>
+			</things-button>
+		</paper-toolbar>
 	</template>
 
 	<script>
