@@ -19,6 +19,19 @@
 <link rel="import" href="../paper-tabs/paper-tab.html">
 <link rel="import" href="../paper-tooltip/paper-tooltip.html">
 
+<link rel="import" href="../iron-input/iron-input.html">
+
+<link rel="import" href="../things-button/things-button.html">
+<link rel="import" href="../things-date-picker/things-date-picker.html">
+<link rel="import" href="../things-date-picker/things-date-from-to.html">
+<link rel="import" href="../things-date-picker/things-time-picker.html">
+<link rel="import" href="../things-input-field/things-input-field.html">
+<link rel="import" href="../things-resource-combo/things-code-combo.html">
+<link rel="import" href="../things-resource-selector/things-resource-selector.html">
+<link rel="import" href="../things-resource-selector/things-resource-field.html">
+<link rel="import" href="../things-stamp/things-stamp.html">
+<link rel="import" href="../things-tristate-checkbox/things-tristate-checkbox.html">
+
 <link rel="import" href="../things-view-open-behavior/things-view-open-behavior.html">
 <link rel="import" href="../things-msg-box-behavior/things-msg-box-behavior.html">
 <link rel="import" href="../things-spinner/things-spinner-behavior.html">
@@ -132,6 +145,15 @@ things-resource로 부터 위와 같은 형식의 form-fields meta data를 조�
 				padding: 10px;
 			}
 		</style>
+			
+		<paper-toolbar>
+			<span class="title">[[title]]</span>
+			<things-button color='green' id='save-btn' on-tap='submitMyForm'>
+				<things-i18n-msg msgid="button.save">
+					<things-i18n-msg msgid="button.save">Save</things-i18n-msg>
+				</things-i18n-msg>
+			</things-button>
+		</paper-toolbar>
 
 		<form
 			is="iron-form" 
@@ -147,14 +169,7 @@ things-resource로 부터 위와 같은 형식의 form-fields meta data를 조�
 				<div id="right-fields" class="layout vertical flex fields"></div>
 			</div>
 		</form>
-		<paper-toolbar>
-			<<!-- span class="title">[[title]]</span> -->
-			<things-button color='green' id='save-btn' on-tap='submitMyForm'>
-				<things-i18n-msg msgid="button.save">
-					<things-i18n-msg msgid="button.save">Save</things-i18n-msg>
-				</things-i18n-msg>
-			</things-button>
-		</paper-toolbar>
+
 	</template>
 
 	<script>
