@@ -3,7 +3,6 @@
 <link rel="import" href="../iron-form/iron-form.html">
 <link rel="import" href="../iron-flex-layout/iron-flex-layout.html">
 <link rel="import" href="../iron-flex-layout/iron-flex-layout-classes.html">
-
 <link rel="import" href="../paper-button/paper-button.html">
 <link rel="import" href="../paper-checkbox/paper-checkbox.html">
 <link rel="import" href="../paper-dropdown-menu/paper-dropdown-menu.html">
@@ -67,41 +66,24 @@
     <style>
       :host {
         display: block;
-        box-sizing: border-box;
-        /*text-align: center;*/
-        /*margin: 0 auto;*/
-        height: 100%;
-        width: 98%;
       }
-          
-      :host paper-input {
-        margin-left: auto;
-        margin-right: auto;
-        width: 90%;
+      paper-toolbar{
+        background-color:var(--things-primary-background-color);
+        height:45px;
       }
-
-      :host things-code-combo {
-        margin-left: auto;
-        margin-right: auto;
-        width: 90%;
-      }    
-      
-      :host paper-material {
-        padding: 10px;
+      paper-toolbar::shadow #topBar{
+        height:45px;
       }
-
-      :host .search {
-        padding:5px 0 3px 5px;
+      paper-toolbar::shadow .title{
+        margin-left:32px !important;
       }
-
-      :host .fields {
-        padding: 0px 10px 0px 0px;
+      form{
+        @apply(--things-default-padding)
       }
     </style>
 
     <paper-material elevation="1" class="flex" on-keypress="handleKeyPress">
       <paper-toolbar>
-        <paper-icon-button icon="menu"></paper-icon-button>
         <span class="title">[[title]]</span>
         <paper-icon-button icon="search" id="search-btn" on-tap="_onSearchFormTap">
         </paper-icon-button>
