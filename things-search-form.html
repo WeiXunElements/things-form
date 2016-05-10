@@ -80,6 +80,13 @@
       form{
         @apply(--things-default-padding)
       }
+      paper-fab{
+        @apply(--things-search-fab);
+      }
+      #fullscreen-btn{
+        @apply(--things-header-button);
+        background:url(/images/icon-fullscreen.png) 100% 50% no-repeat;
+      }
     </style>
 
     <paper-material elevation="1" class="flex" on-keypress="handleKeyPress">
@@ -89,8 +96,8 @@
         </paper-icon-button>
         <paper-icon-button icon="refresh" id="reset-btn" on-tap="resetMyForm">
         </paper-icon-button>
-        <paper-icon-button icon="icons:fullscreen" id="fullscreen-btn" on-tap="toggleFullscreen">
-        </paper-icon-button>
+        <button id="fullscreen-btn" on-tap="toggleFullscreen">
+        </button>
         <paper-tooltip for="search-btn" offset="0">
           <things-i18n-msg msgid="button.search">Search</things-i18n-msg>
         </paper-tooltip>
@@ -112,6 +119,7 @@
             <div id="left-fields" class="layout vertical flex fields"></div>
             <div id="right-fields" class="layout vertical flex"></div>
           </div>
+          <paper-fab icon="search" title="search"></paper-fab>
         </form>
       </div>
     </paper-material>
