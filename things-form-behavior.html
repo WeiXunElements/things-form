@@ -268,8 +268,11 @@ Things.FormBehaviorImpl = {
 			// user stamp & time stamp
 			case 'things-stamp':
 				newElement = document.createElement('things-stamp');
-				break;				
+				break;
 
+			case 'empty':
+				newElement = document.createElement('label');
+				break;
 			default:
 				newElement = document.createElement('things-input-field');
 				//newElement = this._bindAttributes(newElement, element);
