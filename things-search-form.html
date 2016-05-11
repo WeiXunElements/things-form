@@ -162,6 +162,10 @@
       if(this.isFormConfigured()) return;
 
       if(this.formFields.length > 0) {
+        if((this.formFields.length % 2) == 1) {
+          var emptyObj = { type: 'empty'};
+          this.formFields.push(emptyObj);
+        }
         var divContainer = this.$.fields;
         var rowDiv = null;
 
@@ -172,7 +176,7 @@
 
           if((index % 2) == 0) {
             rowDiv = document.createElement('div');
-            rowDiv.setAttribute('class', 'layout horizontal flex');
+            rowDiv.setAttribute('class', 'layout horizontal');
             divContainer.appendChild(rowDiv);
           }
           rowDiv.appendChild(newElement);          
