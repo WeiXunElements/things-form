@@ -66,6 +66,7 @@
     <style>
       :host {
         display: block;
+        background-color:var(--things-lightgrey-background-color);
       }
       paper-toolbar{
         background-color:var(--things-primary-background-color);
@@ -78,7 +79,9 @@
         margin-left:32px !important;
       }
       form{
-        @apply(--things-default-padding)
+        @apply(--things-default-padding);
+        padding-bottom:0;
+        border-bottom:1px solid rgba(0,0,0,.1);
       }
       paper-fab{
         @apply(--things-search-fab);
