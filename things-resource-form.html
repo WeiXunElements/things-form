@@ -144,19 +144,15 @@ things-resource로 부터 위와 같은 형식의 form-fields meta data를 조�
 			}
 		</style>
 
-		<form
-			is="iron-form" 
-			id="resource-form" 
-			action=[[action]]
-			headers="[[headers]]"
-			content-type="[[contentType]]"
-			method="[[method]]"
-			with-credentials="[[withCredentials]]"
-			last-response="{{lastResponse}}">
-			<div class="layout horizontal flex">
-				<div id="left-fields" class="layout vertical flex fields"></div>
-				<div id="right-fields" class="layout vertical flex fields"></div>
-			</div>
+		<form is="iron-form" 
+					id="resource-form" 
+					action=[[action]]
+					headers="[[headers]]"
+					content-type="[[contentType]]"
+					method="[[method]]"
+					with-credentials="[[withCredentials]]"
+					last-response="{{lastResponse}}">
+			<div id="fields" class="layout vertical flex"></div>
 		</form>
 		<paper-toolbar>
 			<<!-- span class="title">[[title]]</span> -->
@@ -171,7 +167,6 @@ things-resource로 부터 위와 같은 형식의 form-fields meta data를 조�
 	<script>
 		Polymer({
 			is: 'things-resource-form',
-			
 			properties: {
 				/**
 				 * 폼 타이틀 
@@ -210,7 +205,7 @@ things-resource로 부터 위와 같은 형식의 form-fields meta data를 조�
 			 * 리소스 폼이 이미 구성되었는지 여부 
 			 */
 			isFormConfigured: function() {
-				return this.$['left-fields'].childNodes.length > 0 || this.$['right-fields'].childNodes.length > 0;
+				return this.$.fields.childNodes.length > 0;
 			},
 
 			/**
@@ -219,18 +214,28 @@ things-resource로 부터 위와 같은 형식의 form-fields meta data를 조�
 			reconfigureMyForm: function() {
 				if(this.isFormConfigured() || !this.formFields || this.formFields.length == 0) return;
 				
+				var divContainer = this.$.fields;
+				var rowDiv = null;
+
 				for(index in this.formFields) {
 					var field = this.formFields[index];
 					var newElement = this._createFormElement(field);
 
 					if(!newElement || this.stampFields.includes(newElement.name)) continue;
 
-					if((index % 2) == 0) {
-						this.$['left-fields'].appendChild(newElement);
-					} else {
-						this.$['right-fields'].appendChild(newElement);
+					var newDivFlag = (field.type == 'textarea') ? true : ((index % 2) == 0 ? true : false);
+					if(newDivFlag) {
+						rowDiv = document.createElement('div');
+						rowDiv.setAttribute('class', 'layout horizontal flex');
+						divContainer.appendChild(rowDiv);
 					}
+
+					rowDiv.appendChild(newElement);
 				}
+
+				rowDiv = document.createElement('div');
+				rowDiv.setAttribute('class', 'layout horizontal flex');
+				divContainer.appendChild(rowDiv);
 
 				var stampables = this.formFields.filter(function(field) { 
 					return field.name == 'created_at' || field.name == 'updated_at'; 
@@ -238,7 +243,7 @@ things-resource로 부터 위와 같은 형식의 form-fields meta data를 조�
 
 				if(stampables && stampables.length > 0) {
 					var stamp = this._createFormElement({ type : 'things-stamp' });
-					this.$['left-fields'].appendChild(stamp);
+					rowDiv.appendChild(stamp);
 				}
 			},
 
@@ -246,11 +251,17 @@ things-resource로 부터 위와 같은 형식의 form-fields meta data를 조�
 			 * 모든 Form Element를 리턴 
 			 */
 			getFormElements: function() {
-				var leftElements = this.$['left-fields'].childNodes ? this.$['left-fields'].childNodes : [];
-				var rightElements = this.$['right-fields'].childNodes ? this.$['right-fields'].childNodes : [];
 				var formElements = [];
-				for(var i = 0 ; i < leftElements.length ; i++) { formElements.push(leftElements[i]); }
-				for(var i = 0 ; i < rightElements.length ; i++) { formElements.push(rightElements[i]); }
+				var allDivs = this.$.fields.childNodes;
+				if(!allDivs || allDivs.length == 0) 
+					return [];
+
+				for(var i = 0 ; i < allDivs.length; i++) {
+					var divContainer = allDivs[i];
+					var divElements = divContainer.childNodes ? divContainer.childNodes : [];
+					for(var j = 0 ; j < divElements.length ; j++) { formElements.push(divElements[j]); }
+				}
+
 				return formElements;
 			},
 

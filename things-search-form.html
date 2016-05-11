@@ -112,10 +112,7 @@
               content-type="[[contentType]]"
               last-response ="{{lastResponse}}"
               with-credentials="[[withCredentials]]">
-          <div class="layout horizontal flex" >
-            <div id="left-fields" class="layout vertical flex fields"></div>
-            <div id="right-fields" class="layout vertical flex"></div>
-          </div>
+          <div id="fields" class="layout vertical flex"></div>
           <paper-fab icon="search" title="search" on-tap="_onSearchFormTap"></paper-fab>
         </form>
       </div>
@@ -155,7 +152,7 @@
      * 리소스 폼이 이미 구성되었는지 여부 
      */
     isFormConfigured: function() {
-      return this.$['left-fields'].childNodes.length > 0 || this.$['right-fields'].childNodes.length > 0;
+      return this.$.fields.childNodes.length > 0;
     },
 
     /**
@@ -165,16 +162,20 @@
       if(this.isFormConfigured()) return;
 
       if(this.formFields.length > 0) {
+        var divContainer = this.$.fields;
+        var rowDiv = null;
+
         for(index in this.formFields) {
           var field = this.formFields[index];
           var newElement = this._createFormElement(field);
           if(!newElement) continue;
-          
+
           if((index % 2) == 0) {
-            this.$['left-fields'].appendChild(newElement);
-          } else {
-            this.$['right-fields'].appendChild(newElement);
+            rowDiv = document.createElement('div');
+            rowDiv.setAttribute('class', 'layout horizontal flex');
+            divContainer.appendChild(rowDiv);
           }
+          rowDiv.appendChild(newElement);          
         }
       }
     },
