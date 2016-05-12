@@ -278,6 +278,38 @@ Things.FormBehaviorImpl = {
 				//newElement = this._bindAttributes(newElement, element);
 				newElement.setAttribute('name', element.name);
 				newElement.setAttribute('label', element.label);
+
+				if(element.userObj) {
+					if(element.userObj.required) {
+						newElement.setAttribute('required', true);
+						newElement.setAttribute('error-message', 'This field has to be filled')
+						newElement.setAttribute('auto-validate', true);
+					}
+
+					if(element.userObj.max && element.userObj.max > 0) {
+						newElement.setAttribute('maxlength', element.userObj.max);
+						newElement.setAttribute('auto-validate', true);
+					}
+
+					if(element.userObj.type) {
+						if(element.userObj.type == 'integer') {
+							newElement.setAttribute('type', 'number');
+							newElement.setAttribute('min', 0);
+						} else if (element.userObj.type == 'string' || element.userObj.type == 'text') {
+							newElement.setAttribute('type', 'text');
+						} else if (element.userObj.type == 'password') {
+							newElement.setAttribute('type', 'password');
+						}
+					}
+
+					if(element.userObj.hidden) {
+						newElement.setAttribute('hidden', true);
+					}
+
+					if(element.userObj.readonly) {
+						newElement.setAttribute('readonly', true);
+					}
+				}
 		}
 
 		if(!newElement) return null;
