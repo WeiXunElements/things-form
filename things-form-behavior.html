@@ -179,6 +179,12 @@ Things.FormBehaviorImpl = {
 				newElement.setAttribute('label', element.label);
 				break;
 
+			case 'tristate-radio':
+				newElement = document.createElement('things-tristate-radio');
+				newElement.setAttribute('name', element.name);
+				newElement.setAttribute('label', element.label);
+				break;
+
 			case 'button':
 				newElement = document.createElement('things-button');
 				newElement = this._bindAttributes(newElement, element);
