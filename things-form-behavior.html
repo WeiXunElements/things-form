@@ -260,17 +260,6 @@ Things.FormBehaviorImpl = {
 				newElement.setAttribute('label', element.label);
 				break;
 
-			// case 'datetime':
-			// 	// TODO
-			// 	break;
-
-			// code-editor, template-editor 필드인 경우 정보를 저장은 해당 editor에서 책임지고 Form에서는 관계하지 않는다.
-			// case 'code-editor':
-			// 	break;
-
-			// case 'template-editor':
-			// 	break;
-
 			// user stamp & time stamp
 			case 'things-stamp':
 				newElement = document.createElement('things-stamp');
@@ -279,13 +268,14 @@ Things.FormBehaviorImpl = {
 			case 'empty':
 				newElement = document.createElement('label');
 				break;
+
 			default:
 				newElement = document.createElement('things-input-field');
-				//newElement = this._bindAttributes(newElement, element);
 				newElement.setAttribute('name', element.name);
 				newElement.setAttribute('label', element.label);
 
-				if(element.userObj) {
+				// Resource Form일 경우에만 Validation은 의미가 있고 Search Form일 경우는 의미없다.
+				if(!element.searchForm && element.userObj) {
 					if(element.userObj.required) {
 						newElement.setAttribute('required', true);
 						newElement.setAttribute('error-message', 'This field has to be filled')
@@ -301,8 +291,10 @@ Things.FormBehaviorImpl = {
 						if(element.userObj.type == 'integer') {
 							newElement.setAttribute('type', 'number');
 							newElement.setAttribute('min', 0);
+
 						} else if (element.userObj.type == 'string' || element.userObj.type == 'text') {
 							newElement.setAttribute('type', 'text');
+
 						} else if (element.userObj.type == 'password') {
 							newElement.setAttribute('type', 'password');
 						}
@@ -320,10 +312,6 @@ Things.FormBehaviorImpl = {
 
 		if(!newElement) return null;
 		
-		/*if(element.name == 'id' || element.name == 'domain_id' || element.name == 'domainId') {
-			newElement.setAttribute('hidden', true);
-		}*/
-
 		newElement.setAttribute('class', 'flex style-scope things-form');
 		return newElement;
 	},

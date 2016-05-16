@@ -95,10 +95,8 @@
     <paper-material elevation="0" class="flex" on-keypress="handleKeyPress">
       <paper-toolbar>
         <span class="title">[[title]]</span>
-        <!--paper-icon-button icon="search" id="search-btn" on-tap="_onSearchFormTap">
-        </paper-icon-button>
-        <paper-icon-button icon="refresh" id="reset-btn" on-tap="resetMyForm">
-        </paper-icon-button-->
+        <!--paper-icon-button icon="search" id="search-btn" on-tap="_onSearchFormTap"></paper-icon-button>
+        <paper-icon-button icon="refresh" id="reset-btn" on-tap="resetMyForm"></paper-icon-button-->
         <button id="fullscreen-btn" on-tap="toggleFullscreen">
         </button>
         <paper-tooltip for="fullscreen-btn" offset="0">
@@ -159,71 +157,33 @@
      * 검색 폼 화면을 구성. formFields 정보로 동적으로 폼 하위 엘리먼트를 생성하여 폼을 구성한다.
      */
     reconfigureMyForm: function() {
-      if(this.isFormConfigured()) return;
+      if(!this.formFields || this.formFields.length <= 0 || this.isFormConfigured()) return;
+      var divContainer = this.$.fields, rowDiv = null;
 
-      if(this.formFields.length > 0) {
+      for(index in this.formFields) {
+        var field = this.formFields[index];
+        field.searchForm = true;
+        var newElement = this._createFormElement(field);
+        if(!newElement) continue;
 
-        /**
-         * domain_id가 없는 페이지에 대해 type이 empty인 object를 삽입하기 위한 로직 시작
-         */
-        var isIdExist = false;
-        var idIdx;
-        var isDomainExist = false;
-        var domainIdx;
-        
-        /**
-         * 해당 formFields에 id와 domain_id가 있는지 확인 합니다.
-         */
-        for(var i = 0; i < this.formFields.length; i++) {
-          if(this.formFields[i].name == 'id') {
-            isIdExist = true;
-            idIdx = i;
-          }
-          if(this.formFields[i].name == 'domain_id') {
-            isDomainExist = true;
-            domainIdx = i;
-          }
+        if((index % 2) == 0) {
+          rowDiv = document.createElement('div');
+          rowDiv.setAttribute('class', 'layout horizontal');
+          divContainer.appendChild(rowDiv);
         }
 
-        /**
-         * id, domain_id 둘중 하나만 있다면 적절한 위치에 emptyDomain 또는 emptyId 오브젝트를 삽입 합니다.
-         */
-        if(isIdExist && !isDomainExist) {
-          var emptyDomain = { name: 'domain_id', type: 'empty' };
-          this.formFields.splice(idIdx+1, 0, emptyDomain);
-        } else if (!isIdExist && isDomainExist) {
-          var emptyId = { name: 'id', type: 'id' };
-          this.formFields.splice(domainIdx-1, 0, emptyId);
-        }
+        rowDiv.appendChild(newElement);          
+      }
 
-        /**
-         * domain_id가 없는 페이지에 대해 type이 empty인 object를 삽입하기 위한 로직 끝
-         */
-
-        /**
-         * formFields의 오브젝트가 홀수일 경우 emptyObj를 마지막에 삽입하여 짝수로 맞춰 줍니다. (detail view의 균형을 위해)
-         */
-        if((this.formFields.length % 2) == 1) {
-          var emptyObj = { type: 'empty' };
-          this.formFields.push(emptyObj);
-        }
-
-        var divContainer = this.$.fields;
-        var rowDiv = null;
-
-        for(index in this.formFields) {
-          var field = this.formFields[index];
-          var newElement = this._createFormElement(field);
-          if(!newElement) continue;
-
-          if((index % 2) == 0) {
-            rowDiv = document.createElement('div');
-            rowDiv.setAttribute('class', 'layout horizontal');
-            divContainer.appendChild(rowDiv);
-          }
-          rowDiv.appendChild(newElement);          
+      // 마지막 Div가 홀수이고 textarea가 아니면 empty 열 추가
+      if(rowDiv && rowDiv.childNodes && rowDiv.childNodes.length == 1) {
+        if(rowDiv.childNodes[0].localName != 'textarea') {
+          var emptyElement = this._createFormElement({ type: 'empty' });
+          rowDiv.appendChild(emptyElement);
         }
       }
+
+      this.fire('things-search-form-configured', this.formFields);      
     },
 
     /**
