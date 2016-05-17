@@ -183,6 +183,7 @@ Things.FormBehaviorImpl = {
 				newElement = document.createElement('things-tristate-radio');
 				newElement.setAttribute('name', element.name);
 				newElement.setAttribute('label', element.label);
+				newElement.showIgnore = element.searchForm ? true : false;
 				break;
 
 			case 'button':
