@@ -148,10 +148,14 @@ Things.SearchFormBehaviorImpl = {
     }
 
     form.request.params || {};
+
     if(this.paramType == 'RESOURCE') {
       this._resetResourceSearchParams(form.request.params);
       form.request.params = this.handleRequestParams();
-    }    
+
+    } else if(this.paramType == 'DIY') {
+      form.request.params = this.handleDiyRequestParams(form.request.params);
+    }
   },
 
   /**
