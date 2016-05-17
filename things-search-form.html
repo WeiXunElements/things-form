@@ -177,7 +177,7 @@
 
       // 마지막 Div가 홀수이고 textarea가 아니면 empty 열 추가
       if(rowDiv && rowDiv.childNodes && rowDiv.childNodes.length == 1) {
-        if(rowDiv.childNodes[0].localName != 'textarea') {
+        if(rowDiv.childNodes[0].localName.indexOf('textarea') < 0) {
           var emptyElement = this._createFormElement({ type: 'empty' });
           rowDiv.appendChild(emptyElement);
         }
