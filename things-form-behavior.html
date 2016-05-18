@@ -244,6 +244,8 @@ Things.FormBehaviorImpl = {
 				newElement.setAttribute('label', element.label);
 				newElement.setAttribute('resource-type', element.userObj.resourceType);
 				newElement.setAttribute('resource-url', element.userObj.resourceUrl);
+				newElement.setAttribute('submit-name', element.userObj.submitName);
+				
 				if(element.userObj.readOnly && element.userObj.readOnly === true) {
 					newElement.setAttribute('read-only', element.userObj.readOnly);
 				}
