@@ -130,8 +130,13 @@ things-resource로 부터 위와 같은 형식의 form-fields meta data를 조�
 				display: block;
 				box-sizing: border-box;
 				@apply(--things-default-padding);
+				@apply(--layout-vertical);
+				@apply(--layout-flex);
 			}
-			things-button::shadow paper-button{
+			form {
+				@apply(--layout-flex);
+			}
+			things-button::shadow paper-button {
 				@apply(--things-button-important);
 			}
 		</style>
@@ -146,9 +151,9 @@ things-resource로 부터 위와 같은 형식의 form-fields meta data를 조�
 					last-response="{{lastResponse}}">
 			<div id="fields" class="layout vertical flex"></div>
 		</form>
-		<paper-toolbar justify="end"><!-- 우측정렬 -->
-			<!-- span class="title">[[title]]</span> -->
-			<things-button color='green' id='save-btn' on-tap='submitMyForm'>
+
+		<paper-toolbar justify="end">
+			<things-button id='save-btn' on-tap='submitMyForm'>
 				<things-i18n-msg msgid="button.save">
 					<things-i18n-msg msgid="button.save">Save</things-i18n-msg>
 				</things-i18n-msg>
@@ -225,15 +230,29 @@ things-resource로 부터 위와 같은 형식의 form-fields meta data를 조�
 					var newElement = this._createFormElement(field);
 					if(!newElement) continue;
 
-					var newDivFlag = (field.type == 'textarea' || rowDiv == null || !rowDiv.childNodes || rowDiv.childNodes.length % 2 == 0) ? true : false;
-					if(newDivFlag) {
+					if(field.type == 'textarea') {
+						// 이전 rowDiv가 홀수 개이고 textarea가 아니라면 empty 엘리먼트 추가
+						if(rowDiv && rowDiv.childNodes && rowDiv.childNodes.length % 2 != 0 && rowDiv.childNodes[0].localName.indexOf('textarea') < 0) {
+							rowDiv.appendChild(this._createFormElement({ type: 'empty' }));
+						}
+
 						rowDiv = this._createElementContainer(divContainer, newElement);
+
 					} else {
-						rowDiv.appendChild(newElement);	
+						if(rowDiv == null || !rowDiv.childNodes || rowDiv.childNodes.length % 2 == 0) {
+							rowDiv = this._createElementContainer(divContainer, newElement);
+						} else {
+							// rowDiv의 마지막 엘리먼트가 textarea 이면 rowDiv에 empty 엘리먼트 추가
+							if(rowDiv.childNodes[0].localName.indexOf('textarea') >= 0) {
+								rowDiv = this._createElementContainer(divContainer, newElement);
+							} else {
+								rowDiv.appendChild(newElement);
+							}
+						}
 					}
 				}
 
-				// 2. 마지막 Div가 홀수이고 textarea가 아니면 empty 열 추가
+				// 2. 마지막 Div가 홀수이고 textarea가 아니면 empty 엘리먼트 추가
 				if(rowDiv && rowDiv.childNodes && rowDiv.childNodes.length == 1) {
 					if(rowDiv.childNodes[0].localName.indexOf('textarea') < 0) {
 						var emptyElement = this._createFormElement({ type: 'empty' });
