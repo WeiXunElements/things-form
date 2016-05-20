@@ -279,6 +279,10 @@ Things.FormBehaviorImpl = {
 
 				// Resource Form일 경우에만 Validation은 의미가 있고 Search Form일 경우는 의미없다.
 				if(!element.searchForm && element.userObj) {
+					if(element.userObj.validator) {
+						newElement.setAttribute('validator', element.userObj.validator);
+					}
+
 					if(element.userObj.required) {
 						newElement.setAttribute('required', true);
 						newElement.setAttribute('error-message', 'This field has to be filled')
@@ -295,10 +299,10 @@ Things.FormBehaviorImpl = {
 							newElement.setAttribute('type', 'number');
 							newElement.setAttribute('min', 0);
 
-						} else if (element.userObj.type == 'string' || element.userObj.type == 'text') {
+						} else if(element.userObj.type == 'string' || element.userObj.type == 'text') {
 							newElement.setAttribute('type', 'text');
 
-						} else if (element.userObj.type == 'password') {
+						} else if(element.userObj.type == 'password') {
 							newElement.setAttribute('type', 'password');
 						}
 					}
