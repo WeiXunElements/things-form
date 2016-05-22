@@ -234,6 +234,7 @@ Things.FormBehaviorImpl = {
 				newElement = document.createElement('things-resource-selector');
 				newElement.setAttribute('name', element.name);
 				newElement.setAttribute('label', element.label);
+				newElement.setAttribute('selector-type', element.userObj.selectorType);
 				newElement.setAttribute('resource-type', element.userObj.resourceType);
 				newElement.setAttribute('resource-url', element.userObj.resourceUrl);
 				break;
@@ -242,6 +243,7 @@ Things.FormBehaviorImpl = {
 				newElement = document.createElement('things-resource-field');
 				newElement.setAttribute('name', element.name);
 				newElement.setAttribute('label', element.label);
+				newElement.setAttribute('selector-type', element.userObj.selectorType);
 				newElement.setAttribute('resource-type', element.userObj.resourceType);
 				newElement.setAttribute('resource-url', element.userObj.resourceUrl);
 				newElement.setAttribute('submit-name', element.userObj.submitName);
