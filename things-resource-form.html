@@ -317,7 +317,7 @@ things-resource로 부터 위와 같은 형식의 form-fields meta data를 조�
 			 */
 			submitMyForm: function(e) {
 				this.startSpinner();
-				if(this.validationCheck) {
+				if(this.validationCheck()) {
 					this.saveResource();
 				}
 			},
