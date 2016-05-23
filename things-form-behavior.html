@@ -234,23 +234,28 @@ Things.FormBehaviorImpl = {
 				newElement = document.createElement('things-resource-selector');
 				newElement.setAttribute('name', element.name);
 				newElement.setAttribute('label', element.label);
-				newElement.setAttribute('selector-type', element.userObj.selectorType);
 				newElement.setAttribute('resource-type', element.userObj.resourceType);
-				newElement.setAttribute('resource-url', element.userObj.resourceUrl);
+				newElement.setAttribute('resource-name', element.userObj.resourceName);
+				
+				if(element.userObj.initialParams)
+					newElement.setAttribute('initial-params', element.userObj.initialParams);
+
 				break;
 
 			case 'resource-field':
 				newElement = document.createElement('things-resource-field');
 				newElement.setAttribute('name', element.name);
 				newElement.setAttribute('label', element.label);
-				newElement.setAttribute('selector-type', element.userObj.selectorType);
 				newElement.setAttribute('resource-type', element.userObj.resourceType);
-				newElement.setAttribute('resource-url', element.userObj.resourceUrl);
+				newElement.setAttribute('resource-name', element.userObj.resourceName);
 				newElement.setAttribute('submit-name', element.userObj.submitName);
 				
-				if(element.userObj.readOnly && element.userObj.readOnly === true) {
+				if(element.userObj.initialParams)
+					newElement.setAttribute('initial-params', element.userObj.initialParams);
+
+				if(element.userObj.readOnly && element.userObj.readOnly === true)
 					newElement.setAttribute('read-only', element.userObj.readOnly);
-				}
+				
 				break;
 
 			case 'date-picker':
@@ -359,7 +364,36 @@ Things.FormBehaviorImpl = {
 	 */
 	serializeMyForm: function() {
 		return this.getMyForm().serialize();
-	}
+	},
+
+	/**
+	 * 폼 내 모든 엘리먼트를 리턴한다.
+	 */
+	getFormElements: function() {
+		// 여기서는 Form 내부 구조를 모르기 때문에 실제 상위 Form에서 구현
+		return null;
+	},
+
+	/**
+	 * Resource로 해당 Form elements에 각각 바인딩한다.
+	 *
+	 * @param {Object} resource
+	 */
+	setFormData: function(resource) {
+		var elements = this.getFormElements();
+
+		for(var i = 0 ; i < elements.length ; i++) {
+			var element = elements[i];
+			var val = resource ? resource[element.name] : null;
+			if(!val) continue;
+
+			if(element.nodeName == 'THINGS-STAMP') {
+				element.resource = resource;
+			} else {
+				element.value = val;
+			}
+		}
+	}	
 
 };
 

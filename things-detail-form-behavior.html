@@ -120,37 +120,8 @@ Things.DetailFormBehavior = {
 	 */
 	_resourceChanged: function(resource) {
 		this.reconfigureMyForm();
-		var formElements = this.getFormElements();
-		this._bindElementData(formElements, resource);
+		this.setFormData(resource);
 		this.resourceId = resource.id;
-	},
-
-	/**
-	 * Resource로 elements에 각각 바인딩한다.
-	 *
-	 * @param {Array} elements
-	 * @param {Object} resource
-	 */
-	_bindElementData: function(elements, resource) {
-		for(var i = 0 ; i < elements.length ; i++) {
-			var element = elements[i];
-			var val = resource ? resource[element.name] : null;
-
-			if(element.nodeName == 'THINGS-TRISTATE-CHECKBOX') {
-				if(val === true)
-					element.state = 'on';
-				else if(val === false)
-					element.state = 'off';
-				else
-					element.state = null;
-
-			} else if(element.nodeName == 'THINGS-STAMP') {
-				element.resource = resource;
-
-			} else {
-				element.value = val;
-			}
-		}
 	},
 
 	/**
