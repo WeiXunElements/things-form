@@ -317,8 +317,26 @@ things-resource로 부터 위와 같은 형식의 form-fields meta data를 조�
 			 */
 			submitMyForm: function(e) {
 				this.startSpinner();
-				this.saveResource();
+				if(this.validationCheck) {
+					this.saveResource();
+				}
 			},
+
+			/**
+			 * validation check before save
+			 * 필드들의 isValid 속성을 통해 valdation 체크를 수행 합니다.
+			 */
+			validationCheck: function() {
+				for(var i = 0; i < this.$.fields.childNodes.length; i++) {
+					for(var j = 0; j < this.$.fields.childNodes[i].childNodes.length; j++) {
+						if(this.$.fields.childNodes[i].childNodes[j].isValid == false) {
+							this.openInfoMsg({ title : 'Invalid Input!', text : 'Please Type Proper Input.', type : 'info', timer : 5000 });
+							return false;
+						}
+					}
+				}
+				return true;
+			},	
 
 			/**
 			 * Successful response handler After form submits.
