@@ -236,6 +236,9 @@ Things.FormBehaviorImpl = {
 				newElement.setAttribute('label', element.label);
 				newElement.setAttribute('resource-type', element.userObj.resourceType);
 				newElement.setAttribute('resource-name', element.userObj.resourceName);
+
+				if(element.userObj.bindFields)
+					newElement.setAttribute('bind-fields', element.userObj.bindFields);
 				
 				if(element.userObj.initialParams)
 					newElement.setAttribute('initial-params', element.userObj.initialParams);
@@ -250,6 +253,9 @@ Things.FormBehaviorImpl = {
 				newElement.setAttribute('resource-name', element.userObj.resourceName);
 				newElement.setAttribute('submit-name', element.userObj.submitName);
 				
+				if(element.userObj.bindFields)
+					newElement.setAttribute('bind-fields', element.userObj.bindFields);
+									
 				if(element.userObj.initialParams)
 					newElement.setAttribute('initial-params', element.userObj.initialParams);
 
