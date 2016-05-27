@@ -66,7 +66,7 @@
     <style>
       :host {
         display: block;
-        background-color:var(--things-lightgrey-background-color);
+        background-color:var(--things-whitegrey-background-color);
       }
       paper-toolbar{
         background-color:var(--things-primary-background-color);
@@ -75,12 +75,13 @@
       paper-toolbar::shadow #topBar{
         height:45px;
       }
-      paper-toolbar::shadow .title{
+      paper-toolbar .title{
         margin-left:32px !important;
+        line-height:initial !important;
       }
       form{
         @apply(--things-default-padding);
-        padding-bottom:0;
+        padding-bottom:5px;
         border-bottom:1px solid rgba(0,0,0,.1);
       }
       paper-fab{
