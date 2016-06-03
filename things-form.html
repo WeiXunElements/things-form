@@ -35,93 +35,14 @@
 <link rel="import" href="../things-spinner/things-spinner-behavior.html">
 
 <link rel="import" href="./things-form-behavior.html">
-<link rel="import" href="./things-detail-form-behavior.html">
 
 <!--
-Resource Form Element. 
-
-설정한 form-fields를 바탕으로 리소스 폼을 생성해주고 설정한 resource-url로 데이터를 조회/수정한다.
-
-form-fields는 Form의 child element들을 구성하기 위한 meta data이고 field 명, 표시를 위한 label, element(view) type 그리고 element view가 추가로 필요한 attribute로 구성된다. form-fields는 다음과 같은 형식으로 설정하거나 서버로 부터 조회한다.
-
-	Form Fields Example:
-
-		[ {
-		  "name" : "id",
-		  "label" : "ID",
-		  "type" : "number"
-		}, {
-		  "name" : "name",
-		  "label" : "Name",
-		  "type" : "text"
-		}, {
-		  "name" : "display",
-		  "label" : "Display",
-		  "type" : "text"
-		}, {
-		  "name" : "description",
-		  "label" : "Description",
-		  "type" : "text"
-		}, {
-		  "name" : "locale",
-		  "label" : "Locale",
-		  "type" : "code-combo",
-		  "codeName" : "LOCALE"
-		}, {
-		  "name" : "category",
-		  "label" : "Category",
-		  "type" : "code-combo",
-		  "codeName" : "TERMS_CATEGORY"
-		}, {
-		  "name" : "creator_id",
-		  "label" : "Created By",
-		  "type" : "text"
-		}, {
-		  "name" : "updater_id",
-		  "label" : "Updated By",
-		  "type" : "text"
-		}, {
-		  "name" : "created_at",
-		  "label" : "Created At",
-		  "type" : "text"
-		}, {
-		  "name" : "updated_at",
-		  "label" : "Updated At",
-		  "type" : "text"
-		} ]
-
-아래 Example은 서버로 부터 form-fields meta data를 조회해서 동적으로 리소스 폼을 구성하는 샘플이다.
-things-resource로 부터 위와 같은 형식의 form-fields meta data를 조회하여 things-resource-form으로 바인딩한다.
-
-폼 데이터를 조회할 때는 url : terminologies/:id, method : get 으로,
-폼 데이터를 업데이트할 때는  url : terminologies/:id, method : put 으로 한다.
-업데이트 후에는 last-response로 결과를 얻을 수 있다.
-
-폼이 오픈될 때 things-resource-form-opened 이벤트가 발생하고 
-조회 things-resource-form-read 이벤트가, 업데이트 성공시 things-resource-form-saved 에러 발생시 things-resource-form-error가 발생되므로 성공/실패시 custom action을 구성할 수 있다.
-
-	Resource Form Example:
-
-    <things-ajax 
-      auto
-      method="GET"
-      resource-url="diy_services/ElidomResourceFormFields/query.json" 
-      last-response="{{formFields}}">
-    </things-ajax>
-
-    <things-resource-form 
-      id="resource-form"
-      title="Item Detail"
-      form-fields="[[formFields]]" 
-      resource-url="terminologies/:id"
-      last-response="{{lastResponse}}">
-    </things-resource-form>
-
-
-@demo demo/index.html
+	메타 데이터 FormFields 및 Buttons를 받아서 그 정보로 폼과 버튼을 구성한다.
+	그 이후 해당 폼에 대한 폼 데이터(Resource)를 받아서 화면에 바인딩한다.
+	이 후 버튼별 액션은 이벤트만 던지고 things-form을 사용한 곳에서 이벤트를 받아 액션을 처리한다.
 -->
 
-<dom-module id="things-resource-form">
+<dom-module id="things-form">
 
 	<template>
 		<style is="custom-style" include="iron-flex iron-flex-alignment"></style>
@@ -150,7 +71,7 @@ things-resource로 부터 위와 같은 형식의 form-fields meta data를 조�
 		</style>
 
 		<form is="iron-form" 
-					id="resource-form" 
+					id="form" 
 					action=[[action]]
 					headers="[[headers]]"
 					content-type="[[contentType]]"
@@ -170,7 +91,7 @@ things-resource로 부터 위와 같은 형식의 form-fields meta data를 조�
 	<script>
 		Polymer({
 
-			is: 'things-resource-form',
+			is: 'things-form',
 
 			properties: {
 				/**
@@ -181,34 +102,60 @@ things-resource로 부터 위와 같은 형식의 form-fields meta data를 조�
 				},
 
 				/**
+				 * 구성하고자 하는 폼의 컬럼 개수 
+				 */
+				columnCount: {
+					type: Number,
+					value: 2
+				},
+
+				/**
+				 * 폼 리소스
+				 */
+				resource: {
+					type: Object
+				},
+
+				/**
+				 * 폼 리소스 아이디
+				 */
+				resourceId: {
+					type: String
+				},
+
+				/**
 				 * 폼 버튼 
 				 */
 				buttons: {
 					type: Array,
 					value: function() {
-						return [ {
-							id: 'save-btn',
-							text: 'save'
-						} ];
+						return [];
 					}
 				}
 			},
 
 			behaviors: [
 				Things.FormBehavior,
-				Things.DetailFormBehavior,
 				Things.SpinnerBehavior,
 				Things.MsgBoxBehavior
 			],
 
 			listeners : {
-				'save-btn-tap' : 'submitMyForm',
 				'iron-form-response' :'_successResponseHandler',
-				'iron-form-error' : '_errorResponseHandler',
-				'things-detail-form-read-success' : '_successResponseHandler',
-				'things-detail-form-read-error' : '_errorResponseHandler',			
-				'things-detail-form-save-success' : '_successResponseHandler',
-				'things-detail-form-save-error' : '_errorResponseHandler'
+				'iron-form-error' : '_errorResponseHandler'
+			},
+
+			/**
+			* Resource가 변경될 때 
+			*
+			* @param {Object} 리소스 
+			*/
+			_resourceChanged: function(resource) {
+				this.resourceId = resource.id;
+
+				if(!this.reconfigureMyForm()) {
+					this.setFormData(resource);
+				}
 			},
 
 			/**
@@ -223,7 +170,7 @@ things-resource로 부터 위와 같은 형식의 form-fields meta data를 조�
 			 * 리소스 폼 화면을 구성. formFields 정보로 동적으로 폼 하위 엘리먼트를 생성하여 폼을 구성한다. 
 			 */
 			reconfigureMyForm: function() {
-				if(this.isFormConfigured() || !this.formFields || this.formFields.length == 0) return;
+				if(this.isFormConfigured() || !this.formFields || this.formFields.length == 0) return false;
 				var divContainer = this.$.fields, rowDiv = null, hiddenFields = [], stampExist = false;
 
 				// 1. Resource Form 구성 - hidden이 아니고 stamp 관련 필드가 아닌 엘리먼트 추가 
@@ -234,25 +181,20 @@ things-resource로 부터 위와 같은 형식의 form-fields meta data를 조�
 						hiddenFields.push(field);
 						continue
 					};
-
-					if(this.stampFields.includes(field.name)) {
-						stampExist = true;
-						continue;
-					}
 					
 					var newElement = this._createFormElement(field);
 					if(!newElement) continue;
 
 					if(field.type == 'textarea') {
 						// 이전 rowDiv가 홀수 개이고 textarea가 아니라면 empty 엘리먼트 추가
-						if(rowDiv && rowDiv.childNodes && rowDiv.childNodes.length % 2 != 0 && rowDiv.childNodes[0].localName.indexOf('textarea') < 0) {
+						if(rowDiv && rowDiv.childNodes && (rowDiv.childNodes.length % this.columnCount != 0) && rowDiv.childNodes[0].localName.indexOf('textarea') < 0) {
 							rowDiv.appendChild(this._createFormElement({ type: 'empty' }));
 						}
 
 						rowDiv = this._createElementContainer(divContainer, newElement);
 
 					} else {
-						if(rowDiv == null || !rowDiv.childNodes || rowDiv.childNodes.length % 2 == 0) {
+						if(rowDiv == null || !rowDiv.childNodes || (rowDiv.childNodes.length % this.columnCount == 0)) {
 							rowDiv = this._createElementContainer(divContainer, newElement);
 						} else {
 							// rowDiv의 마지막 엘리먼트가 textarea 이면 rowDiv에 empty 엘리먼트 추가
@@ -266,7 +208,7 @@ things-resource로 부터 위와 같은 형식의 form-fields meta data를 조�
 				}
 
 				// 2. 마지막 Div가 홀수이고 textarea가 아니면 empty 엘리먼트 추가
-				if(rowDiv && rowDiv.childNodes && rowDiv.childNodes.length == 1) {
+				if(rowDiv && rowDiv.childNodes && (rowDiv.childNodes.length % this.columnCount) != 0) {
 					if(rowDiv.childNodes[0].localName.indexOf('textarea') < 0) {
 						var emptyElement = this._createFormElement({ type: 'empty' });
 						rowDiv.appendChild(emptyElement);
@@ -287,8 +229,14 @@ things-resource로 부터 위와 같은 형식의 form-fields meta data를 조�
 					}
 				}
 
+				// 폼 데이터 셋업
+				if(this.resource) {
+					this.setFormData(this.resource);
+				}
+
 				// 5. Resource Form 구성 완료 이벤트
-				this.fire('things-resource-form-configured', this.formFields);
+				this.fire('things-form-configured', this.formFields);
+				return true;
 			},
 
 			/**
@@ -324,14 +272,14 @@ things-resource로 부터 위와 같은 형식의 form-fields meta data를 조�
 			},
 
 			/**
-			 * Save Form
+			 * Submit Form
 			 *
 			 * @param {Object} e 버튼 클릭 이벤트 
 			 */
 			submitMyForm: function(e) {
 				this.startSpinner();
 				if(this.validationCheck()) {
-					this.saveResource();
+					this.$.form.submit();
 				}
 			},
 
@@ -348,7 +296,7 @@ things-resource로 부터 위와 같은 형식의 form-fields meta data를 조�
 						}
 					}
 				}
-				
+
 				return true;
 			},	
 
@@ -387,35 +335,7 @@ things-resource로 부터 위와 같은 형식의 form-fields meta data를 조�
 				}
 
 				this.handleErrorResponse(response);
-			},
-
-			/***************************************************************************************
-			*                            Start detail item view interface
-			***************************************************************************************/
-
-			/**
-			* detail item view를 구성하기 위한 필수 함수 
-			* item view를 구성한다.
-			*
-			* @return {Object} resource 리소스 데이터 (Object) 혹은 리소스 아이디 (Number)
-			*/
-			loadDetailData: function(resource) {
-				this.resource = resource;
-			},
-
-			/**
-			* detail item view를 구성하기 위한 필수 함수 
-			* data로 부터 item view의 데이터를 직접 로딩한다. 외부에서 직접 데이터를 설정한다.
-			*
-			* @param {Object} resource
-			*/
-			loadDetailDataDirectly: function(resource) {
-				this.resource = resource;
 			}
-
-			/***************************************************************************************
-			*                            End detail item view interface
-			***************************************************************************************/
 
 		});
 	</script>
