@@ -145,6 +145,10 @@
 				'iron-form-error' : '_errorResponseHandler'
 			},
 
+			attached : function(){
+				this.$.toolbar.hidden = this.buttons&&this.buttons.length > 0 ? false : true;
+			},			
+
 			/**
 			* Resource가 변경될 때 
 			*
