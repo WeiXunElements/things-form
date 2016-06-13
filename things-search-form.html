@@ -167,18 +167,31 @@
         var newElement = this._createFormElement(field);
         if(!newElement) continue;
 
-        if((index % 2) == 0) {
-          rowDiv = document.createElement('div');
-          rowDiv.setAttribute('class', 'layout horizontal');
-          divContainer.appendChild(rowDiv);
-        }
+        if(field.type == 'date-from-to-picker') {
+          // 1. 이전 div가 1개이고 date-from-to 가 아니면 empty 열 추가
+          if(rowDiv && rowDiv.childNodes && (rowDiv.childNodes.length % 2 != 0) && rowDiv.childNodes[0].localName.indexOf('things-date-from-to') < 0) {
+            rowDiv.appendChild(this._createFormElement({ type: 'empty' }));
+          }
 
-        rowDiv.appendChild(newElement);          
+          rowDiv = this._createElementContainer(divContainer, newElement);
+
+        } else {
+          if(rowDiv == null || !rowDiv.childNodes || (rowDiv.childNodes.length % 2 == 0)) {
+            rowDiv = this._createElementContainer(divContainer, newElement);
+          } else {
+            // rowDiv의 마지막 엘리먼트가 textarea 이면 rowDiv에 empty 엘리먼트 추가
+            if(rowDiv.childNodes[0].localName.indexOf('things-date-from-to') >= 0) {
+              rowDiv = this._createElementContainer(divContainer, newElement);
+            } else {
+              rowDiv.appendChild(newElement);
+            }
+          }
+        }
       }
 
       // 마지막 Div가 홀수이고 textarea가 아니면 empty 열 추가
       if(rowDiv && rowDiv.childNodes && rowDiv.childNodes.length == 1) {
-        if(rowDiv.childNodes[0].localName.indexOf('textarea') < 0) {
+        if(rowDiv.childNodes[0].localName.indexOf('textarea') < 0 && rowDiv.childNodes[0].localName.indexOf('things-date-from-to') < 0) {
           var emptyElement = this._createFormElement({ type: 'empty' });
           rowDiv.appendChild(emptyElement);
         }
@@ -188,6 +201,20 @@
       this._bindInitialParams();
       this.active = true;
       this.fire('things-search-form-configured', this.formFields);      
+    },
+
+    /**
+     * Container element를 생성한 후 childElement를 추가한 후 divContainer에 추가한다.
+     *
+     * @param {Object} divContainer
+     * @param {Object} childElement
+     */
+    _createElementContainer: function(divContainer, childElement) {
+      rowDiv = document.createElement('div');
+      rowDiv.setAttribute('class', 'layout horizontal');
+      if(childElement) rowDiv.appendChild(childElement);
+      divContainer.appendChild(rowDiv);
+      return rowDiv;
     },
 
     /**
