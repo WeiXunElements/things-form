@@ -270,6 +270,12 @@ Things.FormBehaviorImpl = {
 				newElement.setAttribute('label', element.label);
 				break;
 
+			case 'date-from-to-picker':
+				newElement = document.createElement('things-date-from-to');
+				newElement.setAttribute('name', element.name);
+				newElement.setAttribute('label', element.label);
+				break;
+
 			case 'time-picker':
 				newElement = document.createElement('things-time-picker');
 				newElement.setAttribute('name', element.name);
