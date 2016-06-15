@@ -274,6 +274,9 @@ Things.FormBehaviorImpl = {
 				newElement = document.createElement('things-date-from-to');
 				newElement.setAttribute('name', element.name);
 				newElement.setAttribute('label', element.label);
+				newElement.setAttribute('selected-to-date', new Date("2016-06-01"));
+				newElement.setAttribute('allow-range', 7);
+				newElement.setAttribute('error-message', '검색 기간은 7일로 제한 됩니다.');
 				break;
 
 			case 'time-picker':
