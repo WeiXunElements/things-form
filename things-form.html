@@ -113,7 +113,8 @@
 				 * 폼 리소스
 				 */
 				resource: {
-					type: Object
+					type: Object,
+					observer: '_resourceChanged'
 				},
 
 				/**
@@ -157,9 +158,9 @@
 			_resourceChanged: function(resource) {
 				this.resourceId = resource.id;
 
-				if(!this.reconfigureMyForm()) {
+				// if(!this.reconfigureMyForm()) {
 					this.setFormData(resource);
-				}
+				// }
 			},
 
 			/**
