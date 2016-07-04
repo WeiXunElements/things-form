@@ -157,10 +157,8 @@
 			*/
 			_resourceChanged: function(resource) {
 				this.resourceId = resource.id;
-
-				// if(!this.reconfigureMyForm()) {
-					this.setFormData(resource);
-				// }
+				this.setFormData(null);
+				this.setFormData(resource);
 			},
 
 			/**
