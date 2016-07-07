@@ -241,8 +241,11 @@
      * Submit Form. 검색 실행 
      */
     submitMyForm: function() {
-      this.startSpinner();
-      this.getMyForm().submit();
+      var evt = this.fire('things-form-search', this.grid, { cancelable: true });
+      if(!evt.defaultPrevented) {
+        this.startSpinner();
+        this.getMyForm().submit();
+      }
     },
 
     /**
