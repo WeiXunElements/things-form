@@ -81,7 +81,7 @@
 			<div id="fields" class="layout vertical flex"></div>
 		</form>
 
-		<paper-toolbar id ="toolbar" justify='end'>
+		<paper-toolbar id="toolbar" justify='end'>
 			<div class="bottom">
 				<things-button-bar id="button-group" buttons="[[buttons]]"></things-button-bar>
 			</div>
@@ -146,9 +146,9 @@
 				'iron-form-error' : '_errorResponseHandler'
 			},
 
-			attached : function(){
-				this.$.toolbar.hidden = this.buttons&&this.buttons.length > 0 ? false : true;
-			},			
+			attached: function() {
+				this.$.toolbar.hidden = this.buttons && this.buttons.length > 0 ? false : true;
+			},
 
 			/**
 			* Resource가 변경될 때 
@@ -280,9 +280,12 @@
 			 * @param {Object} e 버튼 클릭 이벤트 
 			 */
 			submitMyForm: function(e) {
-				this.startSpinner();
-				if(this.validationCheck()) {
-					this.$.form.submit();
+				var evt = this.fire('things-form-submit', this.grid, { cancelable: true });
+				if(!evt.defaultPrevented) {
+					this.startSpinner();
+					if(this.validationCheck()) {
+						this.$.form.submit();
+					}
 				}
 			},
 
@@ -301,7 +304,7 @@
 				}
 
 				return true;
-			},	
+			},
 
 			/**
 			 * Successful response handler After form submits.

@@ -160,7 +160,7 @@ things-resource로 부터 위와 같은 형식의 form-fields meta data를 조�
 			<div id="fields" class="layout vertical flex"></div>
 		</form>
 
-		<paper-toolbar justify='end'>
+		<paper-toolbar id="toolbar" justify='end'>
 			<div class="bottom">
 				<things-button-bar id="button-group" buttons="[[buttons]]"></things-button-bar>
 			</div>
@@ -209,6 +209,10 @@ things-resource로 부터 위와 같은 형식의 form-fields meta data를 조�
 				'things-detail-form-read-error' : '_errorResponseHandler',			
 				'things-detail-form-save-success' : '_successResponseHandler',
 				'things-detail-form-save-error' : '_errorResponseHandler'
+			},
+
+			attached: function() {
+				this.$.toolbar.hidden = this.buttons && this.buttons.length > 0 ? false : true;
 			},
 
 			/**
@@ -329,9 +333,12 @@ things-resource로 부터 위와 같은 형식의 form-fields meta data를 조�
 			 * @param {Object} e 버튼 클릭 이벤트 
 			 */
 			submitMyForm: function(e) {
-				this.startSpinner();
-				if(this.validationCheck()) {
-					this.saveResource();
+				var evt = this.fire('things-resource-form-submit', this.grid, { cancelable: true });
+				if(!evt.defaultPrevented) {
+					this.startSpinner();
+					if(this.validationCheck()) {
+						this.saveResource();
+					}
 				}
 			},
 
@@ -360,7 +367,6 @@ things-resource로 부터 위와 같은 형식의 form-fields meta data를 조�
 			 */
 			_successResponseHandler: function(event) {
 				this.stopSpinner();
-
 				var method = typeof(event.detail === 'string') ? event.detail : event.srcElement.method.toUpperCase();
 				this.handleSuccessResponse(method);
 			},
