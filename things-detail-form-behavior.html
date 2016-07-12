@@ -153,14 +153,14 @@ Things.DetailFormBehavior = {
     // 1. 저장 전에 Save Ajax URL 핸들링 이벤트 
     var urlEvent = this.fire('things-form-handle-url-before-save', saveAjax, { cancelable: true });
     if(!urlEvent.defaultPrevented) {
-      if(this.resourceUrl.indexOf('/:id') >= 0) {
-        saveAjax.resourceUrl = this.resourceUrl;  
-      } else {
-        saveAjax.resourceUrl = this.resourceUrl + '/:id';
-      }
-
-      saveAjax.resourceId = this.resource.id;
       saveAjax.resourceAction = this.resource.id ? 'update' : 'create';
+
+      if(saveAjax.resourceAction == 'create') {
+        saveAjax.resourceUrl = this.resourceUrl.replace('/:id', '');
+      } else {
+        saveAjax.resourceId = this.resource.id;
+        saveAjax.resourceUrl = (this.resourceUrl.indexOf('/:id') >= 0) ? this.resourceUrl : this.resourceUrl + '/:id';
+      }
     }
 
     // 2. 저장 전에 Parameter 핸들링 이벤트 
