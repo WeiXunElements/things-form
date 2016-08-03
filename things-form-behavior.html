@@ -218,7 +218,8 @@ Things.FormBehaviorImpl = {
 
 			case 'textarea':
 				newElement = document.createElement('things-textarea');
-				newElement = this._bindAttributes(newElement, element)
+				newElement = this._bindAttributes(newElement, element);
+				newElement.rows = 4;
 				break;
 
 			case 'code-combo':
