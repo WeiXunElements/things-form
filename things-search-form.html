@@ -24,6 +24,7 @@
 <link rel="import" href="../things-resource-selector/things-resource-field.html">
 <link rel="import" href="../things-stamp/things-stamp.html">
 <link rel="import" href="../things-tristate-checkbox/things-tristate-checkbox.html">
+<link rel="import" href="../things-alarm/things-alarm-badge.html">
 
 <link rel="import" href="../things-fullscreen/things-fullscreen-behavior.html">
 <link rel="import" href="../things-msg-box-behavior/things-msg-box-behavior.html">
@@ -98,6 +99,7 @@
         <span class="title">[[title]]</span>
         <!--paper-icon-button icon="search" id="search-btn" on-tap="_onSearchFormTap"></paper-icon-button>
         <paper-icon-button icon="refresh" id="reset-btn" on-tap="resetMyForm"></paper-icon-button-->
+        <things-alarm-badge></things-alarm-badge>
         <button id="fullscreen-btn" on-tap="toggleFullscreen">
         </button>
         <paper-tooltip for="fullscreen-btn" offset="0">

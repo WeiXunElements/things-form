@@ -1,6 +1,6 @@
 {
   "name": "things-form",
-  "version": "0.1.52",
+  "version": "0.1.53",
   "authors": [
     "Hatio Lab. <heartyoh@hatiolab.com>"
   ],
@@ -46,7 +46,8 @@
     "things-tristate-checkbox": "ThingsElements/things-tristate-checkbox",
     "things-fullscreen": "ThingsElements/things-fullscreen",
     "things-ajax": "ThingsElements/things-ajax",
-    "things-input-field": "ThingsElements/things-input-field"
+    "things-input-field": "ThingsElements/things-input-field",
+    "things-alarm": "ThingsElements/things-alarm"
   },
   "devDependencies": {
     "iron-component-page": "PolymerElements/iron-component-page#^1.0.0",
