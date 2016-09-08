@@ -410,8 +410,10 @@ Things.FormBehaviorImpl = {
 			var element = elements[i];
 			var val = resource ? resource[element.name] : null;
 
-			if(element.nodeName == 'THINGS-STAMP') {
+			if(element.localName == 'things-stamp') {
 				element.resource = resource;
+			} else if(element.localName == 'things-resource-selector') {
+				element.objValue = val;
 			} else {
 				element.value = val;
 			}
