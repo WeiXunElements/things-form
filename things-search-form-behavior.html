@@ -47,7 +47,7 @@ Things.SearchFormBehaviorImpl = {
      */
     nonValueOpers: {
       type: Array,
-      value: ['is_null', 'is_not_null', 'is_true', 'is_false', 'is_present', 'is_blank']
+      value: ['is_null', 'is_not_null', 'is_true', 'is_not_true', 'is_false', 'is_not_false', 'is_present', 'is_blank']
     },
 
     /**
@@ -125,19 +125,16 @@ Things.SearchFormBehaviorImpl = {
     if(!params) return;
 
     for(prop in params) {
-      if(params[prop] && params[prop] != '') {
         var fieldModels = this.formFields.filter(function(formField) { return formField.name == prop });
 
         if (fieldModels && fieldModels.length > 0) {
           var fieldModel = fieldModels[0];
-          var query = { name : prop, operator : fieldModel.op };
-          if(!this.nonValueOpers.includes(fieldModel.op)) {
-            query.value = params[prop];
-          }
+          var operator = fieldModel.op;
 
-          this.queryFields.push(query);
+          if(params[prop] || this.nonValueOpers.includes(operator)) {
+            this.queryFields.push({ name : prop, operator : operator, value : params[prop] });
+          }
         }
-      }
     }
   },
 
