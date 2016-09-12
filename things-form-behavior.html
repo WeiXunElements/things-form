@@ -254,12 +254,12 @@ Things.FormBehaviorImpl = {
 				break;
 
 			case 'resource-name-selector':
-				newElement = document.createElement('things-resource-name-selector');
+				newElement = document.createElement('things-resource-format-selector');
 				newElement.setAttribute('name', element.name);
 				newElement.setAttribute('label', element.label);
 				newElement.setAttribute('resource-type', element.userObj.resourceType);
 				newElement.setAttribute('resource-name', element.userObj.resourceName);
-				newElement.setAttribute('value-prop', element.userObj.formFormat)
+				newElement.setAttribute('value-field', element.userObj.formFormat)
 
 				break;
 
