@@ -11,7 +11,6 @@
 <link rel="import" href="../paper-material/paper-material.html">
 <link rel="import" href="../paper-radio-group/paper-radio-group.html">
 <link rel="import" href="../paper-radio-button/paper-radio-button.html">
-<link rel="import" href="../paper-toolbar/paper-toolbar.html">
 <link rel="import" href="../paper-tooltip/paper-tooltip.html">
 
 <link rel="import" href="../things-button/things-button.html">
@@ -26,7 +25,6 @@
 <link rel="import" href="../things-tristate-checkbox/things-tristate-checkbox.html">
 <link rel="import" href="../things-alarm/things-alarm-badge.html">
 
-<link rel="import" href="../things-fullscreen/things-fullscreen-behavior.html">
 <link rel="import" href="../things-msg-box-behavior/things-msg-box-behavior.html">
 <link rel="import" href="../things-spinner/things-spinner-behavior.html">
 
@@ -48,7 +46,6 @@
     <things-search-form 
       id="search-form"
       class="flex"
-      title="Sample Title"
       form-fields="[[formFields]]" 
       action-url="diy_services/DynamicScreen/query.json" 
       page="{{page}}"
@@ -69,45 +66,18 @@
         display: block;
         background-color:var(--things-whitegrey-background-color);
       }
-      paper-toolbar{
-        background-color:var(--things-primary-background-color);
-        height:45px;
-      }
-      paper-toolbar::shadow #topBar{
-        height:45px;
-      }
-      paper-toolbar .title{
-        margin-left:32px !important;
-        line-height:initial !important;
-      }
-      form{
+      form {
         @apply(--things-default-padding);
         padding-bottom:5px;
         border-bottom:1px solid rgba(0,0,0,.1);
       }
-      paper-fab{
+      paper-fab {
         @apply(--things-search-fab);
-      }
-      #fullscreen-btn{
-        @apply(--things-header-button);
-        background:url(/images/icon-fullscreen.png) 100% 50% no-repeat;
       }
     </style>
 
     <paper-material elevation="0" class="flex" on-keypress="handleKeyPress">
-      <paper-toolbar>
-        <span class="title">[[title]]</span>
-        <!--paper-icon-button icon="search" id="search-btn" on-tap="_onSearchFormTap"></paper-icon-button>
-        <paper-icon-button icon="refresh" id="reset-btn" on-tap="resetMyForm"></paper-icon-button-->
-        <things-alarm-badge></things-alarm-badge>
-        <button id="fullscreen-btn" on-tap="toggleFullscreen">
-        </button>
-        <paper-tooltip for="fullscreen-btn" offset="0">
-          <things-i18n-msg msgid="button.fullscreen">Full Screen</things-i18n-msg>
-        </paper-tooltip>
-      </paper-toolbar>
-
-      <div class="layout vertical flex">
+      <!--div class="layout vertical flex"-->
         <form is="iron-form"
               action="[[action]]"
               content-type="[[contentType]]"
@@ -116,7 +86,7 @@
           <div id="fields" class="layout vertical flex"></div>
           <paper-fab icon="search" title="search" on-tap="_onSearchFormTap"></paper-fab>
         </form>
-      </div>
+      <!--/div-->
     </paper-material>
   </template>
 
@@ -144,7 +114,6 @@
     behaviors: [ 
       Things.FormBehavior,
       Things.SearchFormBehavior,
-      Things.FullscreenBehavior,
       Things.SpinnerBehavior,
       Things.MsgBoxBehavior
     ],
