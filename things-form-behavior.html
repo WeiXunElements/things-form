@@ -238,6 +238,15 @@ Things.FormBehaviorImpl = {
 				newElement.setAttribute('value-path', 'name');
 				break;
 
+			case 'resource-combo':
+				newElement = document.createElement('things-resource-combo');
+				newElement.setAttribute('name', element.name);
+				newElement.setAttribute('label', element.label);
+				newElement.setAttribute('resource-name', element.userObj.resourceName);
+				newElement.setAttribute('resource-type', element.userObj.resourceType);
+
+				break;
+
 			case 'resource-selector':
 				newElement = document.createElement('things-resource-selector');
 				newElement.setAttribute('name', element.name);
@@ -253,7 +262,7 @@ Things.FormBehaviorImpl = {
 
 				break;
 
-			case 'resource-name-selector':
+			case 'resource-format-selector':
 				newElement = document.createElement('things-resource-format-selector');
 				newElement.setAttribute('name', element.name);
 				newElement.setAttribute('label', element.label);
