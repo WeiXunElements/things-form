@@ -369,6 +369,8 @@ Things.FormBehaviorImpl = {
 
 		if(!newElement) return null;
 		
+		this.setFieldData(newElement, element.default);
+
 		newElement.setAttribute('class', 'flex style-scope things-form');
 		return newElement;
 	},
@@ -425,18 +427,26 @@ Things.FormBehaviorImpl = {
 	 */
 	setFormData: function(resource) {
 		var elements = this.getFormElements();
-
+ 
 		for(var i = 0 ; i < elements.length ; i++) {
 			var element = elements[i];
 			var val = resource ? resource[element.name] : null;
+			this.setFieldData(element, val);
+		}
+	},
 
-			if(element.localName == 'things-stamp') {
-				element.resource = resource;
-			} else if(element.localName == 'things-resource-selector') {
-				element.objValue = val;
-			} else {
-				element.value = val;
-			}
+	/**
+	 * 폼 필드에 값 설정 
+	 *
+	 * @param {Object} resource
+	 */
+	setFieldData: function(element, value) {
+		if(element.localName == 'things-stamp') {
+			element.resource = resource;
+		} else if(element.localName == 'things-resource-selector') {
+			element.objValue = value;
+		} else {
+			element.value = value;
 		}
 	}	
 
