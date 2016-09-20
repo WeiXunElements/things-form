@@ -353,7 +353,7 @@ Things.FormBehaviorImpl = {
 					}
 
 					if(element.userObj.type) {
-						if(element.userObj.type == 'integer') {
+						if(element.userObj.type == 'integer' || element.userObj.type == 'decimal' || element.userObj.type == 'double' || element.userObj.type == 'float' || element.userObj.type == 'long') {
 							newElement.setAttribute('type', 'number');
 
 						} else if(element.userObj.type == 'string' || element.userObj.type == 'text') {
