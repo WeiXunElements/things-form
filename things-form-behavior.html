@@ -303,8 +303,8 @@ Things.FormBehaviorImpl = {
 				newElement.setAttribute('name', element.name);
 				newElement.setAttribute('label', element.label);
 				newElement.setAttribute('selected-to-date', new Date());
-				newElement.setAttribute('allow-range', 7);
-				newElement.setAttribute('error-message', '검색 기간은 7일로 제한 됩니다.');
+				newElement.setAttribute('allow-range', element.userObj.formFormat);
+				newElement.setAttribute('error-message', Things.DataGlobal.t('text.date_range_error') + ' : ' + element.userObj.formFormat);
 				break;
 
 			case 'time-picker':
@@ -335,7 +335,7 @@ Things.FormBehaviorImpl = {
 
 					if(element.userObj.required) {
 						newElement.setAttribute('required', true);
-						newElement.setAttribute('error-message', 'This field has to be filled')
+						newElement.setAttribute('error-message', Things.DataGlobal.t('text.required_error'));
 						newElement.setAttribute('auto-validate', true);
 					}
 
@@ -354,6 +354,15 @@ Things.FormBehaviorImpl = {
 
 						} else if(element.userObj.type == 'password') {
 							newElement.setAttribute('type', 'password');
+
+						} else if(element.userObj.type == 'email') {
+							newElement.setAttribute('validator', 'things-validator-email');
+							newElement.setAttribute('error-message', Things.DataGlobal.t('text.email_error'));
+							newElement.setAttribute('auto-validate', true);
+						} else if(element.userObj.type == 'url') {
+							newElement.setAttribute('validator', 'things-validator-url');
+							newElement.setAttribute('error-message', Things.DataGlobal.t('text.url_error'));
+							newElement.setAttribute('auto-validate', true);
 						}
 					}
 
