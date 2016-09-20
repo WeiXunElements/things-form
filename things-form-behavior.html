@@ -379,7 +379,6 @@ Things.FormBehaviorImpl = {
 		if(!newElement) return null;
 		
 		this.setFieldData(newElement, element.default);
-
 		newElement.setAttribute('class', 'flex style-scope things-form');
 		return newElement;
 	},
@@ -440,7 +439,12 @@ Things.FormBehaviorImpl = {
 		for(var i = 0 ; i < elements.length ; i++) {
 			var element = elements[i];
 			var val = resource ? resource[element.name] : null;
-			this.setFieldData(element, val);
+
+			if(element.localName == 'things-stamp') {
+				element.resource = resource;
+			} else {
+				this.setFieldData(element, val, resource);
+			}
 		}
 	},
 
@@ -450,15 +454,14 @@ Things.FormBehaviorImpl = {
 	 * @param {Object} resource
 	 */
 	setFieldData: function(element, value) {
-		if(element.localName == 'things-stamp') {
-			element.resource = resource;
+		if(value === undefined || element.localName == 'things-stamp') {
+			return;
 		} else if(element.localName == 'things-resource-selector') {
 			element.objValue = value;
 		} else {
 			element.value = value;
 		}
-	}	
-
+	}
 };
 
 Things.FormBehavior = [

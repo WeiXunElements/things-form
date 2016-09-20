@@ -362,8 +362,14 @@ things-resource로 부터 위와 같은 형식의 form-fields meta data를 조�
 			validationCheck: function() {
 				var formElements = this.getFormElements();
 				for(var i = 0 ; i < formElements.length ; i++) {
-					if(!formElements[i].isValid) {
-						this.openInfoMsg({ title : Things.DataGlobal.t('text.invalid_input'), text : Things.DataGlobal.t('text.info_invalid'), type : 'info', timer : 5000 });
+					var element = formElements[i];
+					if(element.isValid === false) {
+						var msg = '[' + element.label + '] ' + Things.DataGlobal.t('text.info_invalid');
+						this.openConfirmMsg({ 
+							title : Things.DataGlobal.t('text.invalid_input'), text : msg, type : 'info', timer : 5000 
+						}, function() {
+							element.focus();
+						});
 						return false;
 					}
 				}
@@ -416,7 +422,6 @@ things-resource로 부터 위와 같은 형식의 form-fields meta data를 조�
 			loadDetailData: function(resource) {
 				this.resource = resource;
 			}
-
 		});
 	</script>
 </dom-module>
