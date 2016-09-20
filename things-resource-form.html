@@ -181,6 +181,14 @@ things-resource로 부터 위와 같은 형식의 form-fields meta data를 조�
 				},
 
 				/**
+				 * 컬럼 개수 
+				 */
+				columnCount: {
+					type: Number,
+					value: 2
+				},
+
+				/**
 				 * 폼 버튼 
 				 */
 				buttons: {
@@ -211,6 +219,9 @@ things-resource로 부터 위와 같은 형식의 form-fields meta data를 조�
 				'things-detail-form-save-error' : '_errorResponseHandler'
 			},
 
+			/**
+			 * Life Cycle
+			 */
 			attached: function() {
 				this.$.toolbar.hidden = this.buttons && this.buttons.length > 0 ? false : true;
 			},
@@ -249,14 +260,14 @@ things-resource로 부터 위와 같은 형식의 form-fields meta data를 조�
 
 					if(field.type == 'textarea') {
 						// 이전 rowDiv가 홀수 개이고 textarea가 아니라면 empty 엘리먼트 추가
-						if(rowDiv && rowDiv.childNodes && rowDiv.childNodes.length % 2 != 0 && rowDiv.childNodes[0].localName.indexOf('textarea') < 0) {
+						if(rowDiv && rowDiv.childNodes && rowDiv.childNodes.length % this.columnCount != 0 && rowDiv.childNodes[0].localName.indexOf('textarea') < 0) {
 							rowDiv.appendChild(this._createFormElement({ type: 'empty' }));
 						}
 
 						rowDiv = this._createElementContainer(divContainer, newElement);
 
 					} else {
-						if(rowDiv == null || !rowDiv.childNodes || rowDiv.childNodes.length % 2 == 0) {
+						if(rowDiv == null || !rowDiv.childNodes || rowDiv.childNodes.length % this.columnCount == 0) {
 							rowDiv = this._createElementContainer(divContainer, newElement);
 						} else {
 							// rowDiv의 마지막 엘리먼트가 textarea 이면 rowDiv에 empty 엘리먼트 추가
@@ -270,7 +281,7 @@ things-resource로 부터 위와 같은 형식의 form-fields meta data를 조�
 				}
 
 				// 2. 마지막 Div가 홀수이고 textarea가 아니면 empty 엘리먼트 추가
-				if(rowDiv && rowDiv.childNodes && rowDiv.childNodes.length == 1) {
+				if(rowDiv && rowDiv.childNodes && (rowDiv.childNodes.length % this.columnCount) != 0) {
 					if(rowDiv.childNodes[0].localName.indexOf('textarea') < 0) {
 						var emptyElement = this._createFormElement({ type: 'empty' });
 						rowDiv.appendChild(emptyElement);
@@ -315,13 +326,14 @@ things-resource로 부터 위와 같은 형식의 form-fields meta data를 조�
 			getFormElements: function() {
 				var formElements = [];
 				var allDivs = this.$.fields.childNodes;
-				if(!allDivs || allDivs.length == 0) 
-					return [];
+				if(!allDivs || allDivs.length == 0) return formElements;
 
 				for(var i = 0 ; i < allDivs.length; i++) {
 					var divContainer = allDivs[i];
 					var divElements = divContainer.childNodes ? divContainer.childNodes : [];
-					for(var j = 0 ; j < divElements.length ; j++) { formElements.push(divElements[j]); }
+					for(var j = 0 ; j < divElements.length ; j++) { 
+						formElements.push(divElements[j]); 
+					}
 				}
 
 				return formElements;
@@ -334,9 +346,10 @@ things-resource로 부터 위와 같은 형식의 form-fields meta data를 조�
 			 */
 			submitMyForm: function(e) {
 				var evt = this.fire('things-resource-form-submit', this.grid, { cancelable: true });
+
 				if(!evt.defaultPrevented) {
-					this.startSpinner();
 					if(this.validationCheck()) {
+						this.startSpinner();
 						this.saveResource();
 					}
 				}
@@ -347,12 +360,11 @@ things-resource로 부터 위와 같은 형식의 form-fields meta data를 조�
 			 * 필드들의 isValid 속성을 통해 valdation 체크를 수행 합니다.
 			 */
 			validationCheck: function() {
-				for(var i = 0; i < this.$.fields.childNodes.length; i++) {
-					for(var j = 0; j < this.$.fields.childNodes[i].childNodes.length; j++) {
-						if(this.$.fields.childNodes[i].childNodes[j].isValid == false) {
-							this.openInfoMsg({ title : 'Some Inputs are invalid!', text : 'Please check invalid inputs.', type : 'info', timer : 5000 });
-							return false;
-						}
+				var formElements = this.getFormElements();
+				for(var i = 0 ; i < formElements.length ; i++) {
+					if(!formElements[i].isValid) {
+						this.openInfoMsg({ title : Things.DataGlobal.t('text.invalid_input'), text : Things.DataGlobal.t('text.info_invalid'), type : 'info', timer : 5000 });
+						return false;
 					}
 				}
 				
@@ -395,35 +407,16 @@ things-resource로 부터 위와 같은 형식의 form-fields meta data를 조�
 				this.handleErrorResponse(response);
 			},
 
-			/***************************************************************************************
-			*                            Start detail item view interface
-			***************************************************************************************/
-
 			/**
-			* detail item view를 구성하기 위한 필수 함수 
-			* item view를 구성한다.
-			*
-			* @return {Object} resource 리소스 데이터 (Object) 혹은 리소스 아이디 (Number)
-			*/
+			 * detail item view를 구성하기 위한 필수 함수 
+			 * item view를 구성한다.
+			 *
+			 * @return {Object} resource 리소스 데이터 (Object) 혹은 리소스 아이디 (Number)
+			 */
 			loadDetailData: function(resource) {
-				this.resource = resource;
-			},
-
-			/**
-			* detail item view를 구성하기 위한 필수 함수 
-			* data로 부터 item view의 데이터를 직접 로딩한다. 외부에서 직접 데이터를 설정한다.
-			*
-			* @param {Object} resource
-			*/
-			loadDetailDataDirectly: function(resource) {
 				this.resource = resource;
 			}
 
-			/***************************************************************************************
-			*                            End detail item view interface
-			***************************************************************************************/
-
 		});
 	</script>
-
 </dom-module>
