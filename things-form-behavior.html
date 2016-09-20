@@ -330,10 +330,18 @@ Things.FormBehaviorImpl = {
 				// Resource Form일 경우에만 Validation은 의미가 있고 Search Form일 경우는 의미없다.
 				if(!element.searchForm && element.userObj) {
 					if(element.userObj.validator) {
+						var validator = element.userObj.validator;
 						newElement.setAttribute('validator', element.userObj.validator);
-					}
 
-					if(element.userObj.required) {
+						if('things-validator-email' == validator) {
+							newElement.setAttribute('error-message', Things.DataGlobal.t('text.email_error'));
+							newElement.setAttribute('auto-validate', true);
+
+						} else if('things-validator-url' == validator) {
+							newElement.setAttribute('error-message', Things.DataGlobal.t('text.url_error'));
+							newElement.setAttribute('auto-validate', true);
+						}
+					} else if(element.userObj.required) {
 						newElement.setAttribute('required', true);
 						newElement.setAttribute('error-message', Things.DataGlobal.t('text.required_error'));
 						newElement.setAttribute('auto-validate', true);
@@ -347,22 +355,12 @@ Things.FormBehaviorImpl = {
 					if(element.userObj.type) {
 						if(element.userObj.type == 'integer') {
 							newElement.setAttribute('type', 'number');
-							newElement.setAttribute('min', 0);
 
 						} else if(element.userObj.type == 'string' || element.userObj.type == 'text') {
 							newElement.setAttribute('type', 'text');
 
 						} else if(element.userObj.type == 'password') {
 							newElement.setAttribute('type', 'password');
-
-						} else if(element.userObj.type == 'email') {
-							newElement.setAttribute('validator', 'things-validator-email');
-							newElement.setAttribute('error-message', Things.DataGlobal.t('text.email_error'));
-							newElement.setAttribute('auto-validate', true);
-						} else if(element.userObj.type == 'url') {
-							newElement.setAttribute('validator', 'things-validator-url');
-							newElement.setAttribute('error-message', Things.DataGlobal.t('text.url_error'));
-							newElement.setAttribute('auto-validate', true);
 						}
 					}
 
