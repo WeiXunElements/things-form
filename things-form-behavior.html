@@ -242,9 +242,9 @@ Things.FormBehaviorImpl = {
 				newElement = document.createElement('things-resource-combo');
 				newElement.setAttribute('name', element.name);
 				newElement.setAttribute('label', element.label);
-				newElement.setAttribute('resource-name', element.userObj.resourceName);
-				newElement.setAttribute('resource-type', element.userObj.resourceType);
-				newElement.setAttribute('value-path', (element.userObj.formFormat) ? element.userObj.formFormat : 'id');
+				newElement.setAttribute('resource-name', element.userData.resourceName);
+				newElement.setAttribute('resource-type', element.userData.resourceType);
+				newElement.setAttribute('value-path', (element.userData.formFormat) ? element.userData.formFormat : 'id');
 
 				break;
 
@@ -252,14 +252,14 @@ Things.FormBehaviorImpl = {
 				newElement = document.createElement('things-resource-selector');
 				newElement.setAttribute('name', element.name);
 				newElement.setAttribute('label', element.label);
-				newElement.setAttribute('resource-type', element.userObj.resourceType);
-				newElement.setAttribute('resource-name', element.userObj.resourceName);
+				newElement.setAttribute('resource-type', element.userData.resourceType);
+				newElement.setAttribute('resource-name', element.userData.resourceName);
 
-				if(element.userObj.bindFields)
-					newElement.setAttribute('bind-fields', element.userObj.bindFields);
+				if(element.userData.bindFields)
+					newElement.setAttribute('bind-fields', element.userData.bindFields);
 				
-				if(element.userObj.initialParams)
-					newElement.setAttribute('initial-params', element.userObj.initialParams);
+				if(element.userData.initialParams)
+					newElement.setAttribute('initial-params', element.userData.initialParams);
 
 				break;
 
@@ -267,9 +267,9 @@ Things.FormBehaviorImpl = {
 				newElement = document.createElement('things-resource-format-selector');
 				newElement.setAttribute('name', element.name);
 				newElement.setAttribute('label', element.label);
-				newElement.setAttribute('resource-type', element.userObj.resourceType);
-				newElement.setAttribute('resource-name', element.userObj.resourceName);
-				newElement.setAttribute('value-field', element.userObj.formFormat)
+				newElement.setAttribute('resource-type', element.userData.resourceType);
+				newElement.setAttribute('resource-name', element.userData.resourceName);
+				newElement.setAttribute('value-field', element.userData.formFormat)
 
 				break;
 
@@ -277,18 +277,18 @@ Things.FormBehaviorImpl = {
 				newElement = document.createElement('things-resource-field');
 				newElement.setAttribute('name', element.name);
 				newElement.setAttribute('label', element.label);
-				newElement.setAttribute('resource-type', element.userObj.resourceType);
-				newElement.setAttribute('resource-name', element.userObj.resourceName);
-				newElement.setAttribute('submit-name', element.userObj.submitName);
+				newElement.setAttribute('resource-type', element.userData.resourceType);
+				newElement.setAttribute('resource-name', element.userData.resourceName);
+				newElement.setAttribute('submit-name', element.userData.submitName);
 				
-				if(element.userObj.bindFields)
-					newElement.setAttribute('bind-fields', element.userObj.bindFields);
+				if(element.userData.bindFields)
+					newElement.setAttribute('bind-fields', element.userData.bindFields);
 									
-				if(element.userObj.initialParams)
-					newElement.setAttribute('initial-params', element.userObj.initialParams);
+				if(element.userData.initialParams)
+					newElement.setAttribute('initial-params', element.userData.initialParams);
 
-				if(element.userObj.readOnly && element.userObj.readOnly === true)
-					newElement.setAttribute('read-only', element.userObj.readOnly);
+				if(element.userData.readOnly && element.userData.readOnly === true)
+					newElement.setAttribute('read-only', element.userData.readOnly);
 				
 				break;
 
@@ -303,8 +303,8 @@ Things.FormBehaviorImpl = {
 				newElement.setAttribute('name', element.name);
 				newElement.setAttribute('label', element.label);
 				newElement.setAttribute('selected-to-date', new Date());
-				newElement.setAttribute('allow-range', element.userObj.formFormat);
-				newElement.setAttribute('error-message', Things.DataGlobal.t('text.date_range_error') + ' : ' + element.userObj.formFormat);
+				newElement.setAttribute('allow-range', element.userData.formFormat);
+				newElement.setAttribute('error-message', Things.DataGlobal.t('text.date_range_error') + ' : ' + element.userData.formFormat);
 				break;
 
 			case 'time-picker':
@@ -328,10 +328,10 @@ Things.FormBehaviorImpl = {
 				newElement.setAttribute('label', element.label);
 
 				// Resource Form일 경우에만 Validation은 의미가 있고 Search Form일 경우는 의미없다.
-				if(!element.searchForm && element.userObj) {
-					if(element.userObj.validator) {
-						var validator = element.userObj.validator;
-						newElement.setAttribute('validator', element.userObj.validator);
+				if(!element.searchForm && element.userData) {
+					if(element.userData.validator) {
+						var validator = element.userData.validator;
+						newElement.setAttribute('validator', element.userData.validator);
 
 						if('things-validator-email' == validator) {
 							newElement.setAttribute('error-message', Things.DataGlobal.t('text.email_error'));
@@ -341,34 +341,34 @@ Things.FormBehaviorImpl = {
 							newElement.setAttribute('error-message', Things.DataGlobal.t('text.url_error'));
 							newElement.setAttribute('auto-validate', true);
 						}
-					} else if(element.userObj.required) {
+					} else if(element.userData.required) {
 						newElement.setAttribute('required', true);
 						newElement.setAttribute('error-message', Things.DataGlobal.t('text.required_error'));
 						newElement.setAttribute('auto-validate', true);
 					}
 
-					if(element.userObj.max && element.userObj.max > 0) {
-						newElement.setAttribute('maxlength', element.userObj.max);
+					if(element.userData.max && element.userData.max > 0) {
+						newElement.setAttribute('maxlength', element.userData.max);
 						newElement.setAttribute('auto-validate', true);
 					}
 
-					if(element.userObj.type) {
-						if(element.userObj.type == 'integer' || element.userObj.type == 'decimal' || element.userObj.type == 'double' || element.userObj.type == 'float' || element.userObj.type == 'long') {
+					if(element.userData.type) {
+						if(element.userData.type == 'integer' || element.userData.type == 'decimal' || element.userData.type == 'double' || element.userData.type == 'float' || element.userData.type == 'long') {
 							newElement.setAttribute('type', 'number');
 
-						} else if(element.userObj.type == 'string' || element.userObj.type == 'text') {
+						} else if(element.userData.type == 'string' || element.userData.type == 'text') {
 							newElement.setAttribute('type', 'text');
 
-						} else if(element.userObj.type == 'password') {
+						} else if(element.userData.type == 'password') {
 							newElement.setAttribute('type', 'password');
 						}
 					}
 
-					if(element.userObj.hidden) {
+					if(element.userData.hidden) {
 						newElement.setAttribute('hidden', true);
 					}
 
-					if(element.userObj.readonly) {
+					if(element.userData.readonly) {
 						newElement.setAttribute('readonly', true);
 					}
 				}
