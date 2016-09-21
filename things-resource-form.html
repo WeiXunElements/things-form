@@ -365,10 +365,14 @@ things-resource로 부터 위와 같은 형식의 form-fields meta data를 조�
 					var element = formElements[i];
 					if(element.isValid === false) {
 						var msg = '[' + element.label + '] ' + Things.DataGlobal.t('text.info_invalid');
+						var me = this;
+
 						this.openConfirmMsg({ 
 							title : Things.DataGlobal.t('text.invalid_input'), text : msg, type : 'info', timer : 5000 
 						}, function() {
-							element.focus();
+							me.async(function() {
+								element.focus();
+							}, 500)
 						});
 						return false;
 					}
