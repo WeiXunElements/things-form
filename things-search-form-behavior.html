@@ -135,7 +135,7 @@ Things.SearchFormBehaviorImpl = {
    * Pagination을 사용하는 경우에 page, limit 정보를 파라미터에 추가한다.
    */
   handleBeforeSubmit: function(event) {
-    var form = event.srcElement;
+    var form = event.target;
     var evt = this.fire('things-form-pre-submit', form, { cancelable : true });
     if(evt.defaultPrevented) return;
 

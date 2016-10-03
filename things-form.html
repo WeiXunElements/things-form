@@ -315,7 +315,7 @@
 			_successResponseHandler: function(event) {
 				this.stopSpinner();
 
-				var method = typeof(event.detail === 'string') ? event.detail : event.srcElement.method.toUpperCase();
+				var method = typeof(event.detail === 'string') ? event.detail : event.target.method.toUpperCase();
 				this.handleSuccessResponse(method);
 			},
 
