@@ -105,6 +105,15 @@ Things.FormBehaviorImpl = {
 		lastResponse: {
 			type: Object,
 			notify: true
+		},
+
+		/**
+		 * formFileds가 변경된 후 things-resource-form-configure
+		 * 이벤트가 발생했는지 여부
+		 */
+		isConfigureFired: {
+			type: Boolean,
+			value: false
 		}
 
 	},
@@ -118,6 +127,10 @@ Things.FormBehaviorImpl = {
    * @param {Array} formFields attribute
    */
 	_formFieldsChanged: function(formFields) {
+		if(!this.isConfigureFired) {
+			this.isConfigureFired = true;
+			this.fire('things-resource-form-configure', formFields);
+		}
 		this.reconfigureMyForm();
 	},
 
