@@ -220,7 +220,7 @@
      * Submit Form. 검색 실행 
      */
     submitMyForm: function() {
-      var evt = this.fire('things-form-search', this.grid, { cancelable: true });
+      var evt = this.fire('things-form-search', this, { cancelable: true });
       if(!evt.defaultPrevented) {
         // 초기 파라미터 설정
         this._bindInitialParams();
