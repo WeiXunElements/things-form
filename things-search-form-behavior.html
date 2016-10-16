@@ -117,17 +117,17 @@ Things.SearchFormBehaviorImpl = {
   _bindInitialParams: function() {
     if(!this.initialParams) return;
 
-    var defaultQuery = {};
+    var searchParams = this.serializeMyForm();
     var queryParamArr = this.initialParams.split(',');
     for(var i = 0 ; i < queryParamArr.length ; i++) {
       var queryParamStr = queryParamArr[i];
       var paramArr = queryParamStr.split('=');
 
       if(paramArr[1])
-        defaultQuery[paramArr[0]] = paramArr[1];
+        searchParams[paramArr[0]] = paramArr[1];
     }
 
-    this.setFormData(defaultQuery);
+    this.setFormData(searchParams);
   },  
 
   /**
