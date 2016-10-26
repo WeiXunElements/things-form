@@ -184,7 +184,6 @@ Things.FormBehaviorImpl = {
    */	 
 	_createFormElement: function(element) {
 		var newElement = null;
-
 		switch(element.type) {
 			case 'checkbox':
 				newElement = document.createElement('things-tristate-checkbox');
@@ -401,6 +400,7 @@ Things.FormBehaviorImpl = {
 		
 		this.setFieldData(newElement, element.default);
 		newElement.setAttribute('class', 'flex style-scope things-form');
+		newElement.tabIndex = element.tabindex;
 		return newElement;
 	},
 
