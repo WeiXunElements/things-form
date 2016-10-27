@@ -400,7 +400,7 @@ Things.FormBehaviorImpl = {
 		
 		this.setFieldData(newElement, element.default);
 		newElement.setAttribute('class', 'flex style-scope things-form');
-		newElement.tabIndex = element.tabindex;
+		newElement.tabIndex = element.tabindex>=0?element.tabindex:-1;
 		return newElement;
 	},
 
