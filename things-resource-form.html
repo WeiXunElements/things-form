@@ -425,6 +425,22 @@ things-resource로 부터 위와 같은 형식의 form-fields meta data를 조�
 			 */
 			loadDetailData: function(resource) {
 				this.resource = resource;
+			},
+
+			/**
+			 * 포커스 
+			 */
+			focus: function() {
+				var elements = this.getFormElements();
+				if(elements && elements.length > 0) {
+					for(var i = 0 ; i < elements.length ; i++) {
+						var element = elements[i];
+						if(element.tabIndex) {
+							element.focus();
+							return;
+						}
+					}
+				}
 			}
 		});
 	</script>

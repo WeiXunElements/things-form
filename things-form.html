@@ -182,7 +182,7 @@
 
 					if(field.userData && field.userData.hidden) {
 						hiddenFields.push(field);
-						continue
+						continue;
 					};
 					
 					var newElement = this._createFormElement(field);
@@ -297,7 +297,7 @@
 				for(var i = 0; i < this.$.fields.childNodes.length; i++) {
 					for(var j = 0; j < this.$.fields.childNodes[i].childNodes.length; j++) {
 						if(this.$.fields.childNodes[i].childNodes[j].isValid == false) {
-							this.openInfoMsg({ title : 'Some Inputs are invalid!', text : 'Please check invalid inputs.', type : 'info', timer : 5000 });
+							this.openInfoMsg({ title : Things.DataGlobal.t('title.warn'), text : Things.DataGlobal.t('text.Invalid data'), type : 'error', timer : 5000 });
 							return false;
 						}
 					}
@@ -341,9 +341,23 @@
 				}
 
 				this.handleErrorResponse(response);
-			}
+			},
 
+			/**
+			 * 포커스 
+			 */
+			focus: function() {
+				var elements = this.getFormElements();
+				if(elements && elements.length > 0) {
+					for(var i = 0 ; i < elements.length ; i++) {
+						var element = elements[i];
+						if(element.tabIndex) {
+							element.focus();
+							return;
+						}
+					}
+				}
+			}
 		});
 	</script>
-
 </dom-module>
