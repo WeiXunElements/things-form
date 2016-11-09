@@ -73,7 +73,7 @@ Things.SearchFormBehaviorImpl = {
   },
 
   observers: [
-    '_pageChanged(page)'
+    '_pageChanged(page,limit)'
   ],  
 
   /**
@@ -81,7 +81,7 @@ Things.SearchFormBehaviorImpl = {
    * 페이지가 변경된 경우 해당 페이지로 다시 검색한다.
    * @param {Number} page 현재 페이지 
    */
-  _pageChanged: function(page) {
+  _pageChanged: function(page,limit) {
     if(this.active && page > 0) {
       this.submitMyForm();
     }
