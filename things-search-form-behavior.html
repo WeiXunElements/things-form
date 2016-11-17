@@ -98,12 +98,18 @@ Things.SearchFormBehaviorImpl = {
     if(!params) return;
 
     for(prop in params) {
-      var fieldModels = this.formFields.filter(function(formField) { return formField.name == prop });
+      var fieldModels = this.formFields.filter(function(formField) { return formField.name == prop; });
+
+      if(!fieldModels || fieldModels == 0) {
+        // reference-query인 경우 체크 
+        fieldModels = this.formFields.filter(function(formField) { 
+          return formField.type == 'reference-query' && formField.userData.searchName == prop;
+        });
+      }
 
       if (fieldModels && fieldModels.length > 0) {
         var fieldModel = fieldModels[0];
         var operator = fieldModel.op;
-
         if(params[prop] || this.nonValueOpers.includes(operator)) {
           this.queryFields.push({ name : prop, operator : operator, value : params[prop] });
         }
