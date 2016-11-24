@@ -280,7 +280,7 @@
 			 * @param {Object} e 버튼 클릭 이벤트 
 			 */
 			submitMyForm: function(e) {
-				var evt = this.fire('things-form-submit', this.grid, { cancelable: true });
+				var evt = this.fire('things-form-submit', this.getMyForm(), { cancelable: true });
 				if(!evt.defaultPrevented) {
 					this.startSpinner();
 					if(this.validationCheck()) {

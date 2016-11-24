@@ -129,7 +129,7 @@ Things.FormBehaviorImpl = {
 	_formFieldsChanged: function(formFields) {
 		if(!this.isConfigureFired) {
 			this.isConfigureFired = true;
-			this.fire('things-resource-form-configure', formFields);
+			this.fire('things-form-configure', formFields);
 		}
 		this.reconfigureMyForm();
 	},
