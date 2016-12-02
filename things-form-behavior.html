@@ -465,7 +465,6 @@ Things.FormBehaviorImpl = {
 	 */
 	setFormData: function(resource) {
 		var elements = this.getFormElements();
- 
 		for(var i = 0 ; i < elements.length ; i++) {
 			var element = elements[i];
 			var val = resource ? resource[element.name] : null;
@@ -486,9 +485,10 @@ Things.FormBehaviorImpl = {
 	setFieldData: function(element, value) {
 		if(value === undefined || element.localName == 'things-stamp') {
 			return;
-		} else if(element.localName == 'things-resource-selector') {
+		} else if(element.localName == 'things-resource-selector'||element.localName == 'things-image-selector') {
 			element.objValue = value;
 		} else {
+			if(element.localName=='things-resource-field')console.log(value);
 			element.value = value;
 		}
 	}
