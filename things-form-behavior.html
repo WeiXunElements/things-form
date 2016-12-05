@@ -372,10 +372,6 @@ Things.FormBehaviorImpl = {
 							newElement.setAttribute('error-message', Things.DataGlobal.t('text.url_error'));
 							newElement.setAttribute('auto-validate', true);
 						}
-					} else if(element.userData.required) {
-						newElement.setAttribute('required', true);
-						newElement.setAttribute('error-message', Things.DataGlobal.t('text.required_error'));
-						newElement.setAttribute('auto-validate', true);
 					}
 
 					if(element.userData.max && element.userData.max > 0) {
@@ -403,6 +399,14 @@ Things.FormBehaviorImpl = {
 						newElement.setAttribute('readonly', true);
 					}
 				}
+		}
+
+		if(!element.searchForm && element.userData) {
+			if(element.userData.required) {
+				newElement.setAttribute('required', true);
+				newElement.setAttribute('error-message', Things.DataGlobal.t('text.required_error'));
+				newElement.setAttribute('auto-validate', true);
+			}
 		}
 
 		if(!newElement) return null;
@@ -488,7 +492,6 @@ Things.FormBehaviorImpl = {
 		} else if(element.localName == 'things-resource-selector'||element.localName == 'things-image-selector') {
 			element.objValue = value;
 		} else {
-			if(element.localName=='things-resource-field')console.log(value);
 			element.value = value;
 		}
 	}
