@@ -148,39 +148,42 @@ Things.DetailFormBehavior = {
    * Save data from resource detail screen
    */
   saveResource: function() {
-    var saveAjax = document.createElement('things-ajax');
+    if(this.validationCheck()) {
+      var saveAjax = document.createElement('things-ajax');
 
-    // 1. 저장 전에 Save Ajax URL 핸들링 이벤트 
-    var urlEvent = this.fire('things-form-handle-url-before-save', saveAjax, { cancelable: true });
-    if(!urlEvent.defaultPrevented) {
-      saveAjax.resourceAction = this.resource.id ? 'update' : 'create';
+      // 1. 저장 전에 Save Ajax URL 핸들링 이벤트 
+      var urlEvent = this.fire('things-form-handle-url-before-save', saveAjax, { cancelable: true });
+      if(!urlEvent.defaultPrevented) {
+        saveAjax.resourceAction = this.resource.id ? 'update' : 'create';
 
-      if(saveAjax.resourceAction == 'create') {
-        saveAjax.resourceUrl = this.resourceUrl.replace('/:id', '');
-      } else {
-        saveAjax.resourceId = this.resource.id;
-        saveAjax.resourceUrl = (this.resourceUrl.indexOf('/:id') >= 0) ? this.resourceUrl : this.resourceUrl + '/:id';
+        if(saveAjax.resourceAction == 'create') {
+          saveAjax.resourceUrl = this.resourceUrl.replace('/:id', '');
+        } else {
+          saveAjax.resourceId = this.resource.id;
+          saveAjax.resourceUrl = (this.resourceUrl.indexOf('/:id') >= 0) ? this.resourceUrl : this.resourceUrl + '/:id';
+        }
       }
+
+      // 2. 저장 전에 Parameter 핸들링 이벤트
+      var params= this.serializeMyForm();
+    
+      var paramEvent = this.fire('things-form-handle-param-before-save', { ajax : saveAjax, params : params }, { cancelable: true });
+      if(!paramEvent.defaultPrevented) {
+        params = this._filterResourceColumns(params);
+        saveAjax.body = params;
+      }
+
+      var me = this;
+      saveAjax.addEventListener('things-ajax-response', function(event) {
+        me.fire('things-detail-form-save-success', saveAjax.method);
+      });
+
+      saveAjax.addEventListener('things-ajax-error', function(event) {
+        me.fire('things-detail-form-save-error', event.detail);
+      });
+
+      saveAjax.generateRequest();
     }
-
-    // 2. 저장 전에 Parameter 핸들링 이벤트 
-    var params = this.serializeMyForm();
-    var paramEvent = this.fire('things-form-handle-param-before-save', { ajax : saveAjax, params : params }, { cancelable: true });
-    if(!paramEvent.defaultPrevented) {
-      params = this._filterResourceColumns(params);
-      saveAjax.body = params;
-    }
-
-    var me = this;
-    saveAjax.addEventListener('things-ajax-response', function(event) {
-      me.fire('things-detail-form-save-success', saveAjax.method);
-    });
-
-    saveAjax.addEventListener('things-ajax-error', function(event) {
-      me.fire('things-detail-form-save-error', event.detail);
-    });
-
-    saveAjax.generateRequest();
   },
 
   /**
