@@ -115,7 +115,6 @@ Things.FormBehaviorImpl = {
 			type: Boolean,
 			value: false
 		}
-
 	},
 
   /**
@@ -131,6 +130,7 @@ Things.FormBehaviorImpl = {
 			this.isConfigureFired = true;
 			this.fire('things-form-configure', formFields);
 		}
+
 		this.reconfigureMyForm();
 	},
 
@@ -184,6 +184,7 @@ Things.FormBehaviorImpl = {
    */	 
 	_createFormElement: function(element) {
 		var newElement = null;
+
 		switch(element.type) {
 			case 'checkbox':
 				newElement = document.createElement('things-tristate-checkbox');
@@ -227,18 +228,21 @@ Things.FormBehaviorImpl = {
 			case 'radio':
 				newElement = document.createElement('paper-radio-group');
 				newElement = this._bindAttributes(newElement, element);
+				
 				for(index in element.child) {
 					child = element[index];
 					newChild = document.createElement('paper-radio-button');
 					newChild = this._bindAttributes(newChild, child);
 					newElement.appendChild(newChild);
 				}
+
 				break;
 
 			case 'textarea':
 				newElement = document.createElement('things-textarea');
 				newElement = this._bindAttributes(newElement, element);
 				newElement.rows = 4;
+				this._applyMinMaxValidator(element.userData, newElement, false);
 				break;
 
 			case 'code-combo':
@@ -271,6 +275,7 @@ Things.FormBehaviorImpl = {
 				
 				if(element.userData.initialParams)
 					newElement.setAttribute('initial-params', element.userData.initialParams);
+
 				break;
 
 			case 'resource-format-selector':
@@ -298,6 +303,7 @@ Things.FormBehaviorImpl = {
 
 				if(element.userData.readOnly && element.userData.readOnly === true)
 					newElement.setAttribute('read-only', element.userData.readOnly);
+
 				break;
 
 			case 'reference-query':
@@ -319,23 +325,36 @@ Things.FormBehaviorImpl = {
 				newElement.setAttribute('label', element.label);
 				break;
 
+			case 'ranged-date-picker':
+				newElement = document.createElement('things-date-picker');
+				newElement.setAttribute('name', element.name);
+				newElement.setAttribute('label', element.label);
+
+				if(element.userData) {
+					if(element.userData.min) newElement.setAttribute('min-date', element.userData.min);
+					if(element.userData.max) newElement.setAttribute('max-date', element.userData.max);
+				}
+
+				break;
+
 			case 'date-from-to-picker':
 				newElement = document.createElement('things-date-from-to');
-				var format = element.userData.format?element.userData.format:'YYYY-MM-DD';
+				var format = element.userData.format ? element.userData.format : 'YYYY-MM-DD';
 				newElement.setAttribute('read-format', format);
 				newElement.setAttribute('name', element.name);
 				newElement.setAttribute('label', element.label);
-				newElement.setAttribute('selected-to-date', new Date());
-				var range = element.userData.defaultRange;
 
-				if(range && range != '' && parseInt(range)) {
-					var rangeDays = parseInt(range);
-					var fromDate = new Date();
-					fromDate.setDate(fromDate.getDate() - rangeDays);
-					newElement.setAttribute('selected-from-date', fromDate);
-					newElement.setAttribute('allow-range', range);
-					newElement.setAttribute('error-message', Things.DataGlobal.t('text.invalid_date_range') + ' : ' + range);
+				if(element.userData) {
+					if(element.userData.min) newElement.setAttribute('selected-from-date', element.userData.min);
+					if(element.userData.max) newElement.setAttribute('selected-to-date', element.userData.max);
+
+					if(element.userData.defaultRange) {
+						var range = element.userData.defaultRange;
+						newElement.setAttribute('allow-range', range);
+						newElement.setAttribute('error-message', Things.DataGlobal.t('text.invalid_date_range', {a : range}));
+					}
 				}
+
 				break;
 
 			case 'time-picker':
@@ -351,6 +370,26 @@ Things.FormBehaviorImpl = {
 
 			case 'empty':
 				newElement = document.createElement('label');
+				break;
+
+			case 'positive-number':
+				newElement = document.createElement('things-input-field');
+				newElement.setAttribute('type', 'number');
+				newElement.setAttribute('name', element.name);
+				newElement.setAttribute('label', element.label);
+				newElement.setAttribute('min', 0);
+				newElement.setAttribute('auto-validate', true);
+				newElement.setAttribute('error-message', Things.DataGlobal.t('error.A_IS_LESS_THAN_B', { a : element.label, b : 0 }));
+				break;
+
+			case 'negative-number':
+				newElement = document.createElement('things-input-field');
+				newElement.setAttribute('type', 'number');
+				newElement.setAttribute('name', element.name);
+				newElement.setAttribute('label', element.label);
+				newElement.setAttribute('max', 0);
+				newElement.setAttribute('auto-validate', true);
+				newElement.setAttribute('error-message', Things.DataGlobal.t('error.A_IS_GREATER_THAN_B', { a : element.label, b : 0 }));
 				break;
 
 			default:
@@ -374,20 +413,25 @@ Things.FormBehaviorImpl = {
 						}
 					}
 
-					if(element.userData.max && element.userData.max > 0) {
-						newElement.setAttribute('maxlength', element.userData.max);
-						newElement.setAttribute('auto-validate', true);
-					}
-
 					if(element.userData.type) {
-						if(element.userData.type == 'integer' || element.userData.type == 'decimal' || element.userData.type == 'double' || element.userData.type == 'float' || element.userData.type == 'long') {
+						if(element.userData.type == 'integer' || 
+							 element.userData.type == 'decimal' || 
+							 element.userData.type == 'double' || 
+							 element.userData.type == 'float' || 
+							 element.userData.type == 'long') {
+
 							newElement.setAttribute('type', 'number');
+							this._applyMinMaxValidator(element.userData, newElement, true);
 
-						} else if(element.userData.type == 'string' || element.userData.type == 'text') {
-							newElement.setAttribute('type', 'text');
+						} else {
+							if(element.userData.type == 'string' || element.userData.type == 'text') {
+								newElement.setAttribute('type', 'text');
 
-						} else if(element.userData.type == 'password') {
-							newElement.setAttribute('type', 'password');
+							} else if(element.userData.type == 'password') {
+								newElement.setAttribute('type', 'password');
+							}
+
+							this._applyMinMaxValidator(element.userData, newElement, false);
 						}
 					}
 
@@ -402,7 +446,7 @@ Things.FormBehaviorImpl = {
 		}
 
 		if(!element.searchForm && element.userData) {
-			if(element.userData.required) {
+			if(element.userData.required && !newElement.getAttribute('error-message')) {
 				newElement.setAttribute('required', true);
 				newElement.setAttribute('error-message', Things.DataGlobal.t('text.required_error'));
 				newElement.setAttribute('auto-validate', true);
@@ -413,8 +457,27 @@ Things.FormBehaviorImpl = {
 		
 		this.setFieldData(newElement, element.default);
 		newElement.setAttribute('class', 'flex style-scope things-form');
-		newElement.tabIndex = element.tabIndex>=0?element.tabIndex:-1;
+		newElement.tabIndex = element.tabIndex >= 0 ? element.tabIndex : -1;
 		return newElement;
+	},
+
+	/**
+	 * Min, Max Validator 설정
+	 */
+	_applyMinMaxValidator: function(userData, newElement, number) {
+		if(!userData) return;
+
+		if(userData.min || userData.max) {
+			newElement.setAttribute('auto-validate', true);
+		}
+
+		if(typeof userData.max != 'undefined' && userData.max != null) {
+			newElement.setAttribute(number ? 'max' : 'maxlength', Number(userData.max));
+		}
+
+		if(typeof userData.min != 'undefined' && userData.min != null) {
+			newElement.setAttribute(number ? 'min' : 'minlength', Number(userData.min));
+		}
 	},
 
 	/**
