@@ -1,4 +1,5 @@
 <link rel="import" href="../polymer/polymer.html">
+
 <link rel="import" href="../iron-flex-layout/iron-flex-layout.html">
 <link rel="import" href="../iron-flex-layout/iron-flex-layout-classes.html">
 <link rel="import" href="../iron-form/iron-form.html">
@@ -30,9 +31,9 @@
 <link rel="import" href="../things-stamp/things-stamp.html">
 <link rel="import" href="../things-tristate-checkbox/things-tristate-checkbox.html">
 
-<link rel="import" href="../things-view-open-behavior/things-view-open-behavior.html">
 <link rel="import" href="../things-msg-box-behavior/things-msg-box-behavior.html">
 <link rel="import" href="../things-spinner/things-spinner-behavior.html">
+<link rel="import" href="../things-view-open-behavior/things-view-open-behavior.html">
 
 <link rel="import" href="./things-form-behavior.html">
 <link rel="import" href="./things-detail-form-behavior.html">
@@ -189,6 +190,14 @@ things-resource로 부터 위와 같은 형식의 form-fields meta data를 조�
 				},
 
 				/**
+				 * Stamp를 숨길 지 여부 
+				 */
+				hideStamp: {
+					type: Boolean,
+					value: false
+				},
+
+				/**
 				 * 폼 버튼 
 				 */
 				buttons: {
@@ -289,7 +298,7 @@ things-resource로 부터 위와 같은 형식의 form-fields meta data를 조�
 				}
 
 				// 3. Stamp Element 추가 
-				if(stampExist) {
+				if(stampExist && this.hideStamp == false) {
 					var stampElement = this._createFormElement({ type : 'things-stamp' });
 					this._createElementContainer(divContainer, stampElement);
 				}

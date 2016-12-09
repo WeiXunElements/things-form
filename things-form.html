@@ -1,4 +1,5 @@
 <link rel="import" href="../polymer/polymer.html">
+
 <link rel="import" href="../iron-flex-layout/iron-flex-layout.html">
 <link rel="import" href="../iron-flex-layout/iron-flex-layout-classes.html">
 <link rel="import" href="../iron-form/iron-form.html">
@@ -125,6 +126,14 @@
 				},
 
 				/**
+				 * Stamp를 숨길 지 여부 
+				 */
+				hideStamp: {
+					type: Boolean,
+					value: false
+				},
+
+				/**
 				 * 폼 버튼 
 				 */
 				buttons: {
@@ -185,6 +194,11 @@
 						continue;
 					};
 					
+					if(this.stampFields && this.stampFields.includes(field.name)) {
+						stampExist = true;
+						continue;
+					}
+
 					var newElement = this._createFormElement(field);
 					if(!newElement) continue;
 
@@ -219,7 +233,7 @@
 				}
 
 				// 3. Stamp Element 추가 
-				if(stampExist) {
+				if(stampExist && this.hideStamp == false) {
 					var stampElement = this._createFormElement({ type : 'things-stamp' });
 					this._createElementContainer(divContainer, stampElement);
 				}
