@@ -60,6 +60,14 @@ Things.SearchFormBehaviorImpl = {
      * 이벤트 전파를 멈추고 Submit을 위한 정보를 조작한다.
      *
      * @event things-form-pre-submit
+     */
+    /**
+     * Fires before handle parameters after parameter setup completed and before form submit
+     * Form 파라미터 셋업이 완료된 이후 그리고 Form Submit 하기 전에 발생하는 이벤트.
+     * 최종적으로 검색 전에 Form 파라미터를 조작하려고 할 때 사용 가능 
+     *
+     * @event things-form-submit-configured
+     */
     /**
      * Fires when the successful response is arrived after submit
      *
@@ -160,6 +168,8 @@ Things.SearchFormBehaviorImpl = {
     } else if(this.paramType == 'DIY') {
       form.request.params = this.handleDiyRequestParams(form.request.params);
     }
+
+    this.fire('things-form-submit-configured', form, null);
   },
 
   /**

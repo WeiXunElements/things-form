@@ -142,6 +142,20 @@
 						return [];
 					}
 				}
+
+        /**
+         * Fires after search form configuration completed
+         * 폼 화면이 모두 구성된 이 후 발생 
+         *
+         * @event things-form-configured
+         */
+        /**
+         * Fires when form submit
+         * Form Submit 시점에 발생하는 이벤트 
+         * Form Submit 동작 자체를 핸들링하고 싶다면 event.preventDefault()를 호출하여 이벤트 전파를 멈추고 Submit을 위한 동작을 구현한다.
+         *
+         * @event things-form-submit
+         */
 			},
 
 			behaviors: [
