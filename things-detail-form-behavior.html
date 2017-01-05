@@ -208,6 +208,7 @@ Things.DetailFormBehavior = {
 
     var me = this;
     getAjax.addEventListener('things-ajax-response', function(event) {
+      me.lastResponse = event.detail;
       me.resource = event.detail;
       me.fire('things-detail-form-read-success', getAjax.method);
     });
