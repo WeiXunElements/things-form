@@ -3,6 +3,7 @@
 <link rel="import" href="../iron-form/iron-form.html">
 <link rel="import" href="../iron-flex-layout/iron-flex-layout.html">
 <link rel="import" href="../iron-flex-layout/iron-flex-layout-classes.html">
+<link rel="import" href="../iron-collapse/iron-collapse.html">
 <link rel="import" href="../paper-button/paper-button.html">
 <link rel="import" href="../paper-checkbox/paper-checkbox.html">
 <link rel="import" href="../paper-dropdown-menu/paper-dropdown-menu.html">
@@ -75,16 +76,19 @@
         @apply(--things-search-fab);
       }
     </style>
-
-    <paper-material elevation="0" class="flex" on-keypress="handleKeyPress">
-      <form is="iron-form"
-            action="[[action]]"
-            content-type="[[contentType]]"
-            last-response ="{{lastResponse}}"
-            with-credentials="[[withCredentials]]">
-        <div id="fields" class="layout vertical flex"></div>
-        <paper-fab icon="search" title="search" on-tap="_onSearchFormTap"></paper-fab>
-      </form>
+    <paper-material elevation="0" class="layout horizontal flex" on-keypress="handleKeyPress">
+      <paper-icon-button icon="[[arrowIcon]]" class="flex-1" on-tap="foldBtnTap"></paper-icon-button>
+        
+      <iron-collapse id="content" class="flex-12" opened>
+          <form is="iron-form"
+                action="[[action]]"
+                content-type="[[contentType]]"
+                last-response ="{{lastResponse}}"
+                with-credentials="[[withCredentials]]">
+            <div id="fields" class="layout vertical flex"></div>
+            <paper-fab icon="search" title="search" on-tap="_onSearchFormTap"></paper-fab>
+          </form>
+      </iron-collapse>
     </paper-material>
   </template>
 
@@ -99,21 +103,11 @@
          */
         title: {
           type: String
+        },
+        arrowIcon: {
+          type: String,
+          value: 'icons:arrow-drop-down'
         }
-
-        /**
-         * Fires after search form configuration completed
-         * 검색 폼 화면이 모두 구성된 이 후 발생 
-         *
-         * @event things-search-form-configured
-         */
-        /**
-         * Fires when form submit
-         * Form Submit (조회) 시점에 발생하는 이벤트 
-         * Form Submit 동작 자체를 핸들링하고 싶다면 event.preventDefault()를 호출하여 이벤트 전파를 멈추고 Submit을 위한 동작을 구현한다.
-         *
-         * @event things-form-search
-         */
       },
 
       listeners : {
@@ -128,7 +122,14 @@
         Things.SpinnerBehavior,
         Things.MsgBoxBehavior
       ],
-
+      foldBtnTap : function(event){
+        this.$['content'].toggle();
+        if(this.$['content'].opened){
+          this.arrowIcon = 'icons:arrow-drop-up';
+        }else{
+          this.arrowIcon = 'icons:arrow-drop-down';
+        }
+      },
       /**
        * 리소스 폼이 이미 구성되었는지 여부 
        */
