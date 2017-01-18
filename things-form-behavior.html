@@ -373,23 +373,29 @@ Things.FormBehaviorImpl = {
 				break;
 
 			case 'positive-number':
-				newElement = document.createElement('things-input-field');
-				newElement.setAttribute('type', 'number');
+				newElement = document.createElement('things-number-field');
+				// newElement.setAttribute('type', 'number');
 				newElement.setAttribute('name', element.name);
 				newElement.setAttribute('label', element.label);
 				newElement.setAttribute('min', 0);
 				newElement.setAttribute('auto-validate', true);
 				newElement.setAttribute('error-message', Things.DataGlobal.t('error.A_IS_LESS_THAN_B', { a : element.label, b : 0 }));
+				if(element.userData.format){
+					newElement.setAttribute('format-with', element.userData.format);
+				}
 				break;
 
 			case 'negative-number':
-				newElement = document.createElement('things-input-field');
-				newElement.setAttribute('type', 'number');
+				newElement = document.createElement('things-number-field');
+				// newElement.setAttribute('type', 'number');
 				newElement.setAttribute('name', element.name);
 				newElement.setAttribute('label', element.label);
 				newElement.setAttribute('max', 0);
 				newElement.setAttribute('auto-validate', true);
 				newElement.setAttribute('error-message', Things.DataGlobal.t('error.A_IS_GREATER_THAN_B', { a : element.label, b : 0 }));
+				if(element.userData.format){
+					newElement.setAttribute('format-with', element.userData.format);
+				}
 				break;
 
 			default:
@@ -399,28 +405,19 @@ Things.FormBehaviorImpl = {
 
 				// Resource Form일 경우에만 Validation은 의미가 있고 Search Form일 경우는 의미없다.
 				if(!element.searchForm && element.userData) {
-					if(element.userData.validator) {
-						var validator = element.userData.validator;
-						newElement.setAttribute('validator', element.userData.validator);
-
-						if('things-validator-email' == validator) {
-							newElement.setAttribute('error-message', Things.DataGlobal.t('text.email_error'));
-							newElement.setAttribute('auto-validate', true);
-
-						} else if('things-validator-url' == validator) {
-							newElement.setAttribute('error-message', Things.DataGlobal.t('text.url_error'));
-							newElement.setAttribute('auto-validate', true);
-						}
-					}
-
 					if(element.userData.type) {
 						if(element.userData.type == 'integer' || 
 							 element.userData.type == 'decimal' || 
 							 element.userData.type == 'double' || 
 							 element.userData.type == 'float' || 
 							 element.userData.type == 'long') {
-
-							newElement.setAttribute('type', 'number');
+							newElement={};
+							newElement = document.createElement('things-number-field');
+							newElement.setAttribute('name', element.name);
+							newElement.setAttribute('label', element.label);
+							if(element.userData.format){
+								newElement.setAttribute('format-with', element.userData.format);
+							}
 							this._applyMinMaxValidator(element.userData, newElement, true);
 
 						} else {
@@ -432,6 +429,20 @@ Things.FormBehaviorImpl = {
 							}
 
 							this._applyMinMaxValidator(element.userData, newElement, false);
+						}
+					}
+
+					if(element.userData.validator) {
+						var validator = element.userData.validator;
+						newElement.setAttribute('validator', element.userData.validator);
+
+						if('things-validator-email' == validator) {
+							newElement.setAttribute('error-message', Things.DataGlobal.t('text.email_error'));
+							newElement.setAttribute('auto-validate', true);
+
+						} else if('things-validator-url' == validator) {
+							newElement.setAttribute('error-message', Things.DataGlobal.t('text.url_error'));
+							newElement.setAttribute('auto-validate', true);
 						}
 					}
 
