@@ -579,7 +579,28 @@ Things.FormBehaviorImpl = {
 		} else {
 			element.value = value;
 		}
-	}
+	},
+
+	enableElement: function(name) {
+		var elements = this.getFormElements();
+		for(var i = 0 ; i < elements.length ; i++) {
+			var element = elements[i];
+			if(element.name == name) {
+				element.removeAttribute('disabled');
+			}
+		}
+	},
+
+	disableElement: function(name) {
+		var elements = this.getFormElements();
+		for(var i = 0 ; i < elements.length ; i++) {
+			var element = elements[i];
+			if(element.name == name) {
+				element.setAttribute('disabled', true);
+			}
+		}
+	}	
+
 };
 
 Things.FormBehavior = [
