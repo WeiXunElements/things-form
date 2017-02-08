@@ -77,9 +77,9 @@
       }
     </style>
     <paper-material elevation="0" class="layout horizontal flex" on-keypress="handleKeyPress">
-      <paper-icon-button icon="[[arrowIcon]]" class="flex-1" on-tap="foldBtnTap"></paper-icon-button>
+      <paper-icon-button icon="[[arrowIcon]]" on-tap="foldBtnTap"></paper-icon-button>
         
-      <iron-collapse id="content" class="flex-12" opened>
+      <iron-collapse id="content" class="flex" opened>
           <form is="iron-form"
                 action="[[action]]"
                 content-type="[[contentType]]"
