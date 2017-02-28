@@ -140,7 +140,11 @@ Things.FormBehaviorImpl = {
 	 * @param {string} url url attribute
 	 */
 	_computeAction: function(baseUrl, actionUrl) {
-		return baseUrl + '/' + actionUrl;
+		if(actionUrl && (actionUrl.toLowerCase().startsWith('http://') || actionUrl.toLowerCase().startsWith('https://'))) {
+			return actionUrl;
+		} else {
+			return baseUrl + '/' + actionUrl;
+		}
 	},
 
 	/**
