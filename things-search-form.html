@@ -76,8 +76,9 @@
         @apply(--things-search-fab);
       }
     </style>
+
     <paper-material elevation="0" class="layout horizontal flex" on-keypress="handleKeyPress">
-      <paper-icon-button icon="[[arrowIcon]]" on-tap="foldBtnTap"></paper-icon-button>
+      <paper-icon-button icon="[[arrowIcon]]" on-tap="toggleSearchConditions"></paper-icon-button>
         
       <iron-collapse id="content" class="flex" opened>
           <form is="iron-form"
@@ -104,6 +105,10 @@
         title: {
           type: String
         },
+
+        /**
+         * 검색 조건 Folding 아이콘 
+         */
         arrowIcon: {
           type: String,
           value: 'icons:arrow-drop-down'
@@ -122,14 +127,21 @@
         Things.SpinnerBehavior,
         Things.MsgBoxBehavior
       ],
-      foldBtnTap : function(event){
+
+      /**
+       * 검색 조건을 접고 펴는 액션 
+       *
+       * @param {Object} event
+       */
+      toggleSearchConditions : function(event) {
         this.$['content'].toggle();
-        if(this.$['content'].opened){
+        if(this.$['content'].opened) {
           this.arrowIcon = 'icons:arrow-drop-up';
-        }else{
+        } else {
           this.arrowIcon = 'icons:arrow-drop-down';
         }
       },
+      
       /**
        * 리소스 폼이 이미 구성되었는지 여부 
        */
