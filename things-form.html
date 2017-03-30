@@ -41,6 +41,21 @@
 	메타 데이터 FormFields 및 Buttons를 받아서 그 정보로 폼과 버튼을 구성한다.
 	그 이후 해당 폼에 대한 폼 데이터(Resource)를 받아서 화면에 바인딩한다.
 	이 후 버튼별 액션은 이벤트만 던지고 things-form을 사용한 곳에서 이벤트를 받아 액션을 처리한다.
+
+	Example:
+
+			<form is="iron-form"
+						id="form"
+						action=[[action]]
+						headers="[[headers]]"
+						content-type="[[contentType]]"
+						method="[[method]]"
+						with-credentials="[[withCredentials]]"
+						last-response="{{lastResponse}}">
+					<div id="fields" class="layout vertical flex"></div>
+			</form>
+
+@demo demo/index.html
 -->
 
 <dom-module id="things-form">
@@ -71,8 +86,8 @@
 			}
 		</style>
 
-		<form is="iron-form" 
-					id="form" 
+		<form is="iron-form"
+					id="form"
 					action=[[action]]
 					headers="[[headers]]"
 					content-type="[[contentType]]"
@@ -96,14 +111,16 @@
 
 			properties: {
 				/**
-				 * 폼 타이틀 
+				 * 폼 타이틀
+				 * @type: String
 				 */
 				title: {
 					type: String
 				},
 
 				/**
-				 * 구성하고자 하는 폼의 컬럼 개수 
+				 * 구성하고자 하는 폼의 컬럼 개수
+				 * @type: Number
 				 */
 				columnCount: {
 					type: Number,
@@ -112,6 +129,7 @@
 
 				/**
 				 * 폼 리소스
+				 * @type: Object
 				 */
 				resource: {
 					type: Object,
@@ -120,13 +138,15 @@
 
 				/**
 				 * 폼 리소스 아이디
+				 * @type: String
 				 */
 				resourceId: {
 					type: String
 				},
 
 				/**
-				 * Stamp를 숨길 지 여부 
+				 * Stamp를 숨길 지 여부
+				 * @type: Boolean
 				 */
 				hideStamp: {
 					type: Boolean,
@@ -134,7 +154,8 @@
 				},
 
 				/**
-				 * 폼 버튼 
+				 * 폼 버튼
+				 * @type: Array
 				 */
 				buttons: {
 					type: Array,
@@ -145,13 +166,13 @@
 
         /**
          * Fires after search form configuration completed
-         * 폼 화면이 모두 구성된 이 후 발생 
+         * 폼 화면이 모두 구성된 이 후 발생
          *
          * @event things-form-configured
          */
         /**
          * Fires when form submit
-         * Form Submit 시점에 발생하는 이벤트 
+         * Form Submit 시점에 발생하는 이벤트
          * Form Submit 동작 자체를 핸들링하고 싶다면 event.preventDefault()를 호출하여 이벤트 전파를 멈추고 Submit을 위한 동작을 구현한다.
          *
          * @event things-form-submit
@@ -174,9 +195,9 @@
 			},
 
 			/**
-			* Resource가 변경될 때 
+			* Resource가 변경될 때
 			*
-			* @param {Object} 리소스 
+			* @param {Object} 리소스
 			*/
 			_resourceChanged: function(resource) {
 				this.resourceId = resource.id;
@@ -185,21 +206,20 @@
 			},
 
 			/**
-			 * 리소스 폼이 이미 구성되었는지 여부 
+			 * 리소스 폼이 이미 구성되었는지 여부
 			 */
 			isFormConfigured: function() {
 				return this.$.fields.childNodes.length > 0;
 			},
 
 			/**
-			/**
-			 * 리소스 폼 화면을 구성. formFields 정보로 동적으로 폼 하위 엘리먼트를 생성하여 폼을 구성한다. 
+			 * 리소스 폼 화면을 구성. formFields 정보로 동적으로 폼 하위 엘리먼트를 생성하여 폼을 구성한다.
 			 */
 			reconfigureMyForm: function() {
 				if(this.isFormConfigured() || !this.formFields || this.formFields.length == 0) return false;
 				var divContainer = this.$.fields, rowDiv = null, hiddenFields = [], stampExist = false;
 
-				// 1. Resource Form 구성 - hidden이 아니고 stamp 관련 필드가 아닌 엘리먼트 추가 
+				// 1. Resource Form 구성 - hidden이 아니고 stamp 관련 필드가 아닌 엘리먼트 추가
 				for(index in this.formFields) {
 					var field = this.formFields[index];
 
@@ -207,7 +227,7 @@
 						hiddenFields.push(field);
 						continue;
 					};
-					
+
 					if(this.stampFields && this.stampFields.includes(field.name)) {
 						stampExist = true;
 						continue;
@@ -246,13 +266,13 @@
 					}
 				}
 
-				// 3. Stamp Element 추가 
+				// 3. Stamp Element 추가
 				if(stampExist && this.hideStamp == false) {
 					var stampElement = this._createFormElement({ type : 'things-stamp' });
 					this._createElementContainer(divContainer, stampElement);
 				}
 
-				// 4. hidden 필드 추가 
+				// 4. hidden 필드 추가
 				if(hiddenFields.length > 0) {
 					rowDiv = this._createElementContainer(divContainer, null);
 					for(var i = 0 ; i < hiddenFields.length ; i++) {
@@ -285,12 +305,12 @@
 			},
 
 			/**
-			 * 모든 Form Element를 리턴 
+			 * 모든 Form Element를 리턴
 			 */
 			getFormElements: function() {
 				var formElements = [];
 				var allDivs = this.$.fields.childNodes;
-				if(!allDivs || allDivs.length == 0) 
+				if(!allDivs || allDivs.length == 0)
 					return [];
 
 				for(var i = 0 ; i < allDivs.length; i++) {
@@ -305,7 +325,7 @@
 			/**
 			 * Submit Form
 			 *
-			 * @param {Object} e 버튼 클릭 이벤트 
+			 * @param {Object} e 버튼 클릭 이벤트
 			 */
 			submitMyForm: function(e) {
 				var evt = this.fire('things-form-submit', this.getMyForm(), { cancelable: true });
@@ -335,9 +355,15 @@
 			},
 
 			/**
+			 * en-us
+			 *
 			 * Successful response handler After form submits.
 			 * this fires a 'things-form-submit-success' in this function
+			 ******
 			 *
+			 * ko-kr
+			 * 성공적인 응답 핸들러 form이 submit된 후, 이 함수에서 'things-form-submit-success'를 발생.
+			 ******
 			 * @param {Object} event Successful response event
 			 */
 			_successResponseHandler: function(event) {
@@ -348,9 +374,16 @@
 			},
 
 			/**
+			 * en-us
+			 *
 			 * Error response handler After form submits.
 			 * this fires a 'things-form-submit-error' in this function
+			 ******
 			 *
+			 * ko-kr
+			 *
+			 * 오류 응답 핸들러 form이 submit된 후, 이 함수에서 'things-form-submit-error'를 발생.
+			 ******
 			 * @param {Object} event Error response event
 			 */
 			_errorResponseHandler: function(event) {
@@ -372,7 +405,7 @@
 			},
 
 			/**
-			 * 포커스 
+			 * 포커스
 			 */
 			focus: function() {
 				var elements = this.getFormElements();

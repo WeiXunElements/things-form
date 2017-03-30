@@ -13,7 +13,7 @@ window.Things = window.Things || {};
 /**
  * Detail Form Behavior.
  * 이 Behavior를 사용하려면 getFormElements() 함수가 구현되어야 한다.
- * getFormElements() 함수 내용 : Form의 모든 Elements를 리턴 
+ * getFormElements() 함수 내용 : Form의 모든 Elements를 리턴
  *
  * @polymerBehavior Things.DetailFormBehavior
  */
@@ -23,6 +23,7 @@ Things.DetailFormBehavior = {
 
     /**
      * Resource Type
+     * @type: String
      */
     resourceType: {
       type: String
@@ -31,8 +32,9 @@ Things.DetailFormBehavior = {
     /**
      * Resource Get/Update를 하기 위한 URL.
      * 이 속성으로 아이디로 레코드를 조회하거나 레코드를 업데이트 혹은 생성하는데 사용된다.
-     * Resource URL은 보통 {복수 entity 명}/{:id} 형식이다. 
+     * Resource URL은 보통 {복수 entity 명}/{:id} 형식이다.
      * ex) users/:id
+     * @type: String
      */
     resourceUrl: {
       type: String
@@ -40,6 +42,7 @@ Things.DetailFormBehavior = {
 
     /**
      * Resource Id
+     * @type: String
      */
     resourceId: {
       type: String
@@ -48,6 +51,7 @@ Things.DetailFormBehavior = {
     /**
      * 폼에 채우기 위한 리소스
      * 최초 폼이 실행되는 시점에 서버에 요청하여 리턴받은 데이터
+     * @type: Object
      */
     resource: {
       type: Object,
@@ -56,6 +60,7 @@ Things.DetailFormBehavior = {
 
     /**
      * 폼에는 있지만 업데이트하기에 불필요한 필드를 삭제하기 위한 필드명
+     * @type: Array
      */
     removeFieldsOnSave: {
       type: Array,
@@ -63,7 +68,8 @@ Things.DetailFormBehavior = {
     },
 
     /**
-     * Time Stamp / User Stamp 필드 
+     * Time Stamp / User Stamp 필드
+     * @type: Array
      */
     stampFields: {
       type: Array,
@@ -102,7 +108,7 @@ Things.DetailFormBehavior = {
   ],
 
   /**
-   * ResourceId가 변경될 때 
+   * ResourceId가 변경될 때
    *
    * @param {String} newVal New resourceId
    * @param {String} oldVal Old resourceId
@@ -114,9 +120,9 @@ Things.DetailFormBehavior = {
   },
 
   /**
-   * Resource가 변경될 때 
+   * Resource가 변경될 때
    *
-   * @param {Object} 리소스 
+   * @param {Object} resource
    */
   _resourceChanged: function(resource) {
     this.reconfigureMyForm();
@@ -127,7 +133,7 @@ Things.DetailFormBehavior = {
   /**
    * 서버에 저장 요청할 파라미터 중에서 Save 전에 저장에 불필요한 컬럼들을 필터링한다.
    *
-   * @param {Object} params 서버에 저장 요청할 파라미터 
+   * @param {Object} params 서버에 저장 요청할 파라미터
    */
   _filterResourceColumns: function(params) {
     for(var name in params) {
@@ -151,7 +157,7 @@ Things.DetailFormBehavior = {
     if(this.validationCheck()) {
       var saveAjax = document.createElement('things-ajax');
 
-      // 1. 저장 전에 Save Ajax URL 핸들링 이벤트 
+      // 1. 저장 전에 Save Ajax URL 핸들링 이벤트
       var urlEvent = this.fire('things-form-handle-url-before-save', saveAjax, { cancelable: true });
       if(!urlEvent.defaultPrevented) {
         saveAjax.resourceAction = this.resource.id ? 'update' : 'create';
@@ -166,7 +172,7 @@ Things.DetailFormBehavior = {
 
       // 2. 저장 전에 Parameter 핸들링 이벤트
       var params= this.serializeMyForm();
-    
+
       var paramEvent = this.fire('things-form-handle-param-before-save', { ajax : saveAjax, params : params }, { cancelable: true });
       if(!paramEvent.defaultPrevented) {
         params = this._filterResourceColumns(params);
@@ -197,11 +203,11 @@ Things.DetailFormBehavior = {
     var getEvent = this.fire('things-form-handle-url-before-get', getAjax, { cancelable: true });
     if(!getEvent.defaultPrevented) {
       if(this.resourceUrl.indexOf('/:id') >= 0) {
-        getAjax.resourceUrl = this.resourceUrl; 
+        getAjax.resourceUrl = this.resourceUrl;
       } else {
         getAjax.resourceUrl = this.resourceUrl + '/:id';
       }
-      
+
       getAjax.resourceId = this.resourceId;
       getAjax.resourceAction = 'find';
     }
@@ -221,11 +227,13 @@ Things.DetailFormBehavior = {
   },
 
   /**
-   * Save 액션 성공 후 후처리 
+   * Save 액션 성공 후 후처리
    *
    * method가 GET인 경우 : things-resource-form-read 이벤트
    * method가 PUT인 경우 : things-resource-form-saved 이벤트
    * method가 POST인 경우 : things-resource-form-created 이벤트
+   *
+   * @param  {[type]} method
    */
   handleSuccessResponse: function(method) {
     if(method == 'GET') {

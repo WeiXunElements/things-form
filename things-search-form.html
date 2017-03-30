@@ -33,22 +33,29 @@
 <link rel="import" href="./things-search-form-behavior.html">
 
 <!--
+en-us
+
 `<things-search-form>` is an HTML `<form>` element that can search data by configure form fields dinamically.
+******
+ko-kr
 
-  Example
+`<things-search-form>`은 구성 양식 필드별로 데이터를 동적으로 검색 할 수 있는 HTML 형식의 `<form>` 요소 입니다.
+******
 
-    <things-ajax 
+  Example:
+
+    <things-ajax
       auto
       method="GET"
-      resource-url="diy_services/ElidomSearchForm/query.json" 
+      resource-url="diy_services/ElidomSearchForm/query.json"
       last-response="{{formFields}}">
     </things-ajax>
 
-    <things-search-form 
+    <things-search-form
       id="search-form"
       class="flex"
-      form-fields="[[formFields]]" 
-      action-url="diy_services/DynamicScreen/query.json" 
+      form-fields="[[formFields]]"
+      action-url="diy_services/DynamicScreen/query.json"
       page="{{page}}"
       limit="{{limit}}"
       last-response="{{lastResponse}}">
@@ -79,7 +86,7 @@
 
     <paper-material elevation="0" class="layout horizontal flex" on-keypress="handleKeyPress">
       <paper-icon-button icon="[[arrowIcon]]" on-tap="toggleSearchConditions"></paper-icon-button>
-        
+
       <iron-collapse id="content" class="flex" opened>
           <form is="iron-form"
                 action="[[action]]"
@@ -100,14 +107,16 @@
 
       properties: {
         /**
-         * Toolbar에 표시할 화면 타이틀 
+         * Toolbar에 표시할 화면 타이틀
+         * @type: String
          */
         title: {
           type: String
         },
 
         /**
-         * 검색 조건 Folding 아이콘 
+         * 검색 조건 Folding 아이콘
+         * @type: String
          */
         arrowIcon: {
           type: String,
@@ -118,10 +127,10 @@
       listeners : {
         'iron-form-presubmit' :'handleBeforeSubmit',
         'iron-form-response' :'_successResponseHandler',
-        'iron-form-error' : '_errorResponseHandler'      
+        'iron-form-error' : '_errorResponseHandler'
       },
-      
-      behaviors: [ 
+
+      behaviors: [
         Things.FormBehavior,
         Things.SearchFormBehavior,
         Things.SpinnerBehavior,
@@ -129,7 +138,7 @@
       ],
 
       /**
-       * 검색 조건을 접고 펴는 액션 
+       * 검색 조건을 접고 펴는 액션
        *
        * @param {Object} event
        */
@@ -141,9 +150,9 @@
           this.arrowIcon = 'icons:arrow-drop-down';
         }
       },
-      
+
       /**
-       * 리소스 폼이 이미 구성되었는지 여부 
+       * 리소스 폼이 이미 구성되었는지 여부
        */
       isFormConfigured: function() {
         return this.$.fields.childNodes.length > 0;
@@ -200,10 +209,10 @@
           var newElement = this._createFormElement(field);
           rowDiv = this._createElementContainer(divContainer, newElement);
           rowDiv.hidden = true;
-        }      
+        }
 
         this.active = true;
-        this.fire('things-search-form-configured', this.formFields);      
+        this.fire('things-search-form-configured', this.formFields);
       },
 
       /**
@@ -221,19 +230,19 @@
       },
 
       /**
-       * 모든 Form Element를 리턴 
+       * 모든 Form Element를 리턴
        */
       getFormElements: function() {
         var formElements = [];
         var allDivs = this.$.fields.childNodes;
-        if(!allDivs || allDivs.length == 0) 
+        if(!allDivs || allDivs.length == 0)
           return [];
 
         for(var i = 0 ; i < allDivs.length; i++) {
           var divContainer = allDivs[i];
           var divElements = divContainer.childNodes ? divContainer.childNodes : [];
-          for(var j = 0 ; j < divElements.length ; j++) { 
-            formElements.push(divElements[j]); 
+          for(var j = 0 ; j < divElements.length ; j++) {
+            formElements.push(divElements[j]);
           }
         }
 
@@ -241,7 +250,7 @@
       },
 
       /**
-       * Submit Form. 검색 실행 
+       * Submit Form. 검색 실행
        */
       submitMyForm: function() {
         var evt = this.fire('things-form-search', this, { cancelable: true });
@@ -251,7 +260,7 @@
           // 2. Start Spinner
           this.startSpinner();
           // 3. Submit
-          this.getMyForm().submit();        
+          this.getMyForm().submit();
         }
       },
 
@@ -262,13 +271,20 @@
        */
       _onSearchFormTap: function(e) {
         if(this.page > 1) this.page = 1;
-        else this.submitMyForm();      
+        else this.submitMyForm();
       },
 
       /**
+       * en-us
+       *
        * Successful response handler After form submits.
        * this fires a 'things-form-submit-success' in this function
+       ******
        *
+       * ko-kr
+       *
+       * form submit후 성공적인 응답 핸들러. 이 함수에서 'things-form-submit-success'를 발생.
+       ******
        * @param {Object} event Successful response event
        */
       _successResponseHandler: function(event) {
@@ -278,8 +294,15 @@
       },
 
       /**
+       * en-us
+       *
        * Error response handler After form submits.
        * this fires a 'things-form-submit-error' in this function
+       ******
+       *
+       * ko-kr
+       *
+       * 오류 응답 핸들러 form이 submit된 후, 이 함수에 'things-form-submit-error'를 발생.
        *
        * @param {Object} event Error response event
        */

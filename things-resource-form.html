@@ -39,7 +39,7 @@
 <link rel="import" href="./things-detail-form-behavior.html">
 
 <!--
-Resource Form Element. 
+Resource Form Element.
 
 설정한 form-fields를 바탕으로 리소스 폼을 생성해주고 설정한 resource-url로 데이터를 조회/수정한다.
 
@@ -98,22 +98,22 @@ things-resource로 부터 위와 같은 형식의 form-fields meta data를 조�
 폼 데이터를 업데이트할 때는  url : terminologies/:id, method : put 으로 한다.
 업데이트 후에는 last-response로 결과를 얻을 수 있다.
 
-폼이 오픈될 때 things-resource-form-opened 이벤트가 발생하고 
+폼이 오픈될 때 things-resource-form-opened 이벤트가 발생하고
 조회 things-resource-form-read 이벤트가, 업데이트 성공시 things-resource-form-saved 에러 발생시 things-resource-form-error가 발생되므로 성공/실패시 custom action을 구성할 수 있다.
 
 	Resource Form Example:
 
-    <things-ajax 
+    <things-ajax
       auto
       method="GET"
-      resource-url="diy_services/ElidomResourceFormFields/query.json" 
+      resource-url="diy_services/ElidomResourceFormFields/query.json"
       last-response="{{formFields}}">
     </things-ajax>
 
-    <things-resource-form 
+    <things-resource-form
       id="resource-form"
       title="Item Detail"
-      form-fields="[[formFields]]" 
+      form-fields="[[formFields]]"
       resource-url="terminologies/:id"
       last-response="{{lastResponse}}">
     </things-resource-form>
@@ -150,8 +150,8 @@ things-resource로 부터 위와 같은 형식의 form-fields meta data를 조�
 			}
 		</style>
 
-		<form is="iron-form" 
-					id="resource-form" 
+		<form is="iron-form"
+					id="resource-form"
 					action=[[action]]
 					headers="[[headers]]"
 					content-type="[[contentType]]"
@@ -175,14 +175,16 @@ things-resource로 부터 위와 같은 형식의 form-fields meta data를 조�
 
 			properties: {
 				/**
-				 * 폼 타이틀 
+				 * 폼 타이틀
+				 * @type: String
 				 */
 				title: {
 					type: String
 				},
 
 				/**
-				 * 컬럼 개수 
+				 * 컬럼 개수
+				 * @type: Number
 				 */
 				columnCount: {
 					type: Number,
@@ -190,7 +192,8 @@ things-resource로 부터 위와 같은 형식의 form-fields meta data를 조�
 				},
 
 				/**
-				 * Stamp를 숨길 지 여부 
+				 * Stamp를 숨길 지 여부
+				 * @type: Boolean
 				 */
 				hideStamp: {
 					type: Boolean,
@@ -198,7 +201,8 @@ things-resource로 부터 위와 같은 형식의 form-fields meta data를 조�
 				},
 
 				/**
-				 * 폼 버튼 
+				 * 폼 버튼
+				 * @type: Array
 				 */
 				buttons: {
 					type: Array,
@@ -212,13 +216,13 @@ things-resource로 부터 위와 같은 형식의 form-fields meta data를 조�
 
         /**
          * Fires after search form configuration completed
-         * 폼 화면이 모두 구성된 이 후 발생 
+         * 폼 화면이 모두 구성된 이 후 발생
          *
          * @event things-form-configured
          */
         /**
          * Fires when form submit
-         * Form Submit 시점에 발생하는 이벤트 
+         * Form Submit 시점에 발생하는 이벤트
          * Form Submit 동작 자체를 핸들링하고 싶다면 event.preventDefault()를 호출하여 이벤트 전파를 멈추고 Submit을 위한 동작을 구현한다.
          *
          * @event things-form-submit
@@ -237,7 +241,7 @@ things-resource로 부터 위와 같은 형식의 form-fields meta data를 조�
 				'iron-form-response' :'_successResponseHandler',
 				'iron-form-error' : '_errorResponseHandler',
 				'things-detail-form-read-success' : '_successResponseHandler',
-				'things-detail-form-read-error' : '_errorResponseHandler',			
+				'things-detail-form-read-error' : '_errorResponseHandler',
 				'things-detail-form-save-success' : '_successResponseHandler',
 				'things-detail-form-save-error' : '_errorResponseHandler'
 			},
@@ -250,7 +254,7 @@ things-resource로 부터 위와 같은 형식의 form-fields meta data를 조�
 			},
 
 			/**
-			 * 리소스 폼이 이미 구성되었는지 여부 
+			 * 리소스 폼이 이미 구성되었는지 여부
 			 */
 			isFormConfigured: function() {
 				return this.$.fields.childNodes.length > 0;
@@ -258,13 +262,13 @@ things-resource로 부터 위와 같은 형식의 form-fields meta data를 조�
 
 			/**
 			/**
-			 * 리소스 폼 화면을 구성. formFields 정보로 동적으로 폼 하위 엘리먼트를 생성하여 폼을 구성한다. 
+			 * 리소스 폼 화면을 구성. formFields 정보로 동적으로 폼 하위 엘리먼트를 생성하여 폼을 구성한다.
 			 */
 			reconfigureMyForm: function() {
 				if(this.isFormConfigured() || !this.formFields || this.formFields.length == 0) return;
 				var divContainer = this.$.fields, rowDiv = null, hiddenFields = [], stampExist = false;
 
-				// 1. Resource Form 구성 - hidden이 아니고 stamp 관련 필드가 아닌 엘리먼트 추가 
+				// 1. Resource Form 구성 - hidden이 아니고 stamp 관련 필드가 아닌 엘리먼트 추가
 				for(index in this.formFields) {
 					var field = this.formFields[index];
 
@@ -277,7 +281,7 @@ things-resource로 부터 위와 같은 형식의 form-fields meta data를 조�
 						stampExist = true;
 						continue;
 					}
-					
+
 					var newElement = this._createFormElement(field);
 					if(!newElement) continue;
 
@@ -311,13 +315,13 @@ things-resource로 부터 위와 같은 형식의 form-fields meta data를 조�
 					}
 				}
 
-				// 3. Stamp Element 추가 
+				// 3. Stamp Element 추가
 				if(stampExist && this.hideStamp == false) {
 					var stampElement = this._createFormElement({ type : 'things-stamp' });
 					this._createElementContainer(divContainer, stampElement);
 				}
 
-				// 4. hidden 필드 추가 
+				// 4. hidden 필드 추가
 				if(hiddenFields.length > 0) {
 					rowDiv = this._createElementContainer(divContainer, null);
 					for(var i = 0 ; i < hiddenFields.length ; i++) {
@@ -344,7 +348,7 @@ things-resource로 부터 위와 같은 형식의 form-fields meta data를 조�
 			},
 
 			/**
-			 * 모든 Form Element를 리턴 
+			 * 모든 Form Element를 리턴
 			 */
 			getFormElements: function() {
 				var formElements = [];
@@ -354,8 +358,8 @@ things-resource로 부터 위와 같은 형식의 form-fields meta data를 조�
 				for(var i = 0 ; i < allDivs.length; i++) {
 					var divContainer = allDivs[i];
 					var divElements = divContainer.childNodes ? divContainer.childNodes : [];
-					for(var j = 0 ; j < divElements.length ; j++) { 
-						formElements.push(divElements[j]); 
+					for(var j = 0 ; j < divElements.length ; j++) {
+						formElements.push(divElements[j]);
 					}
 				}
 
@@ -365,7 +369,7 @@ things-resource로 부터 위와 같은 형식의 form-fields meta data를 조�
 			/**
 			 * Save Form
 			 *
-			 * @param {Object} e 버튼 클릭 이벤트 
+			 * @param {Object} e 버튼 클릭 이벤트
 			 */
 			submitMyForm: function(e) {
 				var evt = this.fire('things-form-submit', this.getMyForm(), { cancelable: true });
@@ -390,8 +394,8 @@ things-resource로 부터 위와 같은 형식의 form-fields meta data를 조�
 						var msg = '[' + element.label + '] ' + Things.DataGlobal.t('text.info_invalid');
 						var me = this;
 
-						this.openConfirmMsg({ 
-							title : Things.DataGlobal.t('text.invalid_input'), text : msg, type : 'info', timer : 5000 
+						this.openConfirmMsg({
+							title : Things.DataGlobal.t('text.invalid_input'), text : msg, type : 'info', timer : 5000
 						}, function() {
 							me.async(function() {
 								element.focus();
@@ -400,9 +404,9 @@ things-resource로 부터 위와 같은 형식의 form-fields meta data를 조�
 						return false;
 					}
 				}
-				
+
 				return true;
-			},	
+			},
 
 			/**
 			 * Successful response handler After form submits.
@@ -441,7 +445,7 @@ things-resource로 부터 위와 같은 형식의 form-fields meta data를 조�
 			},
 
 			/**
-			 * detail item view를 구성하기 위한 필수 함수 
+			 * detail item view를 구성하기 위한 필수 함수
 			 * item view를 구성한다.
 			 *
 			 * @return {Object} resource 리소스 데이터 (Object) 혹은 리소스 아이디 (Number)
@@ -451,7 +455,7 @@ things-resource로 부터 위와 같은 형식의 form-fields meta data를 조�
 			},
 
 			/**
-			 * 포커스 
+			 * 포커스
 			 */
 			focus: function() {
 				var elements = this.getFormElements();

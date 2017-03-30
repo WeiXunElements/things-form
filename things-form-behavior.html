@@ -45,6 +45,7 @@ Things.FormBehaviorImpl = {
      * Meta-Data of the form elements of the form.
      * Custom Form element can configure child elements of the form dynamically.
      * StdFormBehavior create form element by each of this attributes
+     * @type: Array
      */
 		formFields: {
 			type: Array,
@@ -54,6 +55,7 @@ Things.FormBehaviorImpl = {
 		/**
 		 * Url for submit. global setting의 baseUrl이 제거된 불완전한 URL.
 		 * 이 정보로는 form submit을 할 수 없고 이 url이 설정되는 순간 _computeAction이 작동하여 완전한 action url을 생성하여 action 값에 설정한다.
+		 * @type: String
 		 */
 		actionUrl: {
 			type: String,
@@ -61,16 +63,18 @@ Things.FormBehaviorImpl = {
 		},
 
 		/**
-		 * Action url for submit. 
+		 * Action url for submit.
 		 * This attribute is configured by base url of the global setting.
+		 * @type: String
 		 */
 		action: {
 			type: String,
 			computed: '_computeAction(globals.baseUrl,actionUrl)'
 		},
-		
+
 		/**
 		 * HTTP Method for submit.
+		 * @type: String
 		 */
 		method: {
 			type: String
@@ -78,6 +82,7 @@ Things.FormBehaviorImpl = {
 
 		/**
 		 * HTTP Content Type for submit.
+		 * @type: String
 		 */
 		contentType: {
 			type: String,
@@ -85,7 +90,8 @@ Things.FormBehaviorImpl = {
 		},
 
 		/**
-		 * HTTP 전송시 withCredentials 값 설정 
+		 * HTTP 전송시 withCredentials 값 설정
+		 * @type: Boolean
 		 */
 		withCredentials: {
 			type: Boolean,
@@ -94,13 +100,15 @@ Things.FormBehaviorImpl = {
 
 		/**
 		 * HTTP 전송시 Header 값 설정
+		 * @type: Object
 		 */
 		headers: {
 		 type: Object
 		},
 
 		/**
-		 * 검색 결과 데이터 
+		 * 검색 결과 데이터
+		 * @type: Object
 		 */
 		lastResponse: {
 			type: Object,
@@ -110,6 +118,7 @@ Things.FormBehaviorImpl = {
 		/**
 		 * formFileds가 변경된 후 things-resource-form-configure
 		 * 이벤트가 발생했는지 여부
+		 * @type: Boolean
 		 */
 		isConfigureFired: {
 			type: Boolean,
@@ -118,11 +127,21 @@ Things.FormBehaviorImpl = {
 	},
 
   /**
+   * en-us
+   *
    * Handler after Form element changed.
    * Child elements of the form is reconfigured by this function.
    * The form that extends StdFormBehavior must implement 'reconfigureMyForm' function.
    * Logic of'reconfigureMyForm' function is creation form child elements by formFields attributes and configuration layout.
+   ******
    *
+   * ko-kr
+   *
+   * Form element가 바뀐후에 handler
+   * Form의 자식 elements는 이 function에 의해 재구성되어진다.
+   * StdFormBehavior를 확장하는 형식은 'reconfigureMyForm' 함수를 구현해야한다.
+   * 'reconfigureMyForm' function의 logic은 formFields속성 및 구성 레이아웃에 따라 자식 요소를 작성함.
+   ******
    * @param {Array} formFields attribute
    */
 	_formFieldsChanged: function(formFields) {
@@ -135,7 +154,15 @@ Things.FormBehaviorImpl = {
 	},
 
 	/**
+	 * en-us
+	 *
 	 * compute action url by base url of the global settings
+	 ******
+	 *
+	 * ko-kr
+	 *
+	 * 전역 설정의 기본 URL로 action url을 compute함.
+	 ******
 	 * @param {string} baseUrl base url of the global settings
 	 * @param {string} url url attribute
 	 */
@@ -148,7 +175,15 @@ Things.FormBehaviorImpl = {
 	},
 
 	/**
+	 * en-us
+	 *
 	 * Bind element's attribute values by formField informations.
+	 ******
+	 *
+	 * ko-kr
+	 *
+	 * formField 정보로 요소의 속성 값을 바인딩함.
+	 ******
 	 * @param {Object} child element of the form
 	 * @param {Object} element information object from formFields
 	 */
@@ -161,15 +196,22 @@ Things.FormBehaviorImpl = {
 	},
 
 	/**
-	 * create list box
+	 * en-us
 	 *
+	 * create list box
+	 ******
+	 *
+	 * ko-kr
+	 *
+	 * list box 생성
+	 ******
 	 * @param {Array} items Listbox values
-	 * @return {Object} paper-listbox element 
+	 * @return {Object} paper-listbox element
 	 */
 	_makeListBox: function(items) {
 		var listbox = document.createElement('paper-listbox');
 		listbox.setAttribute('selected','0');
-		
+
 		for(index in items) {
 			option = items[index];
 			item = document.createElement('paper-item');
@@ -181,11 +223,18 @@ Things.FormBehaviorImpl = {
 	},
 
   /**
-   * Create child element of the form by one of the formFields object
+   * en-us
    *
+   * Create child element of the form by one of the formFields object
+   ******
+   *
+   * ko-kr
+   *
+   * formFields 객체 중 하나를 사용하여 form의 자식 element 생성.
+   ******
    * @param {Object} one of the formFields attribute
    * @return {Object} created child element for the form
-   */	 
+   */
 	_createFormElement: function(element) {
 		var newElement = null;
 
@@ -232,7 +281,7 @@ Things.FormBehaviorImpl = {
 			case 'radio':
 				newElement = document.createElement('paper-radio-group');
 				newElement = this._bindAttributes(newElement, element);
-				
+
 				for(index in element.child) {
 					child = element[index];
 					newChild = document.createElement('paper-radio-button');
@@ -280,7 +329,7 @@ Things.FormBehaviorImpl = {
 
 				if(element.userData.bindFields)
 					newElement.setAttribute('bind-fields', element.userData.bindFields);
-				
+
 				if(element.userData.initialParams)
 					newElement.setAttribute('initial-params', element.userData.initialParams);
 
@@ -302,7 +351,7 @@ Things.FormBehaviorImpl = {
 				newElement.setAttribute('resource-type', element.userData.resourceType);
 				newElement.setAttribute('resource-name', element.userData.resourceName);
 				newElement.setAttribute('submit-name', element.userData.submitName);
-				
+
 				if(element.userData.bindFields)
 					newElement.setAttribute('bind-fields', element.userData.bindFields);
 
@@ -419,10 +468,10 @@ Things.FormBehaviorImpl = {
 				// Resource Form일 경우에만 Validation은 의미가 있고 Search Form일 경우는 의미없다.
 				if(!element.searchForm && element.userData) {
 					if(element.userData.type) {
-						if(element.userData.type == 'integer' || 
-							 element.userData.type == 'decimal' || 
-							 element.userData.type == 'double' || 
-							 element.userData.type == 'float' || 
+						if(element.userData.type == 'integer' ||
+							 element.userData.type == 'decimal' ||
+							 element.userData.type == 'double' ||
+							 element.userData.type == 'float' ||
 							 element.userData.type == 'long') {
 							newElement={};
 							newElement = document.createElement('things-number-field');
@@ -478,7 +527,7 @@ Things.FormBehaviorImpl = {
 		}
 
 		if(!newElement) return null;
-		
+
 		this.setFieldData(newElement, element.default);
 		newElement.setAttribute('class', 'flex style-scope things-form');
 		if(element.type != 'empty') {
@@ -507,7 +556,15 @@ Things.FormBehaviorImpl = {
 	},
 
 	/**
+	 * en-us
+	 *
 	 * key event - form submits when enter key is monitored
+	 ******
+	 *
+	 * ko-kr
+	 *
+	 * ket event = key를 누를 때 form submits은 모니터 되어짐.
+	 ******
 	 * @param {Object} event A 'KeyPressed' event
 	 */
 	handleKeyPress: function(event) {
@@ -519,7 +576,15 @@ Things.FormBehaviorImpl = {
 	},
 
 	/**
+	 * en-us
+	 *
 	 * find form by querySelector and return found form
+	 ******
+	 *
+	 * ko-kr
+	 *
+	 * querySelector에 의해 form을 찾고 발견된 form을 반환.
+	 ******
 	 * @return {Object}
 	 */
 	getMyForm: function() {
@@ -535,8 +600,17 @@ Things.FormBehaviorImpl = {
 	},
 
 	/**
+	 * en-us
+	 *
 	 * Serialize form and return serialized object.
 	 * It can be used form parameters
+	 ******
+	 *
+	 * ko-kr
+	 *
+	 * form 직렬화 미 직렬화된 object 리턴
+	 * 양식 매개변수로 사용할 수 있음
+	 ****** 
 	 * @return {Object} serialized object
 	 */
 	serializeMyForm: function() {
@@ -571,7 +645,7 @@ Things.FormBehaviorImpl = {
 	},
 
 	/**
-	 * 폼 필드에 값 설정 
+	 * 폼 필드에 값 설정
 	 *
 	 * @param {Object} resource
 	 */
@@ -603,13 +677,13 @@ Things.FormBehaviorImpl = {
 				element.setAttribute('disabled', true);
 			}
 		}
-	}	
+	}
 
 };
 
 Things.FormBehavior = [
-	'IronFormElementBehavior', 
-	Things.FormBehaviorImpl, 
+	'IronFormElementBehavior',
+	Things.FormBehaviorImpl,
 	Things.GlobalBehavior
 ];
 
