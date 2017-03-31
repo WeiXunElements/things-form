@@ -176,7 +176,8 @@ things-resource로 부터 위와 같은 형식의 form-fields meta data를 조�
 			properties: {
 				/**
 				 * 폼 타이틀
-				 * @type: String
+				 * *******
+				 * @type {String}
 				 */
 				title: {
 					type: String
@@ -184,7 +185,8 @@ things-resource로 부터 위와 같은 형식의 form-fields meta data를 조�
 
 				/**
 				 * 컬럼 개수
-				 * @type: Number
+				 * *******
+				 * @type {Number}
 				 */
 				columnCount: {
 					type: Number,
@@ -193,7 +195,8 @@ things-resource로 부터 위와 같은 형식의 form-fields meta data를 조�
 
 				/**
 				 * Stamp를 숨길 지 여부
-				 * @type: Boolean
+				 * *******
+				 * @type {Boolean}
 				 */
 				hideStamp: {
 					type: Boolean,
@@ -202,7 +205,8 @@ things-resource로 부터 위와 같은 형식의 form-fields meta data를 조�
 
 				/**
 				 * 폼 버튼
-				 * @type: Array
+				 * *******
+				 * @type {Array}
 				 */
 				buttons: {
 					type: Array,
@@ -248,6 +252,7 @@ things-resource로 부터 위와 같은 형식의 form-fields meta data를 조�
 
 			/**
 			 * Life Cycle
+			 * *******
 			 */
 			attached: function() {
 				this.$.toolbar.hidden = this.buttons && this.buttons.length > 0 ? false : true;
@@ -255,6 +260,7 @@ things-resource로 부터 위와 같은 형식의 form-fields meta data를 조�
 
 			/**
 			 * 리소스 폼이 이미 구성되었는지 여부
+			 * ******
 			 */
 			isFormConfigured: function() {
 				return this.$.fields.childNodes.length > 0;
@@ -263,6 +269,7 @@ things-resource로 부터 위와 같은 형식의 form-fields meta data를 조�
 			/**
 			/**
 			 * 리소스 폼 화면을 구성. formFields 정보로 동적으로 폼 하위 엘리먼트를 생성하여 폼을 구성한다.
+			 * ******
 			 */
 			reconfigureMyForm: function() {
 				if(this.isFormConfigured() || !this.formFields || this.formFields.length == 0) return;
@@ -349,6 +356,7 @@ things-resource로 부터 위와 같은 형식의 form-fields meta data를 조�
 
 			/**
 			 * 모든 Form Element를 리턴
+			 * ********
 			 */
 			getFormElements: function() {
 				var formElements = [];
@@ -368,7 +376,7 @@ things-resource로 부터 위와 같은 형식의 form-fields meta data를 조�
 
 			/**
 			 * Save Form
-			 *
+			 *******
 			 * @param {Object} e 버튼 클릭 이벤트
 			 */
 			submitMyForm: function(e) {
@@ -385,6 +393,7 @@ things-resource로 부터 위와 같은 형식의 form-fields meta data를 조�
 			/**
 			 * validation check before save
 			 * 필드들의 isValid 속성을 통해 valdation 체크를 수행 합니다.
+			 * ******
 			 */
 			validationCheck: function() {
 				var formElements = this.getFormElements();
@@ -447,7 +456,7 @@ things-resource로 부터 위와 같은 형식의 form-fields meta data를 조�
 			/**
 			 * detail item view를 구성하기 위한 필수 함수
 			 * item view를 구성한다.
-			 *
+			 *******
 			 * @return {Object} resource 리소스 데이터 (Object) 혹은 리소스 아이디 (Number)
 			 */
 			loadDetailData: function(resource) {
@@ -456,6 +465,7 @@ things-resource로 부터 위와 같은 형식의 form-fields meta data를 조�
 
 			/**
 			 * 포커스
+			 * *******
 			 */
 			focus: function() {
 				var elements = this.getFormElements();

@@ -23,6 +23,7 @@ Things.DetailFormBehavior = {
 
     /**
      * Resource Type
+     * ********
      * @type: String
      */
     resourceType: {
@@ -34,6 +35,7 @@ Things.DetailFormBehavior = {
      * 이 속성으로 아이디로 레코드를 조회하거나 레코드를 업데이트 혹은 생성하는데 사용된다.
      * Resource URL은 보통 {복수 entity 명}/{:id} 형식이다.
      * ex) users/:id
+     * ******
      * @type: String
      */
     resourceUrl: {
@@ -42,6 +44,7 @@ Things.DetailFormBehavior = {
 
     /**
      * Resource Id
+     * ********
      * @type: String
      */
     resourceId: {
@@ -51,6 +54,7 @@ Things.DetailFormBehavior = {
     /**
      * 폼에 채우기 위한 리소스
      * 최초 폼이 실행되는 시점에 서버에 요청하여 리턴받은 데이터
+     * *******
      * @type: Object
      */
     resource: {
@@ -60,6 +64,7 @@ Things.DetailFormBehavior = {
 
     /**
      * 폼에는 있지만 업데이트하기에 불필요한 필드를 삭제하기 위한 필드명
+     * ********
      * @type: Array
      */
     removeFieldsOnSave: {
@@ -69,6 +74,7 @@ Things.DetailFormBehavior = {
 
     /**
      * Time Stamp / User Stamp 필드
+     * *******
      * @type: Array
      */
     stampFields: {
@@ -78,27 +84,27 @@ Things.DetailFormBehavior = {
 
     /**
      * 폼이 오픈된 후 fire
-     *
+     ***********
      * @event things-resource-form-opened
      */
     /**
      * 리소스 조회 후 fire
-     *
+     **********
      * @event things-resource-form-read
      */
     /**
      * 리소스 업데이트 후 fire
-     *
+     **********
      * @event things-resource-form-saved
      */
     /**
      * 생성 후 fire
-     *
+     *********
      * @event things-resource-form-created
      */
     /**
      * 조회/생성/업데이트 에러 발생 후 fire
-     *
+     **********
      * @event things-resource-form-error
      */
   },
@@ -152,6 +158,7 @@ Things.DetailFormBehavior = {
 
   /**
    * Save data from resource detail screen
+   * *********
    */
   saveResource: function() {
     if(this.validationCheck()) {
@@ -194,7 +201,7 @@ Things.DetailFormBehavior = {
 
   /**
    * 리소스 아이디로 서버에 리소스를 조회 요청한다.
-   *
+   *******
    * @param {String} resourceId
    */
   findResource: function(resourceId) {
@@ -228,7 +235,7 @@ Things.DetailFormBehavior = {
 
   /**
    * Save 액션 성공 후 후처리
-   *
+   ********
    * method가 GET인 경우 : things-resource-form-read 이벤트
    * method가 PUT인 경우 : things-resource-form-saved 이벤트
    * method가 POST인 경우 : things-resource-form-created 이벤트
@@ -250,7 +257,7 @@ Things.DetailFormBehavior = {
   /**
   * Error response handler After form submits.
   * Fires a 'things-resource-form-error' in this function
-  *
+  *******
   * @param {Object} errorResponse
   */
   handleErrorResponse: function(errorResponse) {

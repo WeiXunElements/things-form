@@ -112,7 +112,8 @@
 			properties: {
 				/**
 				 * 폼 타이틀
-				 * @type: String
+				 * ********
+				 * @type {String}
 				 */
 				title: {
 					type: String
@@ -120,7 +121,8 @@
 
 				/**
 				 * 구성하고자 하는 폼의 컬럼 개수
-				 * @type: Number
+				 * ********
+				 * @type {Number}
 				 */
 				columnCount: {
 					type: Number,
@@ -129,7 +131,8 @@
 
 				/**
 				 * 폼 리소스
-				 * @type: Object
+				 * ********
+				 * @type {Object}
 				 */
 				resource: {
 					type: Object,
@@ -138,7 +141,8 @@
 
 				/**
 				 * 폼 리소스 아이디
-				 * @type: String
+				 * ********
+				 * @type {String}
 				 */
 				resourceId: {
 					type: String
@@ -146,7 +150,8 @@
 
 				/**
 				 * Stamp를 숨길 지 여부
-				 * @type: Boolean
+				 * ********
+				 * @type {Boolean}
 				 */
 				hideStamp: {
 					type: Boolean,
@@ -155,7 +160,8 @@
 
 				/**
 				 * 폼 버튼
-				 * @type: Array
+				 * ********
+				 * @type {Array}
 				 */
 				buttons: {
 					type: Array,
@@ -190,6 +196,9 @@
 				'iron-form-error' : '_errorResponseHandler'
 			},
 
+							/**
+							* attached
+							*/
 			attached: function() {
 				this.$.toolbar.hidden = this.buttons && this.buttons.length > 0 ? false : true;
 			},
@@ -207,6 +216,7 @@
 
 			/**
 			 * 리소스 폼이 이미 구성되었는지 여부
+			 * ******
 			 */
 			isFormConfigured: function() {
 				return this.$.fields.childNodes.length > 0;
@@ -214,6 +224,7 @@
 
 			/**
 			 * 리소스 폼 화면을 구성. formFields 정보로 동적으로 폼 하위 엘리먼트를 생성하여 폼을 구성한다.
+			 * ******
 			 */
 			reconfigureMyForm: function() {
 				if(this.isFormConfigured() || !this.formFields || this.formFields.length == 0) return false;
@@ -306,6 +317,7 @@
 
 			/**
 			 * 모든 Form Element를 리턴
+			 * *******
 			 */
 			getFormElements: function() {
 				var formElements = [];
@@ -324,7 +336,7 @@
 
 			/**
 			 * Submit Form
-			 *
+			 *********
 			 * @param {Object} e 버튼 클릭 이벤트
 			 */
 			submitMyForm: function(e) {
@@ -340,6 +352,7 @@
 			/**
 			 * validation check before save
 			 * 필드들의 isValid 속성을 통해 valdation 체크를 수행 합니다.
+			 * ********
 			 */
 			validationCheck: function() {
 				for(var i = 0; i < this.$.fields.childNodes.length; i++) {
@@ -406,6 +419,7 @@
 
 			/**
 			 * 포커스
+			 * *******
 			 */
 			focus: function() {
 				var elements = this.getFormElements();

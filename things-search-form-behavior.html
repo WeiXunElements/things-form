@@ -20,7 +20,8 @@ Things.SearchFormBehaviorImpl = {
 
     /**
      * form이 active 상태인지 여부. active 상태인 경우에만 form submit이 가능하다.
-     * @type: Boolean
+     * *******
+     * @type {Boolean}
      */
     active: {
       type: Boolean
@@ -28,7 +29,8 @@ Things.SearchFormBehaviorImpl = {
 
     /**
      * 값이 필요없는 operator
-     * @type: Array
+     * *******
+     * @type {Array}
      */
     nonValueOpers: {
       type: Array,
@@ -39,7 +41,8 @@ Things.SearchFormBehaviorImpl = {
      * 검색시 파라미터 유형 : RESOURCE / PLAIN
      * RESOURCE : 리소스 쿼리인 경우 검색 파라미터가 query = "[{'name' : 'searchField', 'operator' : 'eq', 'value' : 'value'}]" 형식으로 넘어간다.
      * PLAIN : 검색 파라미터가 Key / Value 형식으로 넘어간다.
-     * @type: String
+     * *******
+     * @type {String}
      */
     paramType: {
       type: String,
@@ -50,7 +53,8 @@ Things.SearchFormBehaviorImpl = {
      * Resource Selector 창이 실행되면서 바로 반영되어야 할 파라미터들을 지정한다.
      * Resource Selector가 실행된 후 바로 서비스 호출을 하게 되는데 이 때 initialParams가 서비스 호출 파라미터에 반영된다.
      * Format : {Parameter Name1}:{Parameter Value1},{Parameter Name2}:{Parameter Value2},...
-     * @type: String
+     * *******
+     * @type {String}
      */
     initialParams: {
       type: String
@@ -177,7 +181,7 @@ Things.SearchFormBehaviorImpl = {
   /**
    * Submit 전에 전처리 핸들
    * Pagination을 사용하는 경우에 page, limit 정보를 파라미터에 추가한다.
-   *
+   *******
    * @param  {event} event
    */
   handleBeforeSubmit: function(event) {
@@ -209,7 +213,7 @@ Things.SearchFormBehaviorImpl = {
    *
    * Successful response handler After form submits.
    * this fires a 'things-form-submit-success' in this function
-   ******
+   *
    *
    * ko-kr
    *
@@ -226,12 +230,12 @@ Things.SearchFormBehaviorImpl = {
    *
    * Error response handler After form submits.
    * this fires a 'things-form-submit-error' in this function
-   ******
+   *
    *
    * ko-kr
    *
    * form submit후 오류 응답 핸들러. 이 함수에서 'things-form-submit-error'를 발생.
-   ****** 
+   ******
    * @param {Object} sucessResponse Error Response
    */
   handleErrorResponse: function(sucessResponse) {
