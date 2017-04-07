@@ -66,21 +66,24 @@ ko-kr
 
 <dom-module id="things-search-form">
   <template>
-    <style is="custom-style" include="iron-flex iron-flex-alignment">
-    </style>
-
     <style>
       :host {
         display: block;
-        background-color:var(--things-whitegrey-background-color);
-      }
-      form {
-        @apply(--things-default-padding);
-        padding-bottom:5px;
+        background-color:var(—things-whitegrey-background-color);
         border-bottom:1px solid rgba(0,0,0,.1);
       }
+      form {
+        @apply(—things-default-padding);
+        padding-bottom:5px;
+
+      }
       paper-fab {
-        @apply(--things-search-fab);
+        @apply(—things-search-fab);
+      }
+      paper-icon-button{
+        width:20px;height:20px;
+        padding:0;
+        opacity: .5;
       }
     </style>
 
