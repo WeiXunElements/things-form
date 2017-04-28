@@ -146,7 +146,7 @@ Things.FormBehaviorImpl = {
    *
    * ko-kr
    *
-   * Form element가 바뀐후에 handler
+   * Form element가 변경된 이 후의  handler
    * Form의 자식 elements는 이 function에 의해 재구성되어진다.
    * StdFormBehavior를 확장하는 형식은 'reconfigureMyForm' 함수를 구현해야한다.
    * 'reconfigureMyForm' function의 logic은 formFields속성 및 구성 레이아웃에 따라 자식 요소를 작성함.
@@ -394,6 +394,17 @@ Things.FormBehaviorImpl = {
 				newElement = document.createElement('things-date-picker');
 				newElement.setAttribute('name', element.name);
 				newElement.setAttribute('label', element.label);
+
+				if(element.userData) {
+					if(element.userData.format) {
+						newElement.setAttribute('write-format', element.userData.format);
+					}
+
+					if(element.userData.defValue) {
+						newElement.setAttribute('date-value', element.userData.defValue);
+					}
+				}
+
 				break;
 
 			case 'ranged-date-picker':
@@ -412,6 +423,7 @@ Things.FormBehaviorImpl = {
 				newElement = document.createElement('things-date-from-to');
 				var format = element.userData.format ? element.userData.format : 'YYYY-MM-DD';
 				newElement.setAttribute('read-format', format);
+				newElement.setAttribute('write-format', format);
 				newElement.setAttribute('name', element.name);
 				newElement.setAttribute('label', element.label);
 
@@ -432,6 +444,35 @@ Things.FormBehaviorImpl = {
 				newElement = document.createElement('things-time-picker');
 				newElement.setAttribute('name', element.name);
 				newElement.setAttribute('label', element.label);
+
+				if(element.userData) {
+					if(element.userData.format) {
+						newElement.setAttribute('read-format', element.userData.format);
+						newElement.setAttribute('write-format', element.userData.format);
+					}
+
+					if(element.userData.defValue) {
+						newElement.setAttribute('value', element.userData.defValue);
+					}
+				}
+
+				break;
+
+			case 'datetime-picker':
+				newElement = document.createElement('things-date-time-picker');
+				newElement.setAttribute('name', element.name);
+				newElement.setAttribute('label', element.label);
+
+				if(element.userData) {
+					if(element.userData.format) {
+						newElement.setAttribute('write-format', element.userData.format);
+					}
+
+					if(element.userData.defValue) {
+						newElement.setAttribute('value', element.userData.defValue);
+					}
+				}
+
 				break;
 
 			// user stamp & time stamp
@@ -441,6 +482,12 @@ Things.FormBehaviorImpl = {
 
 			case 'empty':
 				newElement = document.createElement('label');
+				break;
+
+			case 'cj-line-combo':
+				newElement = document.createElement('cj-line-combo');
+				newElement.setAttribute('name', element.name);
+				newElement.setAttribute('label', element.label);
 				break;
 
 			case 'positive-number':
@@ -537,16 +584,24 @@ Things.FormBehaviorImpl = {
 
 		if(!newElement) return null;
 
-		this.setFieldData(newElement, element.default);
+		if(!newElement.value) {
+			this.setFieldData(newElement, element.default);
+		}
+
 		newElement.setAttribute('class', 'flex style-scope things-form');
 		if(element.type != 'empty') {
 			newElement.tabIndex = element.tabindex >= 0 ? element.tabindex : -1;
 		}
+
 		return newElement;
 	},
 
 	/**
 	 * Min, Max Validator 설정
+	 ***********
+	 * @param {Object} userData
+	 * @param {Object} newElement
+	 * @param {Number} number
 	 */
 	_applyMinMaxValidator: function(userData, newElement, number) {
 		if(!userData) return;
@@ -569,7 +624,6 @@ Things.FormBehaviorImpl = {
 	 *
 	 * key event - form submits when enter key is monitored
 	 *
-	 *
 	 * ko-kr
 	 *
 	 * ket event = key를 누를 때 form submits은 모니터 되어짐.
@@ -588,7 +642,6 @@ Things.FormBehaviorImpl = {
 	 * en-us
 	 *
 	 * find form by querySelector and return found form
-	 *
 	 *
 	 * ko-kr
 	 *
@@ -614,7 +667,6 @@ Things.FormBehaviorImpl = {
 	 *
 	 * Serialize form and return serialized object.
 	 * It can be used form parameters
-	 *
 	 *
 	 * ko-kr
 	 *
@@ -658,19 +710,23 @@ Things.FormBehaviorImpl = {
 	/**
 	 * 폼 필드에 값 설정
 	 ********
-	 * @param {Object} resource
+	 * @param {Object} element
+	 * @param {Object} value
 	 */
 	setFieldData: function(element, value) {
 		if(value === undefined || element.localName == 'things-stamp') {
 			return;
-		} else if(element.localName == 'things-resource-selector'||element.localName == 'things-image-selector') {
+		} else if(element.localName == 'things-resource-selector' || element.localName == 'things-image-selector') {
 			element.objValue = value;
 		} else {
 			element.value = value;
 		}
 	},
+
 	/**
+	 * name으로 컴포넌트를 찾아 enable 시킨다.
 	 ********
+	 * @param {Object} name
 	 */
 	enableElement: function(name) {
 		var elements = this.getFormElements();
@@ -681,8 +737,11 @@ Things.FormBehaviorImpl = {
 			}
 		}
 	},
+
 	/**
+	 * name으로 폼 필드를 찾아 컴포넌트를 disable 시킨다.
 	 ********
+	 * @param {Object} name
 	 */
 	disableElement: function(name) {
 		var elements = this.getFormElements();
@@ -693,7 +752,6 @@ Things.FormBehaviorImpl = {
 			}
 		}
 	}
-
 };
 
 Things.FormBehavior = [
