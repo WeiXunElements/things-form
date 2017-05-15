@@ -113,7 +113,7 @@ ko-kr
         /**
          * Toolbar에 표시할 화면 타이틀
          * *******
-				 * @type {String}
+         * @type {String}
          */
         title: {
           type: String
@@ -122,7 +122,7 @@ ko-kr
         /**
          * 검색 조건 Folding 아이콘
          * *******
-				 * @type {String}
+         * @type {String}
          */
         arrowIcon: {
           type: String,
@@ -181,9 +181,11 @@ ko-kr
           var newElement = this._createFormElement(field);
           if(!newElement) continue;
 
-          if(field.type == 'date-from-to-picker') {
+          if(field.type == 'date-from-to-picker' || field.type == 'ranged-datetime-picker') {
             // 1. 이전 div가 1개이고 date-from-to 가 아니면 empty 열 추가
-            if(rowDiv && rowDiv.childNodes && (rowDiv.childNodes.length % 2 != 0) && rowDiv.childNodes[0].localName.indexOf('things-date-from-to') < 0) {
+            if(rowDiv && rowDiv.childNodes && (rowDiv.childNodes.length % 2 != 0) && 
+               rowDiv.childNodes[0].localName.indexOf('things-date-from-to') < 0 && 
+               rowDiv.childNodes[0].localName.indexOf('things-date-time-range-picker') < 0) {
               rowDiv.appendChild(this._createFormElement({ type: 'empty' }));
             }
 
@@ -194,7 +196,8 @@ ko-kr
               rowDiv = this._createElementContainer(divContainer, newElement);
             } else {
               // rowDiv의 마지막 엘리먼트가 textarea 이면 rowDiv에 empty 엘리먼트 추가
-              if(rowDiv.childNodes[0].localName.indexOf('things-date-from-to') >= 0) {
+              if(rowDiv.childNodes[0].localName.indexOf('things-date-from-to') >= 0 &&
+                 rowDiv.childNodes[0].localName.indexOf('ranged-datetime-picker') >= 0) {
                 rowDiv = this._createElementContainer(divContainer, newElement);
               } else {
                 rowDiv.appendChild(newElement);
@@ -205,7 +208,10 @@ ko-kr
 
         // 마지막 Div가 홀수이고 textarea가 아니면 empty 열 추가
         if(rowDiv && rowDiv.childNodes && rowDiv.childNodes.length == 1) {
-          if(rowDiv.childNodes[0].localName.indexOf('textarea') < 0 && rowDiv.childNodes[0].localName.indexOf('things-date-from-to') < 0) {
+          var localName = rowDiv.childNodes[0].localName;
+          if(localName.indexOf('textarea') < 0 && 
+             localName.indexOf('things-date-from-to') < 0 && 
+             localName.indexOf('things-date-time-range-picker') < 0) {
             var emptyElement = this._createFormElement({ type: 'empty' });
             rowDiv.appendChild(emptyElement);
           }

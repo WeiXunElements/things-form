@@ -475,6 +475,19 @@ Things.FormBehaviorImpl = {
 
 				break;
 
+			case 'ranged-datetime-picker':
+				newElement = document.createElement('things-date-time-range-picker');
+				newElement.setAttribute('name', element.name);
+				newElement.setAttribute('label', element.label);
+
+				if(element.userData) {
+					newElement.setAttribute('write-format', element.userData.format);
+					if(element.userData.min) newElement.setAttribute('min-date', element.userData.min);
+					if(element.userData.max) newElement.setAttribute('max-date', element.userData.max);
+				}
+
+				break;
+
 			// user stamp & time stamp
 			case 'things-stamp':
 				newElement = document.createElement('things-stamp');
