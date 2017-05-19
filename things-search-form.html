@@ -96,6 +96,7 @@ ko-kr
                 action="[[action]]"
                 content-type="[[contentType]]"
                 last-response ="{{lastResponse}}"
+                method="GET"
                 with-credentials="[[withCredentials]]">
             <div id="fields" class="layout vertical flex"></div>
             <paper-fab icon="search" title="search" on-tap="_onSearchFormTap"></paper-fab>
@@ -183,8 +184,8 @@ ko-kr
 
           if(field.type == 'date-from-to-picker' || field.type == 'ranged-datetime-picker') {
             // 1. 이전 div가 1개이고 date-from-to 가 아니면 empty 열 추가
-            if(rowDiv && rowDiv.childNodes && (rowDiv.childNodes.length % 2 != 0) && 
-               rowDiv.childNodes[0].localName.indexOf('things-date-from-to') < 0 && 
+            if(rowDiv && rowDiv.childNodes && (rowDiv.childNodes.length % 2 != 0) &&
+               rowDiv.childNodes[0].localName.indexOf('things-date-from-to') < 0 &&
                rowDiv.childNodes[0].localName.indexOf('things-date-time-range-picker') < 0) {
               rowDiv.appendChild(this._createFormElement({ type: 'empty' }));
             }
@@ -209,8 +210,8 @@ ko-kr
         // 마지막 Div가 홀수이고 textarea가 아니면 empty 열 추가
         if(rowDiv && rowDiv.childNodes && rowDiv.childNodes.length == 1) {
           var localName = rowDiv.childNodes[0].localName;
-          if(localName.indexOf('textarea') < 0 && 
-             localName.indexOf('things-date-from-to') < 0 && 
+          if(localName.indexOf('textarea') < 0 &&
+             localName.indexOf('things-date-from-to') < 0 &&
              localName.indexOf('things-date-time-range-picker') < 0) {
             var emptyElement = this._createFormElement({ type: 'empty' });
             rowDiv.appendChild(emptyElement);
