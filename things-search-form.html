@@ -183,7 +183,7 @@ ko-kr
           if(!newElement) continue;
 
           if(field.type == 'date-from-to-picker' || field.type == 'ranged-datetime-picker') {
-            // 1. 이전 div가 1개이고 date-from-to 가 아니면 empty 열 추가
+            // 이전 div가 1개이고 한 줄로 채워야 할 컴포넌트가 아니면 empty 열 추가
             if(rowDiv && rowDiv.childNodes && (rowDiv.childNodes.length % 2 != 0) &&
                rowDiv.childNodes[0].localName.indexOf('things-date-from-to') < 0 &&
                rowDiv.childNodes[0].localName.indexOf('things-date-time-range-picker') < 0) {
@@ -196,9 +196,10 @@ ko-kr
             if(rowDiv == null || !rowDiv.childNodes || (rowDiv.childNodes.length % 2 == 0)) {
               rowDiv = this._createElementContainer(divContainer, newElement);
             } else {
-              // rowDiv의 마지막 엘리먼트가 textarea 이면 rowDiv에 empty 엘리먼트 추가
-              if(rowDiv.childNodes[0].localName.indexOf('things-date-from-to') >= 0 &&
-                 rowDiv.childNodes[0].localName.indexOf('ranged-datetime-picker') >= 0) {
+              // rowDiv의 마지막 엘리먼트가 한 줄로 채워야 할 컴포넌트이면 현재 rowDiv는 넘어가고 새로운 rowDiv를 생성하여 컴포넌트 추가
+              if(rowDiv.childNodes[0].localName.indexOf('textarea') >= 0 ||
+                 rowDiv.childNodes[0].localName.indexOf('things-date-from-to') >= 0 ||
+                 rowDiv.childNodes[0].localName.indexOf('things-date-time-range-picker') >= 0) {
                 rowDiv = this._createElementContainer(divContainer, newElement);
               } else {
                 rowDiv.appendChild(newElement);
