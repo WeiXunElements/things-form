@@ -482,8 +482,8 @@ Things.FormBehaviorImpl = {
 
 				if(element.userData) {
 					newElement.setAttribute('write-format', element.userData.format);
-					if(element.userData.min) newElement.setAttribute('min-date', element.userData.min);
-					if(element.userData.max) newElement.setAttribute('max-date', element.userData.max);
+					if(element.userData.from) newElement.setAttribute('init-from-date', element.userData.from);
+					if(element.userData.to) newElement.setAttribute('init-to-date', element.userData.to);
 				}
 
 				break;
