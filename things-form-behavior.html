@@ -400,6 +400,11 @@ Things.FormBehaviorImpl = {
 						newElement.setAttribute('write-format', element.userData.format);
 					}
 
+					if(element.userData.required) {
+						newElement.setAttribute('required', element.userData.required);
+						element.userData.defValue = element.userData.defValue ? element.userData.defValue : moment(new Date()).format('YYYY-MM-DD');
+					}
+
 					if(element.userData.defValue) {
 						newElement.setAttribute('date-value', element.userData.defValue);
 					}
