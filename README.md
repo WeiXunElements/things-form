@@ -1,6 +1,6 @@
 # things-form
 
-#### 메타 데이터 FormFields 및 Buttons를 받아서 그 정보로 폼과 버튼을 구성한다. 그 이후 해당 폼에 대한 폼 데이터(Resource)를 받아서 화면에 바인딩한다. 이 후 버튼별 액션은 이벤트만 던지고 things-form을 사용한 곳에서 이벤트를 받아 액션을 처리한다.
+#### The component receives FormFields and Buttons of the meta data and constructs the form and button with that information. Then, it receives the form data (Resource) for the corresponding form and binds it to the screen. After that, it only fires an event and receives the event where it used things-form to proceed the action of each button.
 
 Example:
 
@@ -20,8 +20,7 @@ Example:
 
 ## Dependencies
 
-Element dependencies are managed via [Bower](http://bower.io/). You can
-install that via:
+Element dependencies are managed via [Bower](http://bower.io/). You can install that via:
 
     npm install -g bower
 
