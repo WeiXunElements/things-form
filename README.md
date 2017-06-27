@@ -43,7 +43,3 @@ And you can run it via:
 
 Once running, you can preview your element at
 `http://localhost:8080/components/things-form/`, where `things-form` is the name of the directory containing it.
-
-
-## Example 1. Things Form
-`<things-form>` Things Form
