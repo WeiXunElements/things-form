@@ -136,8 +136,23 @@ Things.DetailFormBehavior = {
    */
   _resourceChanged: function(resource) {
     this.reconfigureMyForm();
+    this._beforeSetFormData(resource);
     this.setFormData(resource);
     this.resourceId = resource.id;
+  },
+
+  /**
+   * 리소스를 폼에 설정하기 전에 핸들링
+   *
+   * @param {Object} resource 리소스
+   */
+  _beforeSetFormData: function(resource) {
+    if(resource.extprops_) {
+      for(key in resource.extprops_) {
+        var val = resource.extprops_[key];
+        resource[key] = val;
+      }
+    }
   },
 
   /**
@@ -182,7 +197,7 @@ Things.DetailFormBehavior = {
       }
 
       // 2. 저장 전에 Parameter 핸들링 이벤트
-      var params= this.serializeMyForm();
+      var params = this.serializeMyForm();
 
       var paramEvent = this.fire('things-form-handle-param-before-save', { ajax : saveAjax, params : params }, { cancelable: true });
       if(!paramEvent.defaultPrevented) {

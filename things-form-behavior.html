@@ -696,7 +696,28 @@ Things.FormBehaviorImpl = {
 	 * @return {Object} serialized object
 	 */
 	serializeMyForm: function() {
-		return this.getMyForm().serialize();
+		var formData = this.getMyForm().serialize();
+		this._beforeSerializeForm(formData);
+		return formData;
+	},
+
+	/**
+	 * serialize 전에 확장 필드 처리
+	 * ********
+	 * @param {Object} formData
+	 */
+	_beforeSerializeForm: function(formData) {
+		var extFields = this.formFields.filter(function(field) {
+			return field.userData && field.userData.extField === true;
+		});
+
+		if(extFields && extFields.length > 0) {
+			formData.extprops_ = {};
+			extFields.forEach(function(field) {
+				formData.extprops_[field.name] = formData[field.name];
+				delete formData[field.name];
+			});
+		}
 	},
 
 	/**
