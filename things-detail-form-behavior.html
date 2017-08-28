@@ -55,6 +55,10 @@ Things.DetailFormBehavior = {
       type: String
     },
 
+    idField: {
+      type: String
+    },
+
     /**
      * 폼에 채우기 위한 리소스
      * 최초 폼이 실행되는 시점에 서버에 요청하여 리턴받은 데이터
@@ -138,7 +142,7 @@ Things.DetailFormBehavior = {
     this.reconfigureMyForm();
     this._beforeSetFormData(resource);
     this.setFormData(resource);
-    this.resourceId = resource.id;
+    this.resourceId = this.idField ? resource[this.idField] : resource.id;
   },
 
   /**
@@ -186,12 +190,13 @@ Things.DetailFormBehavior = {
       // 1. 저장 전에 Save Ajax URL 핸들링 이벤트
       var urlEvent = this.fire('things-form-handle-url-before-save', saveAjax, { cancelable: true });
       if(!urlEvent.defaultPrevented) {
-        saveAjax.resourceAction = this.resource.id ? 'update' : 'create';
+        var idData = this.idField ? this.resource[this.idField] : this.resource.id;
+        saveAjax.resourceAction = idData ? 'update' : 'create';
 
         if(saveAjax.resourceAction == 'create') {
           saveAjax.resourceUrl = this.resourceUrl.replace('/:id', '');
         } else {
-          saveAjax.resourceId = this.resource.id;
+          saveAjax.resourceId = idData;
           saveAjax.resourceUrl = (this.resourceUrl.indexOf('/:id') >= 0) ? this.resourceUrl : this.resourceUrl + '/:id';
         }
       }
@@ -234,7 +239,7 @@ Things.DetailFormBehavior = {
         getAjax.resourceUrl = this.resourceUrl + '/:id';
       }
 
-      getAjax.resourceId = this.resourceId;
+      getAjax.resourceId = resourceId;
       getAjax.resourceAction = 'find';
     }
 
