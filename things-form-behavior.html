@@ -707,6 +707,9 @@ Things.FormBehaviorImpl = {
 	 * @param {Object} formData
 	 */
 	_beforeSerializeForm: function(formData) {
+		if(!this.formFields){
+			return;			
+		}
 		var extFields = this.formFields.filter(function(field) {
 			return field.userData && field.userData.extField === true;
 		});
