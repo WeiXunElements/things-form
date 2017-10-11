@@ -35,6 +35,7 @@ Copyright © HatioLab Inc. All rights reserved.
 
 <link rel="import" href="./things-form-behavior.html">
 <link rel="import" href="./things-search-form-behavior.html">
+<link rel="import" href="../iron-media-query/iron-media-query.html">
 
 <!--
 en-us
@@ -91,6 +92,10 @@ ko-kr
         opacity: .5;
       }
     </style>
+    <iron-media-query query="(max-width: 1239px)" query-matches="{{isTwoContainer}}"></iron-media-query>
+    <iron-media-query query="(min-width: 1240px)" query-matches="{{isThreeContainer}}"></iron-media-query>
+    <iron-media-query query="(min-width: 1920px)" query-matches="{{isFourContainer}}"></iron-media-query>
+    <iron-media-query query="(min-width: 2560px)" query-matches="{{isFiveContainer}}"></iron-media-query>
 
     <paper-material elevation="0" class="layout horizontal flex" on-keypress="handleKeyPress">
       <paper-icon-button icon="[[arrowIcon]]" on-tap="toggleSearchConditions"></paper-icon-button>
@@ -132,6 +137,15 @@ ko-kr
         arrowIcon: {
           type: String,
           value: 'icons:arrow-drop-down'
+        },
+        /**
+         * 검색 조건 Container수량
+         * *******
+         * @type {Number}
+         */
+        containerSize:{
+          type : Number,
+          notify: true
         }
       },
 
@@ -148,6 +162,25 @@ ko-kr
         Things.MsgBoxBehavior
       ],
 
+      observers :[
+        '_computeContainers(isTwoContainer, isThreeContainer, isFourContainer,isFiveContainer)'
+      ],
+
+      _computeContainers: function(isTwoContainer, isThreeContainer, isFourContainer,isFiveContainer){
+        if(isFiveContainer){
+          this.set('containerSize',5);
+        }else if(isFourContainer){
+          this.set('containerSize',4);
+        }else if(isThreeContainer){
+          this.set('containerSize',3);
+        }else if(isTwoContainer){
+          this.set('containerSize',2);
+        }
+        while (this.$.fields.hasChildNodes()) {
+          this.$.fields.removeChild(this.$.fields.lastChild);
+        }
+        this.reconfigureMyForm();
+      },
       /**
        * 검색 조건을 접고 펴는 액션
        *******
@@ -177,7 +210,6 @@ ko-kr
       reconfigureMyForm: function() {
         if(!this.formFields || this.formFields.length <= 0 || this.isFormConfigured()) return;
         var divContainer = this.$.fields, rowDiv = null;
-
         for(index in this.formFields) {
           var field = this.formFields[index];
           if(field.type == 'hidden') continue;
@@ -187,24 +219,50 @@ ko-kr
           if(!newElement) continue;
 
           if(field.type == 'date-from-to-picker' || field.type == 'ranged-datetime-picker') {
+            newElement.classList.remove('flex');
+            newElement.classList.add('flex-2');
             // 이전 div가 1개이고 한 줄로 채워야 할 컴포넌트가 아니면 empty 열 추가
-            if(rowDiv && rowDiv.childNodes && (rowDiv.childNodes.length % 2 != 0) &&
-               rowDiv.childNodes[0].localName.indexOf('things-date-from-to') < 0 &&
-               rowDiv.childNodes[0].localName.indexOf('things-date-time-range-picker') < 0) {
-              rowDiv.appendChild(this._createFormElement({ type: 'empty' }));
+            if(rowDiv && rowDiv.childNodes && (rowDiv.childNodes.length % this.containerSize != 0) &&
+               rowDiv.lastChild.localName.indexOf('things-date-from-to') < 0 &&
+               rowDiv.lastChild.localName.indexOf('things-date-time-range-picker') < 0) {
+              if(this.containerSize-rowDiv.childNodes.length>=2){
+                rowDiv.appendChild(newElement);
+              }else if(this.containerSize-rowDiv.childNodes.length<2){
+                var emptyElement = this._createFormElement({ type: 'empty' });
+                rowDiv.appendChild(emptyElement);
+                rowDiv = this._createElementContainer(divContainer, newElement);
+              }
+            }else{
+              rowDiv = this._createElementContainer(divContainer, newElement);
             }
 
-            rowDiv = this._createElementContainer(divContainer, newElement);
-
           } else {
-            if(rowDiv == null || !rowDiv.childNodes || (rowDiv.childNodes.length % 2 == 0)) {
+            if(rowDiv == null || !rowDiv.childNodes || 
+                (rowDiv.childNodes.length % this.containerSize == 0)) {
+
               rowDiv = this._createElementContainer(divContainer, newElement);
+
             } else {
-              // rowDiv의 마지막 엘리먼트가 한 줄로 채워야 할 컴포넌트이면 현재 rowDiv는 넘어가고 새로운 rowDiv를 생성하여 컴포넌트 추가
-              if(rowDiv.childNodes[0].localName.indexOf('textarea') >= 0 ||
-                 rowDiv.childNodes[0].localName.indexOf('things-date-from-to') >= 0 ||
-                 rowDiv.childNodes[0].localName.indexOf('things-date-time-range-picker') >= 0) {
-                rowDiv = this._createElementContainer(divContainer, newElement);
+              // rowDiv의 Child중에 2칸을 차지해야할 컴포넌트가 있으면서 2보다크거나 같으면 자식추가
+              // 2보다 작으면서 1보다 크면 빈칸추가, 1인경우는 신규행 추가
+              var rowDivChinds = Array.prototype.slice.call(rowDiv.childNodes);
+              var rowDivChindNames = rowDivChinds.map(function(element){
+                return element.localName;
+              })
+
+              if(rowDivChindNames.indexOf('textarea') >= 0 ||
+                 rowDivChindNames.indexOf('things-date-from-to') >= 0 ||
+                 rowDivChindNames.indexOf('things-date-time-range-picker') >= 0){
+                if(this.containerSize-rowDiv.childNodes.length>=2){
+                  rowDiv.appendChild(newElement);
+                }else if(this.containerSize-rowDiv.childNodes.length>1 && 
+                  this.containerSize-rowDiv.childNodes.length<2){
+                  var emptyElement = this._createFormElement({ type: 'empty' });
+                  rowDiv.appendChild(emptyElement);
+                }else{
+                  rowDiv = this._createElementContainer(divContainer, newElement);
+                }
+                // 
               } else {
                 rowDiv.appendChild(newElement);
               }
@@ -212,14 +270,25 @@ ko-kr
           }
         }
 
-        // 마지막 Div가 홀수이고 textarea가 아니면 empty 열 추가
-        if(rowDiv && rowDiv.childNodes && rowDiv.childNodes.length == 1) {
-          var localName = rowDiv.childNodes[0].localName;
+        
+        if(rowDiv && rowDiv.childNodes && rowDiv.childNodes.length <this.containerSize) {
+          var localName = rowDiv.lastChild.localName;
+          // 마지막 Div가 컨테너가 들어가야 하는 수량보다 작고 2줄을 차지해야 할 컴포넌트가 아니면 empty 열로 fill
           if(localName.indexOf('textarea') < 0 &&
              localName.indexOf('things-date-from-to') < 0 &&
              localName.indexOf('things-date-time-range-picker') < 0) {
-            var emptyElement = this._createFormElement({ type: 'empty' });
-            rowDiv.appendChild(emptyElement);
+            for(var i=rowDiv.childNodes.length; i<this.containerSize; i++){
+              var emptyElement = this._createFormElement({ type: 'empty' });
+              rowDiv.appendChild(emptyElement);
+            }
+          }else{
+            // 마지막 Div가 컨테너가 들어가야 하는 수량보다 작고 2줄을 차지해야 할 컴포넌트이면 2로 나뉘어 지는 수량 만큼 추가
+            if(this.containerSize-rowDiv.childNodes.length>1){
+              for(var i=0 ; i < (this.containerSize-rowDiv.childNodes.length)+1/2;i++){
+                var emptyElement = this._createFormElement({ type: 'empty' });
+                rowDiv.appendChild(emptyElement);
+              }
+            }
           }
         }
 
