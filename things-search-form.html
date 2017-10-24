@@ -210,10 +210,11 @@ ko-kr
       reconfigureMyForm: function() {
         if(!this.formFields || this.formFields.length <= 0 || this.isFormConfigured()) return;
         var divContainer = this.$.fields, rowDiv = null;
+        var remainSize = 0;
         for(index in this.formFields) {
           var field = this.formFields[index];
+          
           if(field.type == 'hidden') continue;
-
           field.searchForm = true;
           var newElement = this._createFormElement(field);
           if(!newElement) continue;
@@ -221,74 +222,38 @@ ko-kr
           if(field.type == 'date-from-to-picker' || field.type == 'ranged-datetime-picker') {
             newElement.classList.remove('flex');
             newElement.classList.add('flex-2');
-            // 이전 div가 1개이고 한 줄로 채워야 할 컴포넌트가 아니면 empty 열 추가
-            if(rowDiv && rowDiv.childNodes && (rowDiv.childNodes.length % this.containerSize != 0) &&
-               rowDiv.lastChild.localName.indexOf('things-date-from-to') < 0 &&
-               rowDiv.lastChild.localName.indexOf('things-date-time-range-picker') < 0) {
-              if(this.containerSize-rowDiv.childNodes.length>=2){
+            if(rowDiv){
+              if(remainSize>=2){
                 rowDiv.appendChild(newElement);
-              }else if(this.containerSize-rowDiv.childNodes.length<2){
-                var emptyElement = this._createFormElement({ type: 'empty' });
-                rowDiv.appendChild(emptyElement);
+              }else if(remainSize<2){
+                if(remainSize>0){
+                  var emptyElement = this._createFormElement({ type: 'empty' });
+                  rowDiv.appendChild(emptyElement);
+                }
                 rowDiv = this._createElementContainer(divContainer, newElement);
+                remainSize = this.containerSize;
               }
             }else{
               rowDiv = this._createElementContainer(divContainer, newElement);
+              remainSize = this.containerSize;
             }
-
+            remainSize = remainSize-2;
           } else {
-            if(rowDiv == null || !rowDiv.childNodes || 
-                (rowDiv.childNodes.length % this.containerSize == 0)) {
-
+            if(rowDiv == null || !rowDiv.childNodes || remainSize==0) {
               rowDiv = this._createElementContainer(divContainer, newElement);
-
+              remainSize = this.containerSize;
             } else {
-              // rowDiv의 Child중에 2칸을 차지해야할 컴포넌트가 있으면서 2보다크거나 같으면 자식추가
-              // 2보다 작으면서 1보다 크면 빈칸추가, 1인경우는 신규행 추가
-              var rowDivChinds = Array.prototype.slice.call(rowDiv.childNodes);
-              var rowDivChindNames = rowDivChinds.map(function(element){
-                return element.localName;
-              })
-
-              if(rowDivChindNames.indexOf('textarea') >= 0 ||
-                 rowDivChindNames.indexOf('things-date-from-to') >= 0 ||
-                 rowDivChindNames.indexOf('things-date-time-range-picker') >= 0){
-                if(this.containerSize-rowDiv.childNodes.length>=2){
-                  rowDiv.appendChild(newElement);
-                }else if(this.containerSize-rowDiv.childNodes.length>1 && 
-                  this.containerSize-rowDiv.childNodes.length<2){
-                  var emptyElement = this._createFormElement({ type: 'empty' });
-                  rowDiv.appendChild(emptyElement);
-                }else{
-                  rowDiv = this._createElementContainer(divContainer, newElement);
-                }
-                // 
-              } else {
                 rowDiv.appendChild(newElement);
-              }
             }
+            remainSize = remainSize-1;
           }
         }
 
         
-        if(rowDiv && rowDiv.childNodes && rowDiv.childNodes.length <this.containerSize) {
-          var localName = rowDiv.lastChild.localName;
-          // 마지막 Div가 컨테너가 들어가야 하는 수량보다 작고 2줄을 차지해야 할 컴포넌트가 아니면 empty 열로 fill
-          if(localName.indexOf('textarea') < 0 &&
-             localName.indexOf('things-date-from-to') < 0 &&
-             localName.indexOf('things-date-time-range-picker') < 0) {
-            for(var i=rowDiv.childNodes.length; i<this.containerSize; i++){
-              var emptyElement = this._createFormElement({ type: 'empty' });
-              rowDiv.appendChild(emptyElement);
-            }
-          }else{
-            // 마지막 Div가 컨테너가 들어가야 하는 수량보다 작고 2줄을 차지해야 할 컴포넌트이면 2로 나뉘어 지는 수량 만큼 추가
-            if(this.containerSize-rowDiv.childNodes.length>1){
-              for(var i=0 ; i < (this.containerSize-rowDiv.childNodes.length)+1/2;i++){
-                var emptyElement = this._createFormElement({ type: 'empty' });
-                rowDiv.appendChild(emptyElement);
-              }
-            }
+        if(rowDiv && rowDiv.childNodes && remainSize>0) {
+          for(var i=0 ; i < remainSize;i++){
+            var emptyElement = this._createFormElement({ type: 'empty' });
+            rowDiv.appendChild(emptyElement);
           }
         }
 
