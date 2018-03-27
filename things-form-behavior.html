@@ -536,6 +536,20 @@ Things.FormBehaviorImpl = {
 				}
 				break;
 
+			/**
+			 * 2018.03.27 - Added by CuiGuang
+			 */
+			case 'number':
+				newElement = document.createElement('things-number-field');
+				newElement.setAttribute('name', element.name);
+				newElement.setAttribute('label', element.label);
+				newElement.setAttribute('auto-validate', true);
+				newElement.setAttribute('error-message', Things.DataGlobal.t('error.A_IS_LESS_THAN_B', { a : element.label, b : 0 }));
+				if(element.userData.format){
+					newElement.setAttribute('format-with', element.userData.format);
+				}
+				break;
+
 			default:
 				newElement = document.createElement('things-input-field');
 				newElement.setAttribute('name', element.name);
@@ -708,7 +722,7 @@ Things.FormBehaviorImpl = {
 	 */
 	_beforeSerializeForm: function(formData) {
 		if(!this.formFields){
-			return;			
+			return;
 		}
 		var extFields = this.formFields.filter(function(field) {
 			return field.userData && field.userData.extField === true;
