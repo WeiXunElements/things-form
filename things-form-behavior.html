@@ -550,6 +550,18 @@ Things.FormBehaviorImpl = {
 				}
 				break;
 
+			/**
+			 * 2018.04.03 - Added by CuiGuang
+			 */
+			case 'time-input':
+				newElement = document.createElement('things-time-input');
+				newElement.setAttribute('name', element.name);
+				newElement.setAttribute('label', element.label);
+				if(element.userData.format){
+					newElement.setAttribute('format-with', element.userData.format);
+				}
+				break;
+
 			default:
 				newElement = document.createElement('things-input-field');
 				newElement.setAttribute('name', element.name);
