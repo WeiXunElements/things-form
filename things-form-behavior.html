@@ -355,6 +355,9 @@ Things.FormBehaviorImpl = {
 				newElement.setAttribute('resource-type', element.userData.resourceType);
 				newElement.setAttribute('resource-name', element.userData.resourceName);
 				newElement.setAttribute('value-field', element.userData.delegateColumn);
+				
+				if(element.userData.initialParams)
+					newElement.setAttribute('initial-params', element.userData.initialParams);
 				break;
 
 			case 'resource-field':
