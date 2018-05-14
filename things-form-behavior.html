@@ -547,22 +547,28 @@ Things.FormBehaviorImpl = {
 				}
 				break;
 
+			/**
+			 * 2018.03.27 - Added by CuiGuang
+			 */
 			case 'number':
 				newElement = document.createElement('things-number-field');
 				newElement.setAttribute('name', element.name);
 				newElement.setAttribute('label', element.label);
 				newElement.setAttribute('auto-validate', true);
 				newElement.setAttribute('error-message', Things.DataGlobal.t('error.A_IS_LESS_THAN_B', { a : element.label, b : 0 }));
-				if(element.userData && element.userData.format) {
+				if (element.userData && element.userData.format){
 					newElement.setAttribute('format-with', element.userData.format);
 				}
 				break;
 
+			/**
+			 * 2018.04.03 - Added by CuiGuang
+			 */
 			case 'time-input':
 				newElement = document.createElement('things-time-input');
 				newElement.setAttribute('name', element.name);
 				newElement.setAttribute('label', element.label);
-				if(element.userData && element.userData.format) {
+				if (element.userData && element.userData.format){
 					newElement.setAttribute('format-with', element.userData.format);
 				}
 				break;
