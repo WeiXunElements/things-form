@@ -167,6 +167,11 @@ Things.SearchFormBehaviorImpl = {
    * 검색 폼 구성 완료 후에 initialParams를 서비스 호출시 파라미터에 반영한다.
    */
   _bindInitialParams: function() {
+    //url에 id가 있으면 해당 URL에서 ID를 resourceId로 치환
+    if(this.actionUrl.indexOf(':id') >=0 && this.resourceId) {
+       this.set('actionUrl',this.actionUrl.replace(':id', this.resourceId));
+    }
+    
     if(!this.initialParams) return;
 
     var searchParams = this.serializeMyForm();
