@@ -212,7 +212,8 @@ Things.DetailFormBehavior = {
 
       var me = this;
       saveAjax.addEventListener('things-ajax-response', function(event) {
-        me.fire('things-detail-form-save-success', saveAjax.method);
+        var eventDetail = {'method':saveAjax.method,'values':event.detail}
+        me.fire('things-detail-form-save-success', eventDetail);
       });
 
       saveAjax.addEventListener('things-ajax-error', function(event) {
@@ -247,7 +248,8 @@ Things.DetailFormBehavior = {
     getAjax.addEventListener('things-ajax-response', function(event) {
       me.lastResponse = event.detail;
       me.resource = event.detail;
-      me.fire('things-detail-form-read-success', getAjax.method);
+      var eventDetail = {'method':getAjax.method,'values':event.detail}
+      me.fire('things-detail-form-read-success', eventDetail);
     });
 
     getAjax.addEventListener('things-ajax-error', function(event) {
@@ -264,17 +266,18 @@ Things.DetailFormBehavior = {
    * method가 PUT인 경우 : things-resource-form-saved 이벤트
    * method가 POST인 경우 : things-resource-form-created 이벤트
    *
-   * @param  {[type]} method
+   * @param {String} method
+   * @param {Object||Array} values submit response detail
    */
-  handleSuccessResponse: function(method) {
+  handleSuccessResponse: function(method, values) {
     if(method == 'GET') {
-      this.fire('things-resource-form-read', event.detail);
+      this.fire('things-resource-form-read', values);
 
     } else if(method == 'PUT') {
-      this.fire('things-resource-form-saved', event.detail);
+      this.fire('things-resource-form-saved', values);
 
     } else if(method == 'POST') {
-      this.fire('things-resource-form-created', event.detail);
+      this.fire('things-resource-form-created', values);
     }
   },
 

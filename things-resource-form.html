@@ -431,8 +431,8 @@ things-resource로 부터 위와 같은 형식의 form-fields meta data를 조�
 			 */
 			_successResponseHandler: function(event) {
 				this.stopSpinner();
-				var method = typeof(event.detail === 'string') ? event.detail : event.target.method.toUpperCase();
-				this.handleSuccessResponse(method);
+				var method = typeof(event.detail.method === 'string') ? event.detail.method : event.target.method.toUpperCase();
+				this.handleSuccessResponse(method, event.detail.values);
 			},
 
 			/**
