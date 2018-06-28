@@ -94,10 +94,6 @@ ko-kr
         opacity: .5;
       }
     </style>
-    <iron-media-query query="(max-width: 1239px)" query-matches="{{isTwoContainer}}"></iron-media-query>
-    <iron-media-query query="(min-width: 1240px)" query-matches="{{isThreeContainer}}"></iron-media-query>
-    <iron-media-query query="(min-width: 1920px)" query-matches="{{isFourContainer}}"></iron-media-query>
-    <iron-media-query query="(min-width: 2560px)" query-matches="{{isFiveContainer}}"></iron-media-query>
 
     <paper-material elevation="0" class="layout horizontal flex" on-keypress="handleKeyPress">
       <paper-icon-button icon="[[arrowIcon]]" on-tap="toggleSearchConditions"></paper-icon-button>
@@ -154,20 +150,103 @@ ko-kr
       listeners : {
         'iron-form-presubmit' :'handleBeforeSubmit',
         'iron-form-response' :'_successResponseHandler',
-        'iron-form-error' : '_errorResponseHandler'
+        'iron-form-error' : '_errorResponseHandler',
+        'iron-resize' :'_reRenderSearchForm'
       },
 
       behaviors: [
         Things.FormBehavior,
         Things.SearchFormBehavior,
         Things.SpinnerBehavior,
-        Things.MsgBoxBehavior
+        Things.MsgBoxBehavior,
+        Polymer.IronResizableBehavior
       ],
+      /**
+       * get parent node
+       * ******
+       * @return {Element} parent element
+       */
+      get parent() {
+        if (this.parentNode.nodeType === Node.DOCUMENT_FRAGMENT_NODE) {
+          return this.parentNode.host;
+        }
 
-      observers :[
-        '_computeContainers(isTwoContainer, isThreeContainer, isFourContainer,isFiveContainer)'
-      ],
-
+        return this.parentNode;
+      },
+      /**
+       * paper material's offsetWidth, that is container of form element
+       * ******
+       * @return {Numer} offsetWidth
+       */
+      get __containerWidth(){
+        return this.$$('paper-material').offsetWidth;
+      },
+      /**
+       * called when iron-resize fired in this component for re rendering form style
+       * ******
+       */
+      _reRenderSearchForm: function(){
+        this._computeContainersParams();
+      },
+      /**
+       * compute container numbers before render search form's child elements
+       * ***
+       * @return {null}
+       */
+      _computeContainersParams: function(){
+        if(this.__containerWidth>0){
+          if(this.__offsetWidth != this.__containerWidth){
+            this.__offsetWidth = this.__containerWidth;
+            if(this.__offsetWidth<1240){
+              if(this.isTwoContainer){
+                return;
+              }
+              this._saveContainerValues(true, false, false,false);
+              this._computeContainers(true, false, false,false);
+            }else if(this.__offsetWidth>=1240 && this.__offsetWidth<1920){
+              if(this.isThreeContainer){
+                return;
+              }
+              this._saveContainerValues(false, true, false,false);
+              this._computeContainers(false, true, false,false);
+            }else if(this.__offsetWidth>=1920 && this.__offsetWidth<2560){
+              if(this.isFourContainer){
+                return;
+              }
+              this._saveContainerValues(false, false, true,false);
+              this._computeContainers(false, false, true,false);
+            }else if(this.__offsetWidth>=2560){
+              if(this.isFiveContainer){
+                return;
+              }
+              this._saveContainerValues(false, false, true,false);
+              this._computeContainers(false, false, false,true);
+            }
+          }
+        }
+      },
+      /**
+       * save container size value
+       * @param  {Boolean} isTwoContainer   
+       * @param  {Boolean} isThreeContainer 
+       * @param  {Boolean} isFourContainer  
+       * @param  {Boolean} isFiveContainer  
+       * @return {null}                   
+       */
+      _saveContainerValues: function(isTwoContainer, isThreeContainer, isFourContainer,isFiveContainer){
+        this.isTwoContainer = isTwoContainer;
+        this.isThreeContainer = isThreeContainer;
+        this.isFourContainer = isFourContainer;
+        this.isFiveContainer = isFiveContainer;
+      },
+      /**
+       * render form with container sizes
+       * @param  {Boolean} isTwoContainer   
+       * @param  {Boolean} isThreeContainer 
+       * @param  {Boolean} isFourContainer  
+       * @param  {Boolean} isFiveContainer  
+       * @return {[nulll]}                   
+       */
       _computeContainers: function(isTwoContainer, isThreeContainer, isFourContainer,isFiveContainer){
         if(isFiveContainer){
           this.set('containerSize',5);
