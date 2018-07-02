@@ -649,6 +649,13 @@ Things.FormBehaviorImpl = {
 		if(element.type != 'empty') {
 			newElement.tabIndex = element.tabindex >= 0 ? element.tabindex : -1;
 		}
+		//增加统一触发逻辑，在FormChild中的Value发生变更时提供
+		newElement.addEventListener('value-changed', function(event){
+			if(event.detail && event.detail.value){
+				var detail = {'values':this.serializeMyForm(), 'changedPath':event.target.name, 'form':this}
+				this.fire('things-form-values-changed',detail);
+			}
+		})
 
 		return newElement;
 	},
