@@ -197,13 +197,13 @@ ko-kr
         if(this.__containerWidth>0){
           if(this.__offsetWidth != this.__containerWidth){
             this.__offsetWidth = this.__containerWidth;
-            if(this.__offsetWidth<1240){
+            if(this.__offsetWidth<1024){
               if(this.isTwoContainer){
                 return;
               }
               this._saveContainerValues(true, false, false,false);
               this._computeContainers(true, false, false,false);
-            }else if(this.__offsetWidth>=1240 && this.__offsetWidth<1920){
+            }else if(this.__offsetWidth>=1024 && this.__offsetWidth<1920){
               if(this.isThreeContainer){
                 return;
               }
