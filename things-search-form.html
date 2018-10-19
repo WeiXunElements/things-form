@@ -148,8 +148,9 @@ ko-kr
             listeners: {
                 'iron-form-presubmit': 'handleBeforeSubmit',
                 'iron-form-response': '_successResponseHandler',
-                'iron-form-error': '_errorResponseHandler',
-                'iron-resize': '_reRenderSearchForm'
+                'iron-form-error': '_errorResponseHandler'
+                // 2018.10.19 - 屏蔽界面大小改变时刷新和清空数据的功能
+                // ,'iron-resize': '_reRenderSearchForm'
             },
 
             behaviors: [
