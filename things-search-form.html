@@ -271,6 +271,11 @@ ko-kr
                     // 界面大小改变时，保留界面上的数据
                     this.legacyData = this.serializeMyForm();
 
+                    // 排出控对象
+                    if (JSON.stringify(this.legacyData) == '{}') {
+                        this.legacyData = null;
+                    }
+
                     // 对resource-selector控件值做单独处理
                     for (var fieldName in this.legacyData) {
                         if (fieldName.endsWith('_id')) {
