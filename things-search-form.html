@@ -134,6 +134,7 @@ ko-kr
                     type: String,
                     value: 'icons:arrow-drop-down'
                 },
+
                 /**
                  * 검색 조건 Container수량
                  * *******
@@ -142,15 +143,24 @@ ko-kr
                 containerSize: {
                     type: Number,
                     notify: true
+                },
+
+                 /**
+                 * 改变界面大小前的数据保存变量
+                 * *******
+                 * @type {Number}
+                 */
+                legacyData: {
+                    type: Object,
+                    notify: true
                 }
             },
 
             listeners: {
                 'iron-form-presubmit': 'handleBeforeSubmit',
                 'iron-form-response': '_successResponseHandler',
-                'iron-form-error': '_errorResponseHandler'
-                // 2018.10.19 - 屏蔽界面大小改变时刷新和清空数据的功能
-                // ,'iron-resize': '_reRenderSearchForm'
+                'iron-form-error': '_errorResponseHandler',
+                'iron-resize': '_reRenderSearchForm'
             },
 
             behaviors: [
@@ -256,6 +266,21 @@ ko-kr
                 } else if (isTwoContainer) {
                     this.set('containerSize', 2);
                 }
+
+                try {
+                    // 界面大小改变时，保留界面上的数据
+                    this.legacyData = this.serializeMyForm();
+
+                    // 对resource-selector控件值做单独处理
+                    for (var fieldName in this.legacyData) {
+                        if (fieldName.endsWith('_id')) {
+                            this.legacyData[fieldName] = this.$$('[name=' + fieldName + ']').objValue;
+                        }
+                    }
+                } catch(err) {
+                    console.log(err);
+                }
+
                 while (this.$.fields.hasChildNodes()) {
                     this.$.fields.removeChild(this.$.fields.lastChild);
                 }
@@ -394,6 +419,8 @@ ko-kr
              * *******
              */
             submitMyForm: function() {
+                this.legacyData = null;
+
                 var evt = this.fire('things-form-search', this, {
                     cancelable: true
                 });
