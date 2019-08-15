@@ -809,6 +809,8 @@ Things.FormBehaviorImpl = {
 			return;
 		} else if(element.localName == 'things-resource-selector' || element.localName == 'things-image-selector') {
 			element.objValue = value;
+		} else if (element.localName == 'things-tristate-checkbox') {
+			element.state = value === 'true' || value === true ? 'on' : 'off';
 		} else {
 			element.value = value;
 		}
