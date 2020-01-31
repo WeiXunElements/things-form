@@ -220,7 +220,7 @@ Copyright © HatioLab Inc. All rights reserved.
 
                 var me = this;
                 saveAjax.addEventListener('things-ajax-response', function (event) {
-                    me.fire('things-detail-form-save-success', saveAjax.method);
+                    me.fire('things-detail-form-save-success', event.detail);
                 });
 
                 saveAjax.addEventListener('things-ajax-error', function (event) {
