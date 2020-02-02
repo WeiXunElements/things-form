@@ -401,21 +401,18 @@ things-resource로 부터 위와 같은 형식의 form-fields meta data를 조�
 			 * 필드들의 isValid 속성을 통해 valdation 체크를 수행 합니다.
 			 * ******
 			 */
-			validationCheck: function() {
-				var formElements = this.getFormElements();
-				for(var i = 0 ; i < formElements.length ; i++) {
-					var element = formElements[i];
-					if(element.isValid === false) {
-						var msg = '[' + element.label + '] ' + Things.DataGlobal.t('text.info_invalid');
-						var me = this;
-
+			 validationCheck: function() {
+				let formElements = this.getFormElements();
+				for (let ele of formElements) {
+					if (ele.isValid === false) {
+						if (ele.name === 'id')
+							continue;
+						if (this.removeFieldsOnSave.includes(ele.name))
+							continue;
+						let msg = '[' + ele.label + '] ' + Things.DataGlobal.t('text.info_invalid');
 						this.openConfirmMsg({
 							title : Things.DataGlobal.t('text.invalid_input'), text : msg, type : 'info', timer : 5000
-						}, function() {
-							me.async(function() {
-								element.focus();
-							}, 500)
-						});
+						}, () => this.async(() => ele.focus(), 500));
 						return false;
 					}
 				}
