@@ -198,9 +198,7 @@ Copyright © HatioLab Inc. All rights reserved.
                         saveAjax.resourceUrl = this.resourceUrl.replace('/:id', '');
                     } else {
                         saveAjax.resourceId = idData;
-                        saveAjax.resourceUrl = (this.resourceUrl.indexOf('/:id') >= 0) ? this.resourceUrl : this
-                            .resourceUrl +
-                            '/:id';
+                        saveAjax.resourceUrl = (this.resourceUrl.indexOf('/:id') >= 0) ? this.resourceUrl : this.resourceUrl + '/:id';
                     }
                 }
 
@@ -220,6 +218,7 @@ Copyright © HatioLab Inc. All rights reserved.
 
                 var me = this;
                 saveAjax.addEventListener('things-ajax-response', function (event) {
+                    me.method = saveAjax.method;
                     me.fire('things-detail-form-save-success', event.detail);
                 });
 
@@ -256,6 +255,7 @@ Copyright © HatioLab Inc. All rights reserved.
                 getAjax.addEventListener('things-ajax-response', function (event) {
                     me.lastResponse = event.detail;
                     me.resource = event.detail;
+                    me.method = saveAjax.method;
                     me.fire('things-detail-form-read-success', event.detail);
                 });
 
