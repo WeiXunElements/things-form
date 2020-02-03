@@ -255,7 +255,7 @@ Copyright © HatioLab Inc. All rights reserved.
                 getAjax.addEventListener('things-ajax-response', function (event) {
                     me.lastResponse = event.detail;
                     me.resource = event.detail;
-                    me.method = saveAjax.method;
+                    me.method = getAjax.method;
                     me.fire('things-detail-form-read-success', event.detail);
                 });
 
