@@ -1,6 +1,6 @@
 <!--
 @license
-Copyright © HatioLab Inc. All rights reserved.
+Copyright © Shenzhen Weixun. All rights reserved.
 -->
 <link rel="import" href="../polymer/polymer.html">
 <link rel="import" href="../iron-input/iron-input.html">
@@ -144,6 +144,16 @@ ko-kr
         containerSize:{
           type : Number,
           notify: true
+        },
+
+        /**
+         * 改变界面大小前的数据保存变量
+         * *******
+         * @type {Object}
+         */
+        legacyData: {
+          type: Object,
+          notify: true
         }
       },
 
@@ -257,6 +267,18 @@ ko-kr
         }else if(isTwoContainer){
           this.set('containerSize',2);
         }
+
+        const legacyData = this.serializeMyForm();
+        if (JSON.stringify(legacyData) === {}) {
+          this.legacyData = null;
+        } else {
+          this.legacyData = legacyData;
+          for (const fieldName in this.legacyData) {
+            if (fieldName.endsWith('_id'))
+              this.legacyData[fieldName] = this.$$(`[name=${fieldName}]`).objValue;
+          }
+        }
+
         while (this.$.fields.hasChildNodes()) {
           this.$.fields.removeChild(this.$.fields.lastChild);
         }
@@ -292,7 +314,7 @@ ko-kr
         if(!this.formFields || this.formFields.length <= 0 || this.isFormConfigured()) return;
         var divContainer = this.$.fields, rowDiv = null;
         var remainSize = 0;
-        for(index in this.formFields) {
+        for(let index in this.formFields) {
           var field = this.formFields[index];
 
           if(field.type == 'hidden') continue;
@@ -390,6 +412,8 @@ ko-kr
        * *******
        */
       submitMyForm: function() {
+        this.legacyData = null;
+
         var evt = this.fire('things-form-search', this, { cancelable: true });
         if(!evt.defaultPrevented) {
           // 1. 초기 파라미터가 있다면 설정해준다.
