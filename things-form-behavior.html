@@ -2,9 +2,9 @@
 @license
 Copyright © HatioLab Inc. All rights reserved.
 -->
-<link rel="import" href="../polymer/polymer.html">
+<link rel="import" href="../polymer/polymer.html" />
 
-<link rel="import" href="../iron-form-element-behavior/iron-form-element-behavior.html">
+<link rel="import" href="../iron-form-element-behavior/iron-form-element-behavior.html" />
 <!-- <link rel="import" href="../iron-input/iron-input.html">
 
 <link rel="import" href="../paper-button/paper-button.html">
@@ -29,814 +29,829 @@ Copyright © HatioLab Inc. All rights reserved.
 <link rel="import" href="../things-stamp/things-stamp.html">
 <link rel="import" href="../things-tristate-checkbox/things-tristate-checkbox.html"> -->
 
-<link rel="import" href="../things-global-behavior/things-global-behavior.html">
+<link rel="import" href="../things-global-behavior/things-global-behavior.html" />
 
 <script>
+  window.Things = window.Things || {};
 
-window.Things = window.Things || {};
+  /**
+   * 기본 Form Behavior
+   * Things.FormBehavior를 사용하고자 한다면 반드시 reconfigureMyForm() 함수를 구현해야 한다.
+   * 구현 내용 - Things.FormBehavior를 이용하여 Form을 구성한다.
+   *
+   * @polymerBehavior Things.FormBehavior
+   */
+  Things.FormBehaviorImpl = {
+    properties: {
+      /**
+       * Meta-Data of the form elements of the form.
+       * Custom Form element can configure child elements of the form dynamically.
+       * StdFormBehavior create form element by each of this attributes
+       * *******
+       * @type {Array}
+       */
+      formFields: {
+        type: Array,
+        observer: "_formFieldsChanged",
+      },
 
-/**
- * 기본 Form Behavior
- * Things.FormBehavior를 사용하고자 한다면 반드시 reconfigureMyForm() 함수를 구현해야 한다.
- * 구현 내용 - Things.FormBehavior를 이용하여 Form을 구성한다.
- *
- * @polymerBehavior Things.FormBehavior
- */
-Things.FormBehaviorImpl = {
+      /**
+       * Url for submit. global setting의 baseUrl이 제거된 불완전한 URL.
+       * 이 정보로는 form submit을 할 수 없고 이 url이 설정되는 순간 _computeAction이 작동하여 완전한 action url을 생성하여 action 값에 설정한다.
+       * *******
+       * @type {String}
+       */
+      actionUrl: {
+        type: String,
+        notify: true,
+      },
 
-	properties: {
-		/**
-     * Meta-Data of the form elements of the form.
-     * Custom Form element can configure child elements of the form dynamically.
-     * StdFormBehavior create form element by each of this attributes
-     * *******
-     * @type {Array}
+      /**
+       * Action url for submit.
+       * This attribute is configured by base url of the global setting.
+       * *******
+       * @type {String}
+       */
+      action: {
+        type: String,
+        computed: "_computeAction(globals.baseUrl,actionUrl)",
+      },
+
+      /**
+       * HTTP Method for submit.
+       * *******
+       * @type {String}
+       */
+      method: {
+        type: String,
+      },
+
+      /**
+       * HTTP Content Type for submit.
+       * *******
+       * @type {String}
+       */
+      contentType: {
+        type: String,
+        value: "application/json",
+      },
+
+      /**
+       * HTTP 전송시 withCredentials 값 설정
+       * *******
+       * @type {Boolean}
+       */
+      withCredentials: {
+        type: Boolean,
+        value: true,
+      },
+
+      /**
+       * HTTP 전송시 Header 값 설정
+       * *******
+       * @type {Object}
+       */
+      headers: {
+        type: Object,
+      },
+
+      /**
+       * 검색 결과 데이터
+       * *******
+       * @type {Object}
+       */
+      lastResponse: {
+        type: Object,
+        notify: true,
+      },
+
+      /**
+       * formFileds가 변경된 후 things-resource-form-configure
+       * 이벤트가 발생했는지 여부
+       * *******
+       * @type {Boolean}
+       */
+      isConfigureFired: {
+        type: Boolean,
+        value: false,
+      },
+    },
+
+    /**
+     * en-us
+     *
+     * Handler after Form element changed.
+     * Child elements of the form is reconfigured by this function.
+     * The form that extends StdFormBehavior must implement 'reconfigureMyForm' function.
+     * Logic of'reconfigureMyForm' function is creation form child elements by formFields attributes and configuration layout.
+     ******
+     *
+     * ko-kr
+     *
+     * Form element가 변경된 이 후의  handler
+     * Form의 자식 elements는 이 function에 의해 재구성되어진다.
+     * StdFormBehavior를 확장하는 형식은 'reconfigureMyForm' 함수를 구현해야한다.
+     * 'reconfigureMyForm' function의 logic은 formFields속성 및 구성 레이아웃에 따라 자식 요소를 작성함.
+     ******
+     * @param {Array} formFields attribute
      */
-		formFields: {
-			type: Array,
-			observer: '_formFieldsChanged'
-		},
-
-		/**
-		 * Url for submit. global setting의 baseUrl이 제거된 불완전한 URL.
-		 * 이 정보로는 form submit을 할 수 없고 이 url이 설정되는 순간 _computeAction이 작동하여 완전한 action url을 생성하여 action 값에 설정한다.
-		 * *******
-     * @type {String}
-		 */
-		actionUrl: {
-			type: String,
-			notify: true
-		},
-
-		/**
-		 * Action url for submit.
-		 * This attribute is configured by base url of the global setting.
-		 * *******
-     * @type {String}
-		 */
-		action: {
-			type: String,
-			computed: '_computeAction(globals.baseUrl,actionUrl)'
-		},
-
-		/**
-		 * HTTP Method for submit.
-		 * *******
-     * @type {String}
-		 */
-		method: {
-			type: String
-		},
-
-		/**
-		 * HTTP Content Type for submit.
-		 * *******
-     * @type {String}
-		 */
-		contentType: {
-			type: String,
-			value: 'application/json'
-		},
-
-		/**
-		 * HTTP 전송시 withCredentials 값 설정
-		 * *******
-     * @type {Boolean}
-		 */
-		withCredentials: {
-			type: Boolean,
-			value: true
-		},
-
-		/**
-		 * HTTP 전송시 Header 값 설정
-		 * *******
-     * @type {Object}
-		 */
-		headers: {
-		 type: Object
-		},
-
-		/**
-		 * 검색 결과 데이터
-		 * *******
-     * @type {Object}
-		 */
-		lastResponse: {
-			type: Object,
-			notify: true
-		},
-
-		/**
-		 * formFileds가 변경된 후 things-resource-form-configure
-		 * 이벤트가 발생했는지 여부
-		 * *******
-     * @type {Boolean}
-		 */
-		isConfigureFired: {
-			type: Boolean,
-			value: false
-		}
-	},
-
-  /**
-   * en-us
-   *
-   * Handler after Form element changed.
-   * Child elements of the form is reconfigured by this function.
-   * The form that extends StdFormBehavior must implement 'reconfigureMyForm' function.
-   * Logic of'reconfigureMyForm' function is creation form child elements by formFields attributes and configuration layout.
-   ******
-   *
-   * ko-kr
-   *
-   * Form element가 변경된 이 후의  handler
-   * Form의 자식 elements는 이 function에 의해 재구성되어진다.
-   * StdFormBehavior를 확장하는 형식은 'reconfigureMyForm' 함수를 구현해야한다.
-   * 'reconfigureMyForm' function의 logic은 formFields속성 및 구성 레이아웃에 따라 자식 요소를 작성함.
-   ******
-   * @param {Array} formFields attribute
-   */
-	_formFieldsChanged: function(formFields) {
-		if(!this.isConfigureFired) {
-			this.isConfigureFired = true;
-			this.fire('things-form-configure', formFields);
-		}
-
-		this.reconfigureMyForm();
-	},
-
-	/**
-	 * en-us
-	 *
-	 * compute action url by base url of the global settings
-	 ******
-	 *
-	 * ko-kr
-	 *
-	 * 전역 설정의 기본 URL로 action url을 compute함.
-	 ******
-	 * @param {string} baseUrl base url of the global settings
-	 * @param {string} url url attribute
-	 */
-	_computeAction: function(baseUrl, actionUrl) {
-		if(actionUrl && (actionUrl.toLowerCase().startsWith('http://') || actionUrl.toLowerCase().startsWith('https://'))) {
-			return actionUrl;
-		} else {
-			return baseUrl + '/' + actionUrl;
-		}
-	},
-
-	/**
-	 * en-us
-	 *
-	 * Bind element's attribute values by formField informations.
-	 ******
-	 *
-	 * ko-kr
-	 *
-	 * formField 정보로 요소의 속성 값을 바인딩함.
-	 ******
-	 * @param {Object} child element of the form
-	 * @param {Object} element information object from formFields
-	 */
-	_bindAttributes: function(element, attrs) {
-		for(attr in attrs) {
-			element.setAttribute(attr, attrs[attr]);
-		}
-
-		return element;
-	},
-
-	/**
-	 * en-us
-	 *
-	 * create list box
-	 ******
-	 *
-	 * ko-kr
-	 *
-	 * list box 생성
-	 ******
-	 * @param {Array} items Listbox values
-	 * @return {Object} paper-listbox element
-	 */
-	_makeListBox: function(items) {
-		var listbox = document.createElement('paper-listbox');
-		listbox.setAttribute('selected','0');
-
-		for(index in items) {
-			option = items[index];
-			item = document.createElement('paper-item');
-			item.innerHTML = option;
-			listbox.appendChild(item);
-		}
-
-		return listbox;
-	},
-
-  /**
-   * en-us
-   *
-   * Create child element of the form by one of the formFields object
-   ******
-   *
-   * ko-kr
-   *
-   * formFields 객체 중 하나를 사용하여 form의 자식 element 생성.
-   ******
-   * @param {Object} one of the formFields attribute
-   * @return {Object} created child element for the form
-   */
-	_createFormElement: function(element) {
-		var newElement = null;
-
-		switch(element.type) {
-			case 'checkbox':
-				newElement = document.createElement('things-tristate-checkbox');
-				newElement.setAttribute('name', element.name);
-				newElement.setAttribute('label', element.label);
-				break;
-
-			case 'tristate-radio':
-				newElement = document.createElement('things-tristate-radio');
-				newElement.setAttribute('name', element.name);
-				newElement.setAttribute('label', element.label);
-				newElement.showIgnore = element.searchForm ? true : false;
-				break;
-
-			case 'button':
-				newElement = document.createElement('things-button');
-				newElement = this._bindAttributes(newElement, element);
-				newElement.label = element.label;
-				break;
-
-			case 'password':
-				newElement = document.createElement('things-input-field');
-				newElement.setAttribute('name', element.name);
-				newElement.setAttribute('label', element.label);
-				newElement.setAttribute('type', 'password');
-				break;
-
-			case 'listbox':
-				newElement = this._makeListBox(element.options);
-				newElement = this._bindAttributes(newElement, element);
-				break;
-
-			case 'dropdown':
-				newElement = document.createElement('paper-dropdown-menu');
-				newElement = this._bindAttributes(newElement, element);
-				newChild = this._makeListBox(element.options);
-				newChild.setAttribute('class','dropdown-content');
-				newElement.appendChild(newChild);
-				break;
-
-			case 'radio':
-				newElement = document.createElement('paper-radio-group');
-				newElement = this._bindAttributes(newElement, element);
-
-				for(index in element.child) {
-					child = element[index];
-					newChild = document.createElement('paper-radio-button');
-					newChild = this._bindAttributes(newChild, child);
-					newElement.appendChild(newChild);
-				}
-
-				break;
-
-			case 'textarea':
-				newElement = document.createElement('things-textarea');
-				newElement = this._bindAttributes(newElement, element);
-				newElement.rows = 4;
-				this._applyMinMaxValidator(element.userData, newElement, false);
-				break;
-
-			case 'code-combo':
-				newElement = document.createElement('things-code-combo');
-				newElement.setAttribute('name', element.name);
-				newElement.setAttribute('label', element.label);
-				newElement.setAttribute('code-name', element.codeName);
-				newElement.setAttribute('label-path', 'description');
-				newElement.setAttribute('value-path', 'name');
-				newElement.setAttribute('value-path', 'name');
-				if(element.userData&&element.userData.readonly){
-					newElement.setAttribute('readonly',element.userData.readonly);
-				}
-				break;
-
-			case 'resource-combo':
-				newElement = document.createElement('things-resource-combo');
-				newElement.setAttribute('name', element.name);
-				newElement.setAttribute('label', element.label);
-				newElement.setAttribute('resource-name', element.userData.resourceName);
-				newElement.setAttribute('resource-type', element.userData.resourceType);
-				newElement.setAttribute('value-path', element.userData.delegateColumn);
-				break;
-
-			case 'resource-selector':
-				newElement = document.createElement('things-resource-selector');
-				newElement.setAttribute('name', element.name);
-				newElement.setAttribute('label', element.label);
-				newElement.setAttribute('resource-type', element.userData.resourceType);
-				newElement.setAttribute('resource-name', element.userData.resourceName);
-
-				if(element.userData.bindFields)
-					newElement.setAttribute('bind-fields', element.userData.bindFields);
-
-				if(element.userData.initialParams)
-					newElement.setAttribute('initial-params', element.userData.initialParams);
-
-				break;
-
-			case 'resource-format-selector':
-				newElement = document.createElement('things-resource-format-selector');
-				newElement.setAttribute('name', element.name);
-				newElement.setAttribute('label', element.label);
-				newElement.setAttribute('resource-type', element.userData.resourceType);
-				newElement.setAttribute('resource-name', element.userData.resourceName);
-				newElement.setAttribute('value-field', element.userData.delegateColumn);
-				
-				if(element.userData.initialParams)
-					newElement.setAttribute('initial-params', element.userData.initialParams);
-				break;
-
-			case 'resource-field':
-				newElement = document.createElement('things-resource-field');
-				newElement.setAttribute('name', element.name);
-				newElement.setAttribute('label', element.label);
-				newElement.setAttribute('resource-type', element.userData.resourceType);
-				newElement.setAttribute('resource-name', element.userData.resourceName);
-				newElement.setAttribute('submit-name', element.userData.submitName);
-
-				if(element.userData.bindFields)
-					newElement.setAttribute('bind-fields', element.userData.bindFields);
-
-				if(element.userData.initialParams)
-					newElement.setAttribute('initial-params', element.userData.initialParams);
-
-				break;
-
-			case 'resource-code':
-				newElement = document.createElement('things-resource-code');
-				newElement.setAttribute('name', element.name);
-				newElement.setAttribute('label', element.label);
-				newElement.setAttribute('resource-name', element.userData.resourceName);
-				newElement.setAttribute('resource-type', element.userData.resourceType);
-				break;
-
-			case 'view-field':
-				newElement = document.createElement('things-view-field');
-				newElement.setAttribute('name', element.name);
-				newElement.setAttribute('label', element.label);
-				newElement.setAttribute('submit-name', element.userData.submitName);
-
-				break;
-
-			case 'reference-query':
-				newElement = document.createElement('things-reference-query');
-				newElement.setAttribute('ref-name', element.userData.refName);
-				newElement.setAttribute('field-name', element.userData.fieldName);
-				newElement.setAttribute('label', element.label);
-				break;
-
-			case 'image-selector':
-				newElement = document.createElement('things-image-selector');
-				newElement.setAttribute('name', element.name);
-				newElement.setAttribute('label', element.label);
-				break;
-
-			case 'date-picker':
-				newElement = document.createElement('things-date-picker');
-				newElement.setAttribute('name', element.name);
-				newElement.setAttribute('label', element.label);
-
-				if(element.userData) {
-					if(element.userData.format) {
-						newElement.setAttribute('write-format', element.userData.format);
-					}
-
-					if(element.userData.required) {
-						newElement.setAttribute('required', element.userData.required);
-						element.userData.defValue = element.userData.defValue ? element.userData.defValue : moment(new Date()).format('YYYY-MM-DD');
-					}
-
-					if(element.userData.defValue) {
-						newElement.setAttribute('date-value', element.userData.defValue);
-					}
-				}
-
-				break;
-
-			case 'ranged-date-picker':
-				newElement = document.createElement('things-date-picker');
-				newElement.setAttribute('name', element.name);
-				newElement.setAttribute('label', element.label);
-
-				if(element.userData) {
-					if(element.userData.min) newElement.setAttribute('min-date', element.userData.min);
-					if(element.userData.max) newElement.setAttribute('max-date', element.userData.max);
-				}
-
-				break;
-
-			case 'date-from-to-picker':
-				newElement = document.createElement('things-date-from-to');
-				var format = element.userData.format ? element.userData.format : 'YYYY-MM-DD';
-				newElement.setAttribute('write-format', format);
-				newElement.setAttribute('name', element.name);
-				newElement.setAttribute('label', element.label);
-
-				if(element.userData) {
-					if(element.userData.min) newElement.setAttribute('selected-from-date', element.userData.min);
-					if(element.userData.max) newElement.setAttribute('selected-to-date', element.userData.max);
-
-					if(element.userData.defaultRange) {
-						var range = element.userData.defaultRange;
-						newElement.setAttribute('allow-range', range);
-						newElement.setAttribute('error-message', Things.DataGlobal.t('text.invalid_date_range', {a : range}));
-					}
-				}
-
-				break;
-
-			case 'time-picker':
-				newElement = document.createElement('things-time-picker');
-				newElement.setAttribute('name', element.name);
-				newElement.setAttribute('label', element.label);
-
-				if(element.userData) {
-					if(element.userData.format) {
-						newElement.setAttribute('write-format', element.userData.format);
-					}
-
-					if(element.userData.defValue) {
-						newElement.setAttribute('value', element.userData.defValue);
-					}
-				}
-
-				break;
-
-			case 'datetime-picker':
-				newElement = document.createElement('things-date-time-picker');
-				newElement.setAttribute('name', element.name);
-				newElement.setAttribute('label', element.label);
-
-				if(element.userData) {
-					if(element.userData.format) {
-						newElement.setAttribute('write-format', element.userData.format);
-					}
-
-					if(element.userData.defValue) {
-						newElement.setAttribute('value', element.userData.defValue);
-					}
-				}
-
-				break;
-
-			case 'ranged-datetime-picker':
-				newElement = document.createElement('things-date-time-range-picker');
-				newElement.setAttribute('name', element.name);
-				newElement.setAttribute('label', element.label);
-
-				if(element.userData) {
-					newElement.setAttribute('write-format', element.userData.format);
-					if(element.userData.from) newElement.setAttribute('init-from-date', element.userData.from);
-					if(element.userData.to) newElement.setAttribute('init-to-date', element.userData.to);
-				}
-
-				break;
-
-			// user stamp & time stamp
-			case 'things-stamp':
-				newElement = document.createElement('things-stamp');
-				break;
-
-			case 'empty':
-				newElement = document.createElement('label');
-				break;
-
-			case 'cj-line-combo':
-				newElement = document.createElement('cj-line-combo');
-				newElement.setAttribute('name', element.name);
-				newElement.setAttribute('label', element.label);
-				break;
-
-			case 'positive-number':
-				newElement = document.createElement('things-number-field');
-				// newElement.setAttribute('type', 'number');
-				newElement.setAttribute('name', element.name);
-				newElement.setAttribute('label', element.label);
-				newElement.setAttribute('min', 0);
-				newElement.setAttribute('auto-validate', true);
-				newElement.setAttribute('error-message', Things.DataGlobal.t('error.A_IS_LESS_THAN_B', { a : element.label, b : 0 }));
-				if(element.userData && element.userData.format) {
-					newElement.setAttribute('format-with', element.userData.format);
-				}
-				break;
-
-			case 'negative-number':
-				newElement = document.createElement('things-number-field');
-				// newElement.setAttribute('type', 'number');
-				newElement.setAttribute('name', element.name);
-				newElement.setAttribute('label', element.label);
-				newElement.setAttribute('max', 0);
-				newElement.setAttribute('auto-validate', true);
-				newElement.setAttribute('error-message', Things.DataGlobal.t('error.A_IS_GREATER_THAN_B', { a : element.label, b : 0 }));
-				if(element.userData && element.userData.format) {
-					newElement.setAttribute('format-with', element.userData.format);
-				}
-				break;
-
-			/**
-			 * 2018.04.03 - Added by CuiGuang
-			 */
-			case 'time-input':
-				newElement = document.createElement('things-time-input');
-				newElement.setAttribute('name', element.name);
-				newElement.setAttribute('label', element.label);
-				if (element.userData && element.userData.format){
-					newElement.setAttribute('format-with', element.userData.format);
-				}
-				break;
-
-			default:
-				newElement = document.createElement('things-input-field');
-				newElement.setAttribute('name', element.name);
-				newElement.setAttribute('label', element.label);
-
-				// Resource Form일 경우에만 Validation은 의미가 있고 Search Form일 경우는 의미없다.
-				if(!element.searchForm && element.userData) {
-					if(element.userData.type) {
-						if(element.userData.type == 'integer' ||
-							 element.userData.type == 'decimal' ||
-							 element.userData.type == 'double' ||
-							 element.userData.type == 'float' ||
-							 element.userData.type == 'long') {
-							newElement={};
-							newElement = document.createElement('things-number-field');
-							newElement.setAttribute('name', element.name);
-							newElement.setAttribute('label', element.label);
-							if(element.userData.format){
-								newElement.setAttribute('format-with', element.userData.format);
-							}
-							this._applyMinMaxValidator(element.userData, newElement, true);
-
-						} else {
-							if(element.userData.type == 'string' || element.userData.type == 'text') {
-								newElement.setAttribute('type', 'text');
-
-							} else if(element.userData.type == 'password') {
-								newElement.setAttribute('type', 'password');
-							}
-
-							this._applyMinMaxValidator(element.userData, newElement, false);
-						}
-					}
-
-					if(element.userData.validator) {
-						var validator = element.userData.validator;
-						newElement.setAttribute('validator', element.userData.validator);
-
-						if('things-validator-email' == validator) {
-							newElement.setAttribute('error-message', Things.DataGlobal.t('text.email_error'));
-							newElement.setAttribute('auto-validate', true);
-
-						} else if('things-validator-url' == validator) {
-							newElement.setAttribute('error-message', Things.DataGlobal.t('text.url_error'));
-							newElement.setAttribute('auto-validate', true);
-						}
-					}
-
-					if(element.userData.hidden) {
-						newElement.setAttribute('hidden', true);
-					}
-
-					if(element.userData.readonly) {
-						newElement.setAttribute('readonly', true);
-					}
-				}
-		}
-
-		if(!element.searchForm && element.userData) {
-			if(element.userData.required && !newElement.getAttribute('error-message')) {
-				newElement.setAttribute('required', true);
-				newElement.setAttribute('error-message', Things.DataGlobal.t('text.required_error'));
-				newElement.setAttribute('auto-validate', true);
-			}
-		}
-
-		if(!newElement) return null;
-
-		if(!newElement.value) {
-			this.setFieldData(newElement, element.default);
-		}
-
-		newElement.setAttribute('class', 'flex style-scope things-form');
-		if(element.type != 'empty') {
-			newElement.tabIndex = element.tabindex >= 0 ? element.tabindex : -1;
-		}
-		//增加统一触发逻辑，在FormChild中的Value发生变更时提供
-		var self = this;
-		newElement.addEventListener('value-changed', function(event){
-			if (event.detail) {
-				if (event.detail.value || typeof event.detail.value == 'boolean') {
-					var detail = {'values':self.serializeMyForm(), 'changedPath':event.target.name, 'form':self}
-					this.fire('things-form-values-changed',detail);
-				}
-			}
-		})
-
-		return newElement;
-	},
-
-	/**
-	 * Min, Max Validator 설정
-	 ***********
-	 * @param {Object} userData
-	 * @param {Object} newElement
-	 * @param {Number} number
-	 */
-	_applyMinMaxValidator: function(userData, newElement, number) {
-		if(!userData) return;
-
-		if(userData.min || userData.max) {
-			newElement.setAttribute('auto-validate', true);
-		}
-
-		if(typeof userData.max != 'undefined' && userData.max != null) {
-			newElement.setAttribute(number ? 'max' : 'maxlength', Number(userData.max));
-		}
-
-		if(typeof userData.min != 'undefined' && userData.min != null) {
-			newElement.setAttribute(number ? 'min' : 'minlength', Number(userData.min));
-		}
-	},
-
-	/**
-	 * en-us
-	 *
-	 * key event - form submits when enter key is monitored
-	 *
-	 * ko-kr
-	 *
-	 * ket event = key를 누를 때 form submits은 모니터 되어짐.
-	 ******
-	 * @param {Object} event A 'KeyPressed' event
-	 */
-	handleKeyPress: function(event) {
-		var code = event.keyCode;
-		if(code == 13) {
-			if(this.page == 1) this.submitMyForm();
-			else this.page = 1;
-		}
-	},
-
-	/**
-	 * en-us
-	 *
-	 * find form by querySelector and return found form
-	 *
-	 * ko-kr
-	 *
-	 * querySelector에 의해 form을 찾고 발견된 form을 반환.
-	 ******
-	 * @return {Object}
-	 */
-	getMyForm: function() {
-		return this.querySelector('form');
-	},
-
-	/**
-	 * Resets form
-	 * ********
-	 */
-	resetMyForm: function() {
-		this.getMyForm().reset();
-		this.setFormData(null);
-	},
-
-	/**
-	 * en-us
-	 *
-	 * Serialize form and return serialized object.
-	 * It can be used form parameters
-	 *
-	 * ko-kr
-	 *
-	 * form 직렬화 미 직렬화된 object 리턴
-	 * 양식 매개변수로 사용할 수 있음
-	 ******
-	 * @return {Object} serialized object
-	 */
-	serializeMyForm: function() {
-		var formData = this.getMyForm().serialize();
-		this._beforeSerializeForm(formData);
-		return formData;
-	},
-
-	/**
-	 * serialize 전에 확장 필드 처리
-	 * ********
-	 * @param {Object} formData
-	 */
-	_beforeSerializeForm: function(formData) {
-		if(!this.formFields){
-			return;
-		}
-		var extFields = this.formFields.filter(function(field) {
-			return field.userData && field.userData.extField === true;
-		});
-
-		if(extFields && extFields.length > 0) {
-			formData.extprops_ = {};
-			extFields.forEach(function(field) {
-				formData.extprops_[field.name] = formData[field.name];
-				delete formData[field.name];
-			});
-		}
-	},
-
-	/**
-	 * 폼 내 모든 엘리먼트를 리턴한다.
-	 * ********
-	 */
-	getFormElements: function() {
-		// 여기서는 Form 내부 구조를 모르기 때문에 실제 상위 Form에서 구현
-		return null;
-	},
-
-	/**
-	 * Resource로 해당 Form elements에 각각 바인딩한다.
-	 ********
-	 * @param {Object} resource
-	 */
-	setFormData: function(resource) {
-		var elements = this.getFormElements();
-		for(var i = 0 ; i < elements.length ; i++) {
-			var element = elements[i];
-			var val = resource ? resource[element.name] : null;
-
-			if(element.localName == 'things-stamp') {
-				element.resource = resource;
-			} else {
-				this.setFieldData(element, val, resource);
-			}
-		}
-	},
-
-	/**
-	 * 폼 필드에 값 설정
-	 ********
-	 * @param {Object} element
-	 * @param {Object} value
-	 */
-	setFieldData: function(element, value) {
-		if(value === undefined || element.localName == 'things-stamp') {
-			return;
-		} else if(element.localName == 'things-resource-selector' || element.localName == 'things-image-selector') {
-			element.objValue = value;
-		} else if (element.localName == 'things-tristate-checkbox') {
-			element.state = value === 'true' || value === true ? 'on' : 'off';
-		} else {
-			element.value = value;
-		}
-	},
-
-	/**
-	 * name으로 컴포넌트를 찾아 enable 시킨다.
-	 ********
-	 * @param {Object} name
-	 */
-	enableElement: function(name) {
-		var elements = this.getFormElements();
-		for(var i = 0 ; i < elements.length ; i++) {
-			var element = elements[i];
-			if(element.name == name) {
-				element.removeAttribute('disabled');
-			}
-		}
-	},
-
-	/**
-	 * name으로 폼 필드를 찾아 컴포넌트를 disable 시킨다.
-	 ********
-	 * @param {Object} name
-	 */
-	disableElement: function(name) {
-		var elements = this.getFormElements();
-		for(var i = 0 ; i < elements.length ; i++) {
-			var element = elements[i];
-			if(element.name == name) {
-				element.setAttribute('disabled', true);
-			}
-		}
-	}
-};
-
-Things.FormBehavior = [
-	'IronFormElementBehavior',
-	Things.FormBehaviorImpl,
-	Things.GlobalBehavior
-];
-
+    _formFieldsChanged: function (formFields) {
+      if (!this.isConfigureFired) {
+        this.isConfigureFired = true;
+        this.fire("things-form-configure", formFields);
+      }
+
+      this.reconfigureMyForm();
+    },
+
+    /**
+     * en-us
+     *
+     * compute action url by base url of the global settings
+     ******
+     *
+     * ko-kr
+     *
+     * 전역 설정의 기본 URL로 action url을 compute함.
+     ******
+     * @param {string} baseUrl base url of the global settings
+     * @param {string} url url attribute
+     */
+    _computeAction: function (baseUrl, actionUrl) {
+      if (
+        actionUrl &&
+        (actionUrl.toLowerCase().startsWith("http://") || actionUrl.toLowerCase().startsWith("https://"))
+      ) {
+        return actionUrl;
+      } else {
+        return baseUrl + "/" + actionUrl;
+      }
+    },
+
+    /**
+     * en-us
+     *
+     * Bind element's attribute values by formField informations.
+     ******
+     *
+     * ko-kr
+     *
+     * formField 정보로 요소의 속성 값을 바인딩함.
+     ******
+     * @param {Object} child element of the form
+     * @param {Object} element information object from formFields
+     */
+    _bindAttributes: function (element, attrs) {
+      for (attr in attrs) {
+        element.setAttribute(attr, attrs[attr]);
+      }
+
+      return element;
+    },
+
+    /**
+     * en-us
+     *
+     * create list box
+     ******
+     *
+     * ko-kr
+     *
+     * list box 생성
+     ******
+     * @param {Array} items Listbox values
+     * @return {Object} paper-listbox element
+     */
+    _makeListBox: function (items) {
+      var listbox = document.createElement("paper-listbox");
+      listbox.setAttribute("selected", "0");
+
+      for (index in items) {
+        option = items[index];
+        item = document.createElement("paper-item");
+        item.innerHTML = option;
+        listbox.appendChild(item);
+      }
+
+      return listbox;
+    },
+
+    /**
+     * en-us
+     *
+     * Create child element of the form by one of the formFields object
+     ******
+     *
+     * ko-kr
+     *
+     * formFields 객체 중 하나를 사용하여 form의 자식 element 생성.
+     ******
+     * @param {Object} one of the formFields attribute
+     * @return {Object} created child element for the form
+     */
+    _createFormElement: function (element) {
+      var newElement = null;
+
+      switch (element.type) {
+        case "checkbox":
+          newElement = document.createElement("things-tristate-checkbox");
+          newElement.setAttribute("name", element.name);
+          newElement.setAttribute("label", element.label);
+          break;
+
+        case "tristate-radio":
+          newElement = document.createElement("things-tristate-radio");
+          newElement.setAttribute("name", element.name);
+          newElement.setAttribute("label", element.label);
+          newElement.showIgnore = element.searchForm ? true : false;
+          break;
+
+        case "button":
+          newElement = document.createElement("things-button");
+          newElement = this._bindAttributes(newElement, element);
+          newElement.label = element.label;
+          break;
+
+        case "password":
+          newElement = document.createElement("things-input-field");
+          newElement.setAttribute("name", element.name);
+          newElement.setAttribute("label", element.label);
+          newElement.setAttribute("type", "password");
+          break;
+
+        case "listbox":
+          newElement = this._makeListBox(element.options);
+          newElement = this._bindAttributes(newElement, element);
+          break;
+
+        case "dropdown":
+          newElement = document.createElement("paper-dropdown-menu");
+          newElement = this._bindAttributes(newElement, element);
+          newChild = this._makeListBox(element.options);
+          newChild.setAttribute("class", "dropdown-content");
+          newElement.appendChild(newChild);
+          break;
+
+        case "radio":
+          newElement = document.createElement("paper-radio-group");
+          newElement = this._bindAttributes(newElement, element);
+
+          for (index in element.child) {
+            child = element[index];
+            newChild = document.createElement("paper-radio-button");
+            newChild = this._bindAttributes(newChild, child);
+            newElement.appendChild(newChild);
+          }
+
+          break;
+
+        case "textarea":
+          newElement = document.createElement("things-textarea");
+          newElement = this._bindAttributes(newElement, element);
+          newElement.rows = 4;
+          this._applyMinMaxValidator(element.userData, newElement, false);
+          break;
+
+        case "code-combo":
+          newElement = document.createElement("things-code-combo");
+          newElement.setAttribute("name", element.name);
+          newElement.setAttribute("label", element.label);
+          newElement.setAttribute("code-name", element.codeName);
+          newElement.setAttribute("label-path", "description");
+          newElement.setAttribute("value-path", "name");
+          newElement.setAttribute("value-path", "name");
+          if (element.userData && element.userData.readonly) {
+            newElement.setAttribute("readonly", element.userData.readonly);
+          }
+          break;
+
+        case "resource-combo":
+          newElement = document.createElement("things-resource-combo");
+          newElement.setAttribute("name", element.name);
+          newElement.setAttribute("label", element.label);
+          newElement.setAttribute("resource-name", element.userData.resourceName);
+          newElement.setAttribute("resource-type", element.userData.resourceType);
+          newElement.setAttribute("value-path", element.userData.delegateColumn);
+          break;
+
+        case "resource-selector":
+          newElement = document.createElement("things-resource-selector");
+          newElement.setAttribute("name", element.name);
+          newElement.setAttribute("label", element.label);
+          newElement.setAttribute("resource-type", element.userData.resourceType);
+          newElement.setAttribute("resource-name", element.userData.resourceName);
+
+          if (element.userData.bindFields) newElement.setAttribute("bind-fields", element.userData.bindFields);
+
+          if (element.userData.initialParams) newElement.setAttribute("initial-params", element.userData.initialParams);
+
+          break;
+
+        case "resource-format-selector":
+          newElement = document.createElement("things-resource-format-selector");
+          newElement.setAttribute("name", element.name);
+          newElement.setAttribute("label", element.label);
+          newElement.setAttribute("resource-type", element.userData.resourceType);
+          newElement.setAttribute("resource-name", element.userData.resourceName);
+          newElement.setAttribute("value-field", element.userData.delegateColumn);
+
+          if (element.userData.initialParams) newElement.setAttribute("initial-params", element.userData.initialParams);
+          break;
+
+        case "resource-field":
+          newElement = document.createElement("things-resource-field");
+          newElement.setAttribute("name", element.name);
+          newElement.setAttribute("label", element.label);
+          newElement.setAttribute("resource-type", element.userData.resourceType);
+          newElement.setAttribute("resource-name", element.userData.resourceName);
+          newElement.setAttribute("submit-name", element.userData.submitName);
+
+          if (element.userData.bindFields) newElement.setAttribute("bind-fields", element.userData.bindFields);
+
+          if (element.userData.initialParams) newElement.setAttribute("initial-params", element.userData.initialParams);
+
+          break;
+
+        case "resource-code":
+          newElement = document.createElement("things-resource-code");
+          newElement.setAttribute("name", element.name);
+          newElement.setAttribute("label", element.label);
+          newElement.setAttribute("resource-name", element.userData.resourceName);
+          newElement.setAttribute("resource-type", element.userData.resourceType);
+          break;
+
+        case "resource-reference-query":
+          newElement = document.createElement("things-resource-reference-query");
+          newElement.setAttribute("name", element.name);
+          newElement.setAttribute("label", element.label);
+          newElement.setAttribute("resource-type", element.userData.resourceType);
+          newElement.setAttribute("resource-name", element.userData.resourceName);
+          newElement.setAttribute("ref-name", element.userData.refName);
+          newElement.setAttribute("field-name", element.userData.fieldName);
+
+          if (element.userData.bindFields) {
+            newElement.setAttribute("bind-fields", element.userData.bindFields);
+          }
+          if (element.userData.initialParams) {
+            newElement.setAttribute("initial-params", element.userData.initialParams);
+          }
+          break;
+
+        case "view-field":
+          newElement = document.createElement("things-view-field");
+          newElement.setAttribute("name", element.name);
+          newElement.setAttribute("label", element.label);
+          newElement.setAttribute("submit-name", element.userData.submitName);
+
+          break;
+
+        case "reference-query":
+          newElement = document.createElement("things-reference-query");
+          newElement.setAttribute("ref-name", element.userData.refName);
+          newElement.setAttribute("field-name", element.userData.fieldName);
+          newElement.setAttribute("label", element.label);
+          break;
+
+        case "image-selector":
+          newElement = document.createElement("things-image-selector");
+          newElement.setAttribute("name", element.name);
+          newElement.setAttribute("label", element.label);
+          break;
+
+        case "date-picker":
+          newElement = document.createElement("things-date-picker");
+          newElement.setAttribute("name", element.name);
+          newElement.setAttribute("label", element.label);
+
+          if (element.userData) {
+            if (element.userData.format) {
+              newElement.setAttribute("write-format", element.userData.format);
+            }
+
+            if (element.userData.required) {
+              newElement.setAttribute("required", element.userData.required);
+              element.userData.defValue = element.userData.defValue
+                ? element.userData.defValue
+                : moment(new Date()).format("YYYY-MM-DD");
+            }
+
+            if (element.userData.defValue) {
+              newElement.setAttribute("date-value", element.userData.defValue);
+            }
+          }
+
+          break;
+
+        case "ranged-date-picker":
+          newElement = document.createElement("things-date-picker");
+          newElement.setAttribute("name", element.name);
+          newElement.setAttribute("label", element.label);
+
+          if (element.userData) {
+            if (element.userData.min) newElement.setAttribute("min-date", element.userData.min);
+            if (element.userData.max) newElement.setAttribute("max-date", element.userData.max);
+          }
+
+          break;
+
+        case "date-from-to-picker":
+          newElement = document.createElement("things-date-from-to");
+          var format = element.userData.format ? element.userData.format : "YYYY-MM-DD";
+          newElement.setAttribute("write-format", format);
+          newElement.setAttribute("name", element.name);
+          newElement.setAttribute("label", element.label);
+
+          if (element.userData) {
+            if (element.userData.min) newElement.setAttribute("selected-from-date", element.userData.min);
+            if (element.userData.max) newElement.setAttribute("selected-to-date", element.userData.max);
+
+            if (element.userData.defaultRange) {
+              var range = element.userData.defaultRange;
+              newElement.setAttribute("allow-range", range);
+              newElement.setAttribute("error-message", Things.DataGlobal.t("text.invalid_date_range", { a: range }));
+            }
+          }
+
+          break;
+
+        case "time-picker":
+          newElement = document.createElement("things-time-picker");
+          newElement.setAttribute("name", element.name);
+          newElement.setAttribute("label", element.label);
+
+          if (element.userData) {
+            if (element.userData.format) {
+              newElement.setAttribute("write-format", element.userData.format);
+            }
+
+            if (element.userData.defValue) {
+              newElement.setAttribute("value", element.userData.defValue);
+            }
+          }
+
+          break;
+
+        case "datetime-picker":
+          newElement = document.createElement("things-date-time-picker");
+          newElement.setAttribute("name", element.name);
+          newElement.setAttribute("label", element.label);
+
+          if (element.userData) {
+            if (element.userData.format) {
+              newElement.setAttribute("write-format", element.userData.format);
+            }
+
+            if (element.userData.defValue) {
+              newElement.setAttribute("value", element.userData.defValue);
+            }
+          }
+
+          break;
+
+        case "ranged-datetime-picker":
+          newElement = document.createElement("things-date-time-range-picker");
+          newElement.setAttribute("name", element.name);
+          newElement.setAttribute("label", element.label);
+
+          if (element.userData) {
+            newElement.setAttribute("write-format", element.userData.format);
+            if (element.userData.from) newElement.setAttribute("init-from-date", element.userData.from);
+            if (element.userData.to) newElement.setAttribute("init-to-date", element.userData.to);
+          }
+
+          break;
+
+        // user stamp & time stamp
+        case "things-stamp":
+          newElement = document.createElement("things-stamp");
+          break;
+
+        case "empty":
+          newElement = document.createElement("label");
+          break;
+
+        case "cj-line-combo":
+          newElement = document.createElement("cj-line-combo");
+          newElement.setAttribute("name", element.name);
+          newElement.setAttribute("label", element.label);
+          break;
+
+        case "positive-number":
+          newElement = document.createElement("things-number-field");
+          // newElement.setAttribute('type', 'number');
+          newElement.setAttribute("name", element.name);
+          newElement.setAttribute("label", element.label);
+          newElement.setAttribute("min", 0);
+          newElement.setAttribute("auto-validate", true);
+          newElement.setAttribute(
+            "error-message",
+            Things.DataGlobal.t("error.A_IS_LESS_THAN_B", { a: element.label, b: 0 })
+          );
+          if (element.userData && element.userData.format) {
+            newElement.setAttribute("format-with", element.userData.format);
+          }
+          break;
+
+        case "negative-number":
+          newElement = document.createElement("things-number-field");
+          // newElement.setAttribute('type', 'number');
+          newElement.setAttribute("name", element.name);
+          newElement.setAttribute("label", element.label);
+          newElement.setAttribute("max", 0);
+          newElement.setAttribute("auto-validate", true);
+          newElement.setAttribute(
+            "error-message",
+            Things.DataGlobal.t("error.A_IS_GREATER_THAN_B", { a: element.label, b: 0 })
+          );
+          if (element.userData && element.userData.format) {
+            newElement.setAttribute("format-with", element.userData.format);
+          }
+          break;
+
+        /**
+         * 2018.04.03 - Added by CuiGuang
+         */
+        case "time-input":
+          newElement = document.createElement("things-time-input");
+          newElement.setAttribute("name", element.name);
+          newElement.setAttribute("label", element.label);
+          if (element.userData && element.userData.format) {
+            newElement.setAttribute("format-with", element.userData.format);
+          }
+          break;
+
+        default:
+          newElement = document.createElement("things-input-field");
+          newElement.setAttribute("name", element.name);
+          newElement.setAttribute("label", element.label);
+
+          // Resource Form일 경우에만 Validation은 의미가 있고 Search Form일 경우는 의미없다.
+          if (!element.searchForm && element.userData) {
+            if (element.userData.type) {
+              if (
+                element.userData.type == "integer" ||
+                element.userData.type == "decimal" ||
+                element.userData.type == "double" ||
+                element.userData.type == "float" ||
+                element.userData.type == "long"
+              ) {
+                newElement = {};
+                newElement = document.createElement("things-number-field");
+                newElement.setAttribute("name", element.name);
+                newElement.setAttribute("label", element.label);
+                if (element.userData.format) {
+                  newElement.setAttribute("format-with", element.userData.format);
+                }
+                this._applyMinMaxValidator(element.userData, newElement, true);
+              } else {
+                if (element.userData.type == "string" || element.userData.type == "text") {
+                  newElement.setAttribute("type", "text");
+                } else if (element.userData.type == "password") {
+                  newElement.setAttribute("type", "password");
+                }
+
+                this._applyMinMaxValidator(element.userData, newElement, false);
+              }
+            }
+
+            if (element.userData.validator) {
+              var validator = element.userData.validator;
+              newElement.setAttribute("validator", element.userData.validator);
+
+              if ("things-validator-email" == validator) {
+                newElement.setAttribute("error-message", Things.DataGlobal.t("text.email_error"));
+                newElement.setAttribute("auto-validate", true);
+              } else if ("things-validator-url" == validator) {
+                newElement.setAttribute("error-message", Things.DataGlobal.t("text.url_error"));
+                newElement.setAttribute("auto-validate", true);
+              }
+            }
+
+            if (element.userData.hidden) {
+              newElement.setAttribute("hidden", true);
+            }
+
+            if (element.userData.readonly) {
+              newElement.setAttribute("readonly", true);
+            }
+          }
+      }
+
+      if (!element.searchForm && element.userData) {
+        if (element.userData.required && !newElement.getAttribute("error-message")) {
+          newElement.setAttribute("required", true);
+          newElement.setAttribute("error-message", Things.DataGlobal.t("text.required_error"));
+          newElement.setAttribute("auto-validate", true);
+        }
+      }
+
+      if (!newElement) return null;
+
+      if (!newElement.value) {
+        this.setFieldData(newElement, element.default);
+      }
+
+      newElement.setAttribute("class", "flex style-scope things-form");
+      if (element.type != "empty") {
+        newElement.tabIndex = element.tabindex >= 0 ? element.tabindex : -1;
+      }
+      //增加统一触发逻辑，在FormChild中的Value发生变更时提供
+      var self = this;
+      newElement.addEventListener("value-changed", function (event) {
+        if (event.detail) {
+          if (event.detail.value || typeof event.detail.value == "boolean") {
+            var detail = { values: self.serializeMyForm(), changedPath: event.target.name, form: self };
+            this.fire("things-form-values-changed", detail);
+          }
+        }
+      });
+
+      return newElement;
+    },
+
+    /**
+     * Min, Max Validator 설정
+     ***********
+     * @param {Object} userData
+     * @param {Object} newElement
+     * @param {Number} number
+     */
+    _applyMinMaxValidator: function (userData, newElement, number) {
+      if (!userData) return;
+
+      if (userData.min || userData.max) {
+        newElement.setAttribute("auto-validate", true);
+      }
+
+      if (typeof userData.max != "undefined" && userData.max != null) {
+        newElement.setAttribute(number ? "max" : "maxlength", Number(userData.max));
+      }
+
+      if (typeof userData.min != "undefined" && userData.min != null) {
+        newElement.setAttribute(number ? "min" : "minlength", Number(userData.min));
+      }
+    },
+
+    /**
+     * en-us
+     *
+     * key event - form submits when enter key is monitored
+     *
+     * ko-kr
+     *
+     * ket event = key를 누를 때 form submits은 모니터 되어짐.
+     ******
+     * @param {Object} event A 'KeyPressed' event
+     */
+    handleKeyPress: function (event) {
+      var code = event.keyCode;
+      if (code == 13) {
+        if (this.page == 1) this.submitMyForm();
+        else this.page = 1;
+      }
+    },
+
+    /**
+     * en-us
+     *
+     * find form by querySelector and return found form
+     *
+     * ko-kr
+     *
+     * querySelector에 의해 form을 찾고 발견된 form을 반환.
+     ******
+     * @return {Object}
+     */
+    getMyForm: function () {
+      return this.querySelector("form");
+    },
+
+    /**
+     * Resets form
+     * ********
+     */
+    resetMyForm: function () {
+      this.getMyForm().reset();
+      this.setFormData(null);
+    },
+
+    /**
+     * en-us
+     *
+     * Serialize form and return serialized object.
+     * It can be used form parameters
+     *
+     * ko-kr
+     *
+     * form 직렬화 미 직렬화된 object 리턴
+     * 양식 매개변수로 사용할 수 있음
+     ******
+     * @return {Object} serialized object
+     */
+    serializeMyForm: function () {
+      var formData = this.getMyForm().serialize();
+      this._beforeSerializeForm(formData);
+      return formData;
+    },
+
+    /**
+     * serialize 전에 확장 필드 처리
+     * ********
+     * @param {Object} formData
+     */
+    _beforeSerializeForm: function (formData) {
+      if (!this.formFields) {
+        return;
+      }
+      var extFields = this.formFields.filter(function (field) {
+        return field.userData && field.userData.extField === true;
+      });
+
+      if (extFields && extFields.length > 0) {
+        formData.extprops_ = {};
+        extFields.forEach(function (field) {
+          formData.extprops_[field.name] = formData[field.name];
+          delete formData[field.name];
+        });
+      }
+    },
+
+    /**
+     * 폼 내 모든 엘리먼트를 리턴한다.
+     * ********
+     */
+    getFormElements: function () {
+      // 여기서는 Form 내부 구조를 모르기 때문에 실제 상위 Form에서 구현
+      return null;
+    },
+
+    /**
+     * Resource로 해당 Form elements에 각각 바인딩한다.
+     ********
+     * @param {Object} resource
+     */
+    setFormData: function (resource) {
+      var elements = this.getFormElements();
+      for (var i = 0; i < elements.length; i++) {
+        var element = elements[i];
+        var val = resource ? resource[element.name] : null;
+
+        if (element.localName == "things-stamp") {
+          element.resource = resource;
+        } else {
+          this.setFieldData(element, val, resource);
+        }
+      }
+    },
+
+    /**
+     * 폼 필드에 값 설정
+     ********
+     * @param {Object} element
+     * @param {Object} value
+     */
+    setFieldData: function (element, value) {
+      if (value === undefined || element.localName == "things-stamp") {
+        return;
+      } else if (element.localName == "things-resource-selector" || element.localName == "things-image-selector") {
+        element.objValue = value;
+      } else if (element.localName == "things-tristate-checkbox") {
+        element.state = value === "true" || value === true ? "on" : "off";
+      } else {
+        element.value = value;
+      }
+    },
+
+    /**
+     * name으로 컴포넌트를 찾아 enable 시킨다.
+     ********
+     * @param {Object} name
+     */
+    enableElement: function (name) {
+      var elements = this.getFormElements();
+      for (var i = 0; i < elements.length; i++) {
+        var element = elements[i];
+        if (element.name == name) {
+          element.removeAttribute("disabled");
+        }
+      }
+    },
+
+    /**
+     * name으로 폼 필드를 찾아 컴포넌트를 disable 시킨다.
+     ********
+     * @param {Object} name
+     */
+    disableElement: function (name) {
+      var elements = this.getFormElements();
+      for (var i = 0; i < elements.length; i++) {
+        var element = elements[i];
+        if (element.name == name) {
+          element.setAttribute("disabled", true);
+        }
+      }
+    },
+  };
+
+  Things.FormBehavior = ["IronFormElementBehavior", Things.FormBehaviorImpl, Things.GlobalBehavior];
 </script>
