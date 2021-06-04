@@ -1,43 +1,43 @@
 <!--
 @license
-Copyright © Shenzhen Weixun. All rights reserved.
+Copyright © 2015-2021 Shenzhen Weixun All rights reserved.
 -->
-<link rel="import" href="../polymer/polymer.html">
-<link rel="import" href="../iron-input/iron-input.html">
-<link rel="import" href="../iron-form/iron-form.html">
-<link rel="import" href="../iron-flex-layout/iron-flex-layout.html">
-<link rel="import" href="../iron-flex-layout/iron-flex-layout-classes.html">
-<link rel="import" href="../iron-collapse/iron-collapse.html">
-<link rel="import" href="../paper-button/paper-button.html">
-<link rel="import" href="../paper-checkbox/paper-checkbox.html">
-<link rel="import" href="../paper-dropdown-menu/paper-dropdown-menu.html">
-<link rel="import" href="../paper-input/paper-input.html">
-<link rel="import" href="../paper-input/paper-textarea.html">
-<link rel="import" href="../paper-material/paper-material.html">
-<link rel="import" href="../paper-radio-group/paper-radio-group.html">
-<link rel="import" href="../paper-radio-button/paper-radio-button.html">
-<link rel="import" href="../paper-tooltip/paper-tooltip.html">
+<link rel="import" href="../polymer/polymer.html" />
+<link rel="import" href="../iron-input/iron-input.html" />
+<link rel="import" href="../iron-form/iron-form.html" />
+<link rel="import" href="../iron-flex-layout/iron-flex-layout.html" />
+<link rel="import" href="../iron-flex-layout/iron-flex-layout-classes.html" />
+<link rel="import" href="../iron-collapse/iron-collapse.html" />
+<link rel="import" href="../paper-button/paper-button.html" />
+<link rel="import" href="../paper-checkbox/paper-checkbox.html" />
+<link rel="import" href="../paper-dropdown-menu/paper-dropdown-menu.html" />
+<link rel="import" href="../paper-input/paper-input.html" />
+<link rel="import" href="../paper-input/paper-textarea.html" />
+<link rel="import" href="../paper-material/paper-material.html" />
+<link rel="import" href="../paper-radio-group/paper-radio-group.html" />
+<link rel="import" href="../paper-radio-button/paper-radio-button.html" />
+<link rel="import" href="../paper-tooltip/paper-tooltip.html" />
 
-<link rel="import" href="../things-button/things-button.html">
-<link rel="import" href="../things-date-picker/things-date-picker.html">
-<link rel="import" href="../things-date-picker/things-date-from-to.html">
-<link rel="import" href="../things-date-picker/things-time-picker.html">
-<link rel="import" href="../things-date-picker/things-time-input.html">
-<link rel="import" href="../things-input-field/things-input-field.html">
-<link rel="import" href="../things-resource-combo/things-code-combo.html">
-<link rel="import" href="../things-resource-combo/things-resource-code.html">
-<link rel="import" href="../things-resource-selector/things-resource-selector.html">
-<link rel="import" href="../things-resource-selector/things-resource-field.html">
-<link rel="import" href="../things-stamp/things-stamp.html">
-<link rel="import" href="../things-tristate-checkbox/things-tristate-checkbox.html">
-<link rel="import" href="../things-alarm/things-alarm-badge.html">
+<link rel="import" href="../things-button/things-button.html" />
+<link rel="import" href="../things-date-picker/things-date-picker.html" />
+<link rel="import" href="../things-date-picker/things-date-from-to.html" />
+<link rel="import" href="../things-date-picker/things-time-picker.html" />
+<link rel="import" href="../things-date-picker/things-time-input.html" />
+<link rel="import" href="../things-input-field/things-input-field.html" />
+<link rel="import" href="../things-resource-combo/things-code-combo.html" />
+<link rel="import" href="../things-resource-combo/things-resource-code.html" />
+<link rel="import" href="../things-resource-selector/things-resource-selector.html" />
+<link rel="import" href="../things-resource-selector/things-resource-field.html" />
+<link rel="import" href="../things-stamp/things-stamp.html" />
+<link rel="import" href="../things-tristate-checkbox/things-tristate-checkbox.html" />
+<link rel="import" href="../things-alarm/things-alarm-badge.html" />
 
-<link rel="import" href="../things-msg-box-behavior/things-msg-box-behavior.html">
-<link rel="import" href="../things-spinner/things-spinner-behavior.html">
+<link rel="import" href="../things-msg-box-behavior/things-msg-box-behavior.html" />
+<link rel="import" href="../things-spinner/things-spinner-behavior.html" />
 
-<link rel="import" href="./things-form-behavior.html">
-<link rel="import" href="./things-search-form-behavior.html">
-<link rel="import" href="../iron-media-query/iron-media-query.html">
+<link rel="import" href="./things-form-behavior.html" />
+<link rel="import" href="./things-search-form-behavior.html" />
+<link rel="import" href="../iron-media-query/iron-media-query.html" />
 
 <!--
 en-us
@@ -76,22 +76,22 @@ ko-kr
     <style>
       :host {
         display: block;
-        background-color:var(--things-whitegrey-background-color);
-        border-bottom:1px solid rgba(0,0,0,.1);
+        background-color: var(--things-whitegrey-background-color);
+        border-bottom: 1px solid rgba(0, 0, 0, 0.1);
       }
 
       form {
-        @apply(--things-default-padding);
-        padding-bottom:5px;
-
+        @apply (--things-default-padding);
+        padding-bottom: 5px;
       }
       paper-fab {
-        @apply(--things-search-fab);
+        @apply (--things-search-fab);
       }
-      paper-icon-button{
-        width:20px;height:20px;
-        padding:0;
-        opacity: .5;
+      paper-icon-button {
+        width: 20px;
+        height: 20px;
+        padding: 0;
+        opacity: 0.5;
       }
     </style>
 
@@ -99,23 +99,24 @@ ko-kr
       <paper-icon-button icon="[[arrowIcon]]" on-tap="toggleSearchConditions"></paper-icon-button>
 
       <iron-collapse id="content" class="flex" opened>
-          <form is="iron-form"
-                action="[[action]]"
-                content-type="[[contentType]]"
-                last-response ="{{lastResponse}}"
-                method="GET"
-                with-credentials="[[withCredentials]]">
-            <div id="fields" class="layout vertical flex"></div>
-            <paper-fab icon="search" title="search" on-tap="_onSearchFormTap"></paper-fab>
-          </form>
+        <form
+          is="iron-form"
+          action="[[action]]"
+          content-type="[[contentType]]"
+          last-response="{{lastResponse}}"
+          method="GET"
+          with-credentials="[[withCredentials]]"
+        >
+          <div id="fields" class="layout vertical flex"></div>
+          <paper-fab icon="search" title="search" on-tap="_onSearchFormTap"></paper-fab>
+        </form>
       </iron-collapse>
     </paper-material>
   </template>
 
   <script>
     Polymer({
-
-      is: 'things-search-form',
+      is: "things-search-form",
 
       properties: {
         /**
@@ -124,7 +125,7 @@ ko-kr
          * @type {String}
          */
         title: {
-          type: String
+          type: String,
         },
 
         /**
@@ -134,16 +135,16 @@ ko-kr
          */
         arrowIcon: {
           type: String,
-          value: 'icons:arrow-drop-down'
+          value: "icons:arrow-drop-down",
         },
         /**
          * 검색 조건 Container수량
          * *******
          * @type {Number}
          */
-        containerSize:{
-          type : Number,
-          notify: true
+        containerSize: {
+          type: Number,
+          notify: true,
         },
 
         /**
@@ -153,15 +154,15 @@ ko-kr
          */
         legacyData: {
           type: Object,
-          notify: true
-        }
+          notify: true,
+        },
       },
 
-      listeners : {
-        'iron-form-presubmit' :'handleBeforeSubmit',
-        'iron-form-response' :'_successResponseHandler',
-        'iron-form-error' : '_errorResponseHandler',
-        'iron-resize' :'_reRenderSearchForm'
+      listeners: {
+        "iron-form-presubmit": "handleBeforeSubmit",
+        "iron-form-response": "_successResponseHandler",
+        "iron-form-error": "_errorResponseHandler",
+        "iron-resize": "_reRenderSearchForm",
       },
 
       behaviors: [
@@ -169,7 +170,7 @@ ko-kr
         Things.SearchFormBehavior,
         Things.SpinnerBehavior,
         Things.MsgBoxBehavior,
-        Polymer.IronResizableBehavior
+        Polymer.IronResizableBehavior,
       ],
       /**
        * get parent node
@@ -188,14 +189,14 @@ ko-kr
        * ******
        * @return {Numer} offsetWidth
        */
-      get __containerWidth(){
-        return this.$$('paper-material').offsetWidth;
+      get __containerWidth() {
+        return this.$$("paper-material").offsetWidth;
       },
       /**
        * called when iron-resize fired in this component for re rendering form style
        * ******
        */
-      _reRenderSearchForm: function(){
+      _reRenderSearchForm: function () {
         this._computeContainersParams();
       },
       /**
@@ -203,47 +204,47 @@ ko-kr
        * ***
        * @return {null}
        */
-      _computeContainersParams: function(){
-        if(this.__containerWidth>0){
-          if(this.__offsetWidth != this.__containerWidth){
+      _computeContainersParams: function () {
+        if (this.__containerWidth > 0) {
+          if (this.__offsetWidth != this.__containerWidth) {
             this.__offsetWidth = this.__containerWidth;
-            if(this.__offsetWidth<1024){
-              if(this.isTwoContainer){
+            if (this.__offsetWidth < 1024) {
+              if (this.isTwoContainer) {
                 return;
               }
-              this._saveContainerValues(true, false, false,false);
-              this._computeContainers(true, false, false,false);
-            }else if(this.__offsetWidth>=1024 && this.__offsetWidth<1920){
-              if(this.isThreeContainer){
+              this._saveContainerValues(true, false, false, false);
+              this._computeContainers(true, false, false, false);
+            } else if (this.__offsetWidth >= 1024 && this.__offsetWidth < 1920) {
+              if (this.isThreeContainer) {
                 return;
               }
-              this._saveContainerValues(false, true, false,false);
-              this._computeContainers(false, true, false,false);
-            }else if(this.__offsetWidth>=1920 && this.__offsetWidth<2560){
-              if(this.isFourContainer){
+              this._saveContainerValues(false, true, false, false);
+              this._computeContainers(false, true, false, false);
+            } else if (this.__offsetWidth >= 1920 && this.__offsetWidth < 2560) {
+              if (this.isFourContainer) {
                 return;
               }
-              this._saveContainerValues(false, false, true,false);
-              this._computeContainers(false, false, true,false);
-            }else if(this.__offsetWidth>=2560){
-              if(this.isFiveContainer){
+              this._saveContainerValues(false, false, true, false);
+              this._computeContainers(false, false, true, false);
+            } else if (this.__offsetWidth >= 2560) {
+              if (this.isFiveContainer) {
                 return;
               }
-              this._saveContainerValues(false, false, true,false);
-              this._computeContainers(false, false, false,true);
+              this._saveContainerValues(false, false, true, false);
+              this._computeContainers(false, false, false, true);
             }
           }
         }
       },
       /**
        * save container size value
-       * @param  {Boolean} isTwoContainer   
-       * @param  {Boolean} isThreeContainer 
-       * @param  {Boolean} isFourContainer  
-       * @param  {Boolean} isFiveContainer  
-       * @return {null}                   
+       * @param  {Boolean} isTwoContainer
+       * @param  {Boolean} isThreeContainer
+       * @param  {Boolean} isFourContainer
+       * @param  {Boolean} isFiveContainer
+       * @return {null}
        */
-      _saveContainerValues: function(isTwoContainer, isThreeContainer, isFourContainer,isFiveContainer){
+      _saveContainerValues: function (isTwoContainer, isThreeContainer, isFourContainer, isFiveContainer) {
         this.isTwoContainer = isTwoContainer;
         this.isThreeContainer = isThreeContainer;
         this.isFourContainer = isFourContainer;
@@ -251,31 +252,30 @@ ko-kr
       },
       /**
        * render form with container sizes
-       * @param  {Boolean} isTwoContainer   
-       * @param  {Boolean} isThreeContainer 
-       * @param  {Boolean} isFourContainer  
-       * @param  {Boolean} isFiveContainer  
-       * @return {[nulll]}                   
+       * @param  {Boolean} isTwoContainer
+       * @param  {Boolean} isThreeContainer
+       * @param  {Boolean} isFourContainer
+       * @param  {Boolean} isFiveContainer
+       * @return {[nulll]}
        */
-      _computeContainers: function(isTwoContainer, isThreeContainer, isFourContainer,isFiveContainer){
-        if(isFiveContainer){
-          this.set('containerSize',5);
-        }else if(isFourContainer){
-          this.set('containerSize',4);
-        }else if(isThreeContainer){
-          this.set('containerSize',3);
-        }else if(isTwoContainer){
-          this.set('containerSize',2);
+      _computeContainers: function (isTwoContainer, isThreeContainer, isFourContainer, isFiveContainer) {
+        if (isFiveContainer) {
+          this.set("containerSize", 5);
+        } else if (isFourContainer) {
+          this.set("containerSize", 4);
+        } else if (isThreeContainer) {
+          this.set("containerSize", 3);
+        } else if (isTwoContainer) {
+          this.set("containerSize", 2);
         }
 
         const legacyData = this.serializeMyForm();
-        if (JSON.stringify(legacyData) === '{}') {
+        if (JSON.stringify(legacyData) === "{}") {
           this.legacyData = null;
         } else {
           this.legacyData = legacyData;
           for (const fieldName in this.legacyData) {
-            if (fieldName.endsWith('_id'))
-              this.legacyData[fieldName] = this.$$(`[name=${fieldName}]`).objValue;
+            if (fieldName.endsWith("_id")) this.legacyData[fieldName] = this.$$(`[name=${fieldName}]`).objValue;
           }
         }
 
@@ -289,12 +289,12 @@ ko-kr
        *******
        * @param {Object} event
        */
-      toggleSearchConditions : function(event) {
-        this.$['content'].toggle();
-        if(this.$['content'].opened) {
-          this.arrowIcon = 'icons:arrow-drop-up';
+      toggleSearchConditions: function (event) {
+        this.$["content"].toggle();
+        if (this.$["content"].opened) {
+          this.arrowIcon = "icons:arrow-drop-up";
         } else {
-          this.arrowIcon = 'icons:arrow-drop-down';
+          this.arrowIcon = "icons:arrow-drop-down";
         }
       },
 
@@ -302,7 +302,7 @@ ko-kr
        * 리소스 폼이 이미 구성되었는지 여부
        * ******
        */
-      isFormConfigured: function() {
+      isFormConfigured: function () {
         return this.$.fields.childNodes.length > 0;
       },
 
@@ -310,66 +310,66 @@ ko-kr
        * 검색 폼 화면을 구성. formFields 정보로 동적으로 폼 하위 엘리먼트를 생성하여 폼을 구성한다.
        * *******
        */
-      reconfigureMyForm: function() {
-        if(!this.formFields || this.formFields.length <= 0 || this.isFormConfigured()) return;
-        var divContainer = this.$.fields, rowDiv = null;
+      reconfigureMyForm: function () {
+        if (!this.formFields || this.formFields.length <= 0 || this.isFormConfigured()) return;
+        var divContainer = this.$.fields,
+          rowDiv = null;
         var remainSize = 0;
-        for(let index in this.formFields) {
+        for (let index in this.formFields) {
           var field = this.formFields[index];
 
-          if(field.type == 'hidden') continue;
+          if (field.type == "hidden") continue;
           field.searchForm = true;
           var newElement = this._createFormElement(field);
-          if(!newElement) continue;
+          if (!newElement) continue;
 
-          if(field.type == 'date-from-to-picker' || field.type == 'ranged-datetime-picker') {
-            newElement.classList.remove('flex');
-            newElement.classList.add('flex-2');
-            if(rowDiv){
-              if(remainSize>=2){
+          if (field.type == "date-from-to-picker" || field.type == "ranged-datetime-picker") {
+            newElement.classList.remove("flex");
+            newElement.classList.add("flex-2");
+            if (rowDiv) {
+              if (remainSize >= 2) {
                 rowDiv.appendChild(newElement);
-              }else if(remainSize<2){
-                if(remainSize>0){
-                  var emptyElement = this._createFormElement({ type: 'empty' });
+              } else if (remainSize < 2) {
+                if (remainSize > 0) {
+                  var emptyElement = this._createFormElement({ type: "empty" });
                   rowDiv.appendChild(emptyElement);
                 }
                 rowDiv = this._createElementContainer(divContainer, newElement);
                 remainSize = this.containerSize;
               }
-            }else{
+            } else {
               rowDiv = this._createElementContainer(divContainer, newElement);
               remainSize = this.containerSize;
             }
-            remainSize = remainSize-2;
+            remainSize = remainSize - 2;
           } else {
-            if(rowDiv == null || !rowDiv.childNodes || remainSize==0) {
+            if (rowDiv == null || !rowDiv.childNodes || remainSize == 0) {
               rowDiv = this._createElementContainer(divContainer, newElement);
               remainSize = this.containerSize;
             } else {
-                rowDiv.appendChild(newElement);
+              rowDiv.appendChild(newElement);
             }
-            remainSize = remainSize-1;
+            remainSize = remainSize - 1;
           }
         }
 
-
-        if(rowDiv && rowDiv.childNodes && remainSize>0) {
-          for(var i=0 ; i < remainSize;i++){
-            var emptyElement = this._createFormElement({ type: 'empty' });
+        if (rowDiv && rowDiv.childNodes && remainSize > 0) {
+          for (var i = 0; i < remainSize; i++) {
+            var emptyElement = this._createFormElement({ type: "empty" });
             rowDiv.appendChild(emptyElement);
           }
         }
 
-        for(index in this.formFields) {
+        for (index in this.formFields) {
           var field = this.formFields[index];
-          if(field.type != 'hidden') continue;
+          if (field.type != "hidden") continue;
           var newElement = this._createFormElement(field);
           rowDiv = this._createElementContainer(divContainer, newElement);
           rowDiv.hidden = true;
         }
 
         this.active = true;
-        this.fire('things-search-form-configured', this.formFields);
+        this.fire("things-search-form-configured", this.formFields);
       },
 
       /**
@@ -378,10 +378,10 @@ ko-kr
        * @param {Object} divContainer
        * @param {Object} childElement
        */
-      _createElementContainer: function(divContainer, childElement) {
-        rowDiv = document.createElement('div');
-        rowDiv.setAttribute('class', 'layout horizontal');
-        if(childElement) rowDiv.appendChild(childElement);
+      _createElementContainer: function (divContainer, childElement) {
+        rowDiv = document.createElement("div");
+        rowDiv.setAttribute("class", "layout horizontal");
+        if (childElement) rowDiv.appendChild(childElement);
         divContainer.appendChild(rowDiv);
         return rowDiv;
       },
@@ -390,16 +390,15 @@ ko-kr
        * 모든 Form Element를 리턴
        * ******
        */
-      getFormElements: function() {
+      getFormElements: function () {
         var formElements = [];
         var allDivs = this.$.fields.childNodes;
-        if(!allDivs || allDivs.length == 0)
-          return [];
+        if (!allDivs || allDivs.length == 0) return [];
 
-        for(var i = 0 ; i < allDivs.length; i++) {
+        for (var i = 0; i < allDivs.length; i++) {
           var divContainer = allDivs[i];
           var divElements = divContainer.childNodes ? divContainer.childNodes : [];
-          for(var j = 0 ; j < divElements.length ; j++) {
+          for (var j = 0; j < divElements.length; j++) {
             formElements.push(divElements[j]);
           }
         }
@@ -411,11 +410,11 @@ ko-kr
        * Submit Form. 검색 실행
        * *******
        */
-      submitMyForm: function() {
+      submitMyForm: function () {
         this.legacyData = null;
 
-        var evt = this.fire('things-form-search', this, { cancelable: true });
-        if(!evt.defaultPrevented) {
+        var evt = this.fire("things-form-search", this, { cancelable: true });
+        if (!evt.defaultPrevented) {
           // 1. 초기 파라미터가 있다면 설정해준다.
           this._bindInitialParams();
           // 2. Start Spinner
@@ -430,8 +429,8 @@ ko-kr
        *
        * @param {Object} e 버튼 클릭 이벤트
        */
-      _onSearchFormTap: function(e) {
-        if(this.page > 1) this.page = 1;
+      _onSearchFormTap: function (e) {
+        if (this.page > 1) this.page = 1;
         else this.submitMyForm();
       },
 
@@ -448,7 +447,7 @@ ko-kr
        ******
        * @param {Object} event Successful response event
        */
-      _successResponseHandler: function(event) {
+      _successResponseHandler: function (event) {
         this.stopSpinner();
         this.lastResponse = event.detail.xhr.response;
         this.handleSuccessResponse(this.lastResponse);
@@ -467,15 +466,14 @@ ko-kr
        *
        * @param {Object} event Error response event
        */
-      _errorResponseHandler: function(event) {
+      _errorResponseHandler: function (event) {
         this.stopSpinner();
 
         var response = event.detail.request.xhr.response;
-        if(response && response.status == 401) {
+        if (response && response.status == 401) {
           this.handleUnauthorized();
-
         } else {
-          if(response) {
+          if (response) {
             this.openResponseError(response);
           } else {
             response = event.detail.request;
@@ -484,7 +482,7 @@ ko-kr
         }
 
         this.handleErrorResponse(response);
-      }
+      },
     });
   </script>
 </dom-module>

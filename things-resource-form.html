@@ -1,48 +1,48 @@
 <!--
 @license
-Copyright © HatioLab Inc. All rights reserved.
+Copyright © 2015-2021 Shenzhen Weixun All rights reserved.
 -->
-<link rel="import" href="../polymer/polymer.html">
+<link rel="import" href="../polymer/polymer.html" />
 
-<link rel="import" href="../iron-flex-layout/iron-flex-layout.html">
-<link rel="import" href="../iron-flex-layout/iron-flex-layout-classes.html">
-<link rel="import" href="../iron-form/iron-form.html">
-<link rel="import" href="../iron-icon/iron-icon.html">
-<link rel="import" href="../iron-icons/iron-icons.html">
-<link rel="import" href="../iron-iconset/iron-iconset.html">
-<link rel="import" href="../iron-input/iron-input.html">
+<link rel="import" href="../iron-flex-layout/iron-flex-layout.html" />
+<link rel="import" href="../iron-flex-layout/iron-flex-layout-classes.html" />
+<link rel="import" href="../iron-form/iron-form.html" />
+<link rel="import" href="../iron-icon/iron-icon.html" />
+<link rel="import" href="../iron-icons/iron-icons.html" />
+<link rel="import" href="../iron-iconset/iron-iconset.html" />
+<link rel="import" href="../iron-input/iron-input.html" />
 
-<link rel="import" href="../paper-button/paper-button.html">
-<link rel="import" href="../paper-checkbox/paper-checkbox.html">
-<link rel="import" href="../paper-dropdown-menu/paper-dropdown-menu.html">
-<link rel="import" href="../paper-input/paper-input.html">
-<link rel="import" href="../paper-input/paper-textarea.html">
-<link rel="import" href="../paper-material/paper-material.html">
-<link rel="import" href="../paper-radio-group/paper-radio-group.html">
-<link rel="import" href="../paper-radio-button/paper-radio-button.html">
-<link rel="import" href="../paper-tabs/paper-tabs.html">
-<link rel="import" href="../paper-tabs/paper-tab.html">
-<link rel="import" href="../paper-tooltip/paper-tooltip.html">
+<link rel="import" href="../paper-button/paper-button.html" />
+<link rel="import" href="../paper-checkbox/paper-checkbox.html" />
+<link rel="import" href="../paper-dropdown-menu/paper-dropdown-menu.html" />
+<link rel="import" href="../paper-input/paper-input.html" />
+<link rel="import" href="../paper-input/paper-textarea.html" />
+<link rel="import" href="../paper-material/paper-material.html" />
+<link rel="import" href="../paper-radio-group/paper-radio-group.html" />
+<link rel="import" href="../paper-radio-button/paper-radio-button.html" />
+<link rel="import" href="../paper-tabs/paper-tabs.html" />
+<link rel="import" href="../paper-tabs/paper-tab.html" />
+<link rel="import" href="../paper-tooltip/paper-tooltip.html" />
 
-<link rel="import" href="../things-button/things-button.html">
-<link rel="import" href="../things-date-picker/things-date-picker.html">
-<link rel="import" href="../things-date-picker/things-date-from-to.html">
-<link rel="import" href="../things-date-picker/things-time-picker.html">
-<link rel="import" href="../things-date-picker/things-time-input.html">
-<link rel="import" href="../things-input-field/things-input-field.html">
-<link rel="import" href="../things-resource-combo/things-code-combo.html">
-<link rel="import" href="../things-resource-combo/things-resource-code.html">
-<link rel="import" href="../things-resource-selector/things-resource-selector.html">
-<link rel="import" href="../things-resource-selector/things-resource-field.html">
-<link rel="import" href="../things-stamp/things-stamp.html">
-<link rel="import" href="../things-tristate-checkbox/things-tristate-checkbox.html">
+<link rel="import" href="../things-button/things-button.html" />
+<link rel="import" href="../things-date-picker/things-date-picker.html" />
+<link rel="import" href="../things-date-picker/things-date-from-to.html" />
+<link rel="import" href="../things-date-picker/things-time-picker.html" />
+<link rel="import" href="../things-date-picker/things-time-input.html" />
+<link rel="import" href="../things-input-field/things-input-field.html" />
+<link rel="import" href="../things-resource-combo/things-code-combo.html" />
+<link rel="import" href="../things-resource-combo/things-resource-code.html" />
+<link rel="import" href="../things-resource-selector/things-resource-selector.html" />
+<link rel="import" href="../things-resource-selector/things-resource-field.html" />
+<link rel="import" href="../things-stamp/things-stamp.html" />
+<link rel="import" href="../things-tristate-checkbox/things-tristate-checkbox.html" />
 
-<link rel="import" href="../things-msg-box-behavior/things-msg-box-behavior.html">
-<link rel="import" href="../things-spinner/things-spinner-behavior.html">
-<link rel="import" href="../things-view-open-behavior/things-view-open-behavior.html">
+<link rel="import" href="../things-msg-box-behavior/things-msg-box-behavior.html" />
+<link rel="import" href="../things-spinner/things-spinner-behavior.html" />
+<link rel="import" href="../things-view-open-behavior/things-view-open-behavior.html" />
 
-<link rel="import" href="./things-form-behavior.html">
-<link rel="import" href="./things-detail-form-behavior.html">
+<link rel="import" href="./things-form-behavior.html" />
+<link rel="import" href="./things-detail-form-behavior.html" />
 
 <!--
 Resource Form Element.
@@ -129,100 +129,102 @@ things-resource로 부터 위와 같은 형식의 form-fields meta data를 조�
 -->
 
 <dom-module id="things-resource-form">
+  <template>
+    <style is="custom-style" include="iron-flex iron-flex-alignment"></style>
+    <style>
+      :host {
+        display: block;
+        box-sizing: border-box;
+        @apply (--things-default-padding);
+        @apply (--layout-vertical);
+        @apply (--layout-flex);
+      }
+      form {
+        @apply (--layout-flex);
+      }
+      paper-toolbar {
+        background-color: var(--things-white-background-color);
+        height: 50px;
+        @apply (--things-tight-padding);
+      }
+      paper-toolbar::shadow #bottomBar {
+        height: 50px;
+        @apply (--layout-horizontal);
+        @apply (--layout-end-justified);
+        padding: 0 10px;
+      }
+    </style>
 
-	<template>
-		<style is="custom-style" include="iron-flex iron-flex-alignment"></style>
-		<style>
-			:host {
-				display: block;
-				box-sizing: border-box;
-				@apply(--things-default-padding);
-				@apply(--layout-vertical);
-				@apply(--layout-flex);
-			}
-			form {
-				@apply(--layout-flex);
-			}
-			paper-toolbar {
-				background-color:var(--things-white-background-color);
-				height: 50px;
-				@apply(--things-tight-padding);
-			}
-			paper-toolbar::shadow #bottomBar {
-				height: 50px;
-				@apply(--layout-horizontal);
-				@apply(--layout-end-justified);
-				padding: 0 10px;
-			}
-		</style>
+    <form
+      is="iron-form"
+      id="resource-form"
+      action="[[action]]"
+      headers="[[headers]]"
+      content-type="[[contentType]]"
+      method="[[method]]"
+      with-credentials="[[withCredentials]]"
+      last-response="{{lastResponse}}"
+    >
+      <div id="fields" class="layout vertical flex"></div>
+    </form>
 
-		<form is="iron-form"
-					id="resource-form"
-					action=[[action]]
-					headers="[[headers]]"
-					content-type="[[contentType]]"
-					method="[[method]]"
-					with-credentials="[[withCredentials]]"
-					last-response="{{lastResponse}}">
-			<div id="fields" class="layout vertical flex"></div>
-		</form>
+    <paper-toolbar id="toolbar" justify="end">
+      <div class="bottom">
+        <things-button-bar id="button-group" buttons="[[buttons]]"></things-button-bar>
+      </div>
+    </paper-toolbar>
+  </template>
 
-		<paper-toolbar id="toolbar" justify='end'>
-			<div class="bottom">
-				<things-button-bar id="button-group" buttons="[[buttons]]"></things-button-bar>
-			</div>
-		</paper-toolbar>
-	</template>
+  <script>
+    Polymer({
+      is: "things-resource-form",
 
-	<script>
-		Polymer({
+      properties: {
+        /**
+         * 폼 타이틀
+         * *******
+         * @type {String}
+         */
+        title: {
+          type: String,
+        },
 
-			is: 'things-resource-form',
+        /**
+         * 컬럼 개수
+         * *******
+         * @type {Number}
+         */
+        columnCount: {
+          type: Number,
+          value: 2,
+        },
 
-			properties: {
-				/**
-				 * 폼 타이틀
-				 * *******
-				 * @type {String}
-				 */
-				title: {
-					type: String
-				},
+        /**
+         * Stamp를 숨길 지 여부
+         * *******
+         * @type {Boolean}
+         */
+        hideStamp: {
+          type: Boolean,
+          value: false,
+        },
 
-				/**
-				 * 컬럼 개수
-				 * *******
-				 * @type {Number}
-				 */
-				columnCount: {
-					type: Number,
-					value: 2
-				},
-
-				/**
-				 * Stamp를 숨길 지 여부
-				 * *******
-				 * @type {Boolean}
-				 */
-				hideStamp: {
-					type: Boolean,
-					value: false
-				},
-
-				/**
-				 * 폼 버튼
-				 * *******
-				 * @type {Array}
-				 */
-				buttons: {
-					type: Array,
-					value: function() {
-						return [ {
-							id: 'save-btn',
-							text: 'save'
-						} ];
-					}
-				}
+        /**
+         * 폼 버튼
+         * *******
+         * @type {Array}
+         */
+        buttons: {
+          type: Array,
+          value: function () {
+            return [
+              {
+                id: "save-btn",
+                text: "save",
+              },
+            ];
+          },
+        },
 
         /**
          * Fires after search form configuration completed
@@ -237,251 +239,257 @@ things-resource로 부터 위와 같은 형식의 form-fields meta data를 조�
          *
          * @event things-form-submit
          */
-			},
+      },
 
-			behaviors: [
-				Things.FormBehavior,
-				Things.DetailFormBehavior,
-				Things.SpinnerBehavior,
-				Things.MsgBoxBehavior
-			],
+      behaviors: [Things.FormBehavior, Things.DetailFormBehavior, Things.SpinnerBehavior, Things.MsgBoxBehavior],
 
-			listeners : {
-				'save-btn-tap' : 'submitMyForm',
-				'iron-form-response' :'_successResponseHandler',
-				'iron-form-error' : '_errorResponseHandler',
-				'things-detail-form-read-success' : '_successResponseHandler',
-				'things-detail-form-read-error' : '_errorResponseHandler',
-				'things-detail-form-save-success' : '_successResponseHandler',
-				'things-detail-form-save-error' : '_errorResponseHandler'
-			},
+      listeners: {
+        "save-btn-tap": "submitMyForm",
+        "iron-form-response": "_successResponseHandler",
+        "iron-form-error": "_errorResponseHandler",
+        "things-detail-form-read-success": "_successResponseHandler",
+        "things-detail-form-read-error": "_errorResponseHandler",
+        "things-detail-form-save-success": "_successResponseHandler",
+        "things-detail-form-save-error": "_errorResponseHandler",
+      },
 
-			/**
-			 * Life Cycle
-			 * *******
-			 */
-			attached: function() {
-				this.$.toolbar.hidden = this.buttons && this.buttons.length > 0 ? false : true;
-			},
+      /**
+       * Life Cycle
+       * *******
+       */
+      attached: function () {
+        this.$.toolbar.hidden = this.buttons && this.buttons.length > 0 ? false : true;
+      },
 
-			/**
-			 * 리소스 폼이 이미 구성되었는지 여부
-			 * ******
-			 */
-			isFormConfigured: function() {
-				return this.$.fields.childNodes.length > 0;
-			},
+      /**
+       * 리소스 폼이 이미 구성되었는지 여부
+       * ******
+       */
+      isFormConfigured: function () {
+        return this.$.fields.childNodes.length > 0;
+      },
 
-			/**
+      /**
 			/**
 			 * 리소스 폼 화면을 구성. formFields 정보로 동적으로 폼 하위 엘리먼트를 생성하여 폼을 구성한다.
 			 * ******
 			 */
-			reconfigureMyForm: function() {
-				if(this.isFormConfigured() || !this.formFields || this.formFields.length == 0) return;
-				var divContainer = this.$.fields, rowDiv = null, hiddenFields = [], stampExist = false;
+      reconfigureMyForm: function () {
+        if (this.isFormConfigured() || !this.formFields || this.formFields.length == 0) return;
+        var divContainer = this.$.fields,
+          rowDiv = null,
+          hiddenFields = [],
+          stampExist = false;
 
-				// 1. Resource Form 구성 - hidden이 아니고 stamp 관련 필드가 아닌 엘리먼트 추가
-				for(index in this.formFields) {
-					var field = this.formFields[index];
+        // 1. Resource Form 구성 - hidden이 아니고 stamp 관련 필드가 아닌 엘리먼트 추가
+        for (index in this.formFields) {
+          var field = this.formFields[index];
 
-					if(field.userData && field.userData.hidden) {
-						hiddenFields.push(field);
-						continue
-					};
+          if (field.userData && field.userData.hidden) {
+            hiddenFields.push(field);
+            continue;
+          }
 
-					if(this.stampFields && this.stampFields.includes(field.name)) {
-						stampExist = true;
-						continue;
-					}
+          if (this.stampFields && this.stampFields.includes(field.name)) {
+            stampExist = true;
+            continue;
+          }
 
-					var newElement = this._createFormElement(field);
-					if(!newElement) continue;
+          var newElement = this._createFormElement(field);
+          if (!newElement) continue;
 
-					if(field.type == 'textarea') {
-						// 이전 rowDiv가 홀수 개이고 textarea가 아니라면 empty 엘리먼트 추가
-						if(rowDiv && rowDiv.childNodes && rowDiv.childNodes.length % this.columnCount != 0 && rowDiv.childNodes[0].localName.indexOf('textarea') < 0) {
-							rowDiv.appendChild(this._createFormElement({ type: 'empty' }));
-						}
+          if (field.type == "textarea") {
+            // 이전 rowDiv가 홀수 개이고 textarea가 아니라면 empty 엘리먼트 추가
+            if (
+              rowDiv &&
+              rowDiv.childNodes &&
+              rowDiv.childNodes.length % this.columnCount != 0 &&
+              rowDiv.childNodes[0].localName.indexOf("textarea") < 0
+            ) {
+              rowDiv.appendChild(this._createFormElement({ type: "empty" }));
+            }
 
-						rowDiv = this._createElementContainer(divContainer, newElement);
+            rowDiv = this._createElementContainer(divContainer, newElement);
+          } else {
+            if (rowDiv == null || !rowDiv.childNodes || rowDiv.childNodes.length % this.columnCount == 0) {
+              rowDiv = this._createElementContainer(divContainer, newElement);
+            } else {
+              // rowDiv의 마지막 엘리먼트가 textarea 이면 rowDiv에 empty 엘리먼트 추가
+              if (rowDiv.childNodes[0].localName.indexOf("textarea") >= 0) {
+                rowDiv = this._createElementContainer(divContainer, newElement);
+              } else {
+                rowDiv.appendChild(newElement);
+              }
+            }
+          }
+        }
 
-					} else {
-						if(rowDiv == null || !rowDiv.childNodes || rowDiv.childNodes.length % this.columnCount == 0) {
-							rowDiv = this._createElementContainer(divContainer, newElement);
-						} else {
-							// rowDiv의 마지막 엘리먼트가 textarea 이면 rowDiv에 empty 엘리먼트 추가
-							if(rowDiv.childNodes[0].localName.indexOf('textarea') >= 0) {
-								rowDiv = this._createElementContainer(divContainer, newElement);
-							} else {
-								rowDiv.appendChild(newElement);
-							}
-						}
-					}
-				}
+        // 2. 마지막 Div가 홀수이고 textarea가 아니면 empty 엘리먼트 추가
+        if (rowDiv && rowDiv.childNodes && rowDiv.childNodes.length % this.columnCount != 0) {
+          if (rowDiv.childNodes[0].localName.indexOf("textarea") < 0) {
+            var emptyElement = this._createFormElement({ type: "empty" });
+            rowDiv.appendChild(emptyElement);
+          }
+        }
 
-				// 2. 마지막 Div가 홀수이고 textarea가 아니면 empty 엘리먼트 추가
-				if(rowDiv && rowDiv.childNodes && (rowDiv.childNodes.length % this.columnCount) != 0) {
-					if(rowDiv.childNodes[0].localName.indexOf('textarea') < 0) {
-						var emptyElement = this._createFormElement({ type: 'empty' });
-						rowDiv.appendChild(emptyElement);
-					}
-				}
+        // 3. Stamp Element 추가
+        if (stampExist && this.hideStamp == false) {
+          var stampElement = this._createFormElement({ type: "things-stamp" });
+          this._createElementContainer(divContainer, stampElement);
+        }
 
-				// 3. Stamp Element 추가
-				if(stampExist && this.hideStamp == false) {
-					var stampElement = this._createFormElement({ type : 'things-stamp' });
-					this._createElementContainer(divContainer, stampElement);
-				}
+        // 4. hidden 필드 추가
+        if (hiddenFields.length > 0) {
+          rowDiv = this._createElementContainer(divContainer, null);
+          for (var i = 0; i < hiddenFields.length; i++) {
+            rowDiv.appendChild(this._createFormElement(hiddenFields[i]));
+          }
+        }
 
-				// 4. hidden 필드 추가
-				if(hiddenFields.length > 0) {
-					rowDiv = this._createElementContainer(divContainer, null);
-					for(var i = 0 ; i < hiddenFields.length ; i++) {
-						rowDiv.appendChild(this._createFormElement(hiddenFields[i]));
-					}
-				}
+        // 5. Resource Form 구성 완료 이벤트
+        this.fire("things-form-configured", this.formFields);
+      },
 
-				// 5. Resource Form 구성 완료 이벤트
-				this.fire('things-form-configured', this.formFields);
-			},
+      /**
+       * Container element를 생성한 후 childElement를 추가한 후 divContainer에 추가한다.
+       *
+       * @param {Object} divContainer
+       * @param {Object} childElement
+       */
+      _createElementContainer: function (divContainer, childElement) {
+        rowDiv = document.createElement("div");
+        rowDiv.setAttribute("class", "layout horizontal");
+        if (childElement) rowDiv.appendChild(childElement);
+        divContainer.appendChild(rowDiv);
+        return rowDiv;
+      },
 
-			/**
-			 * Container element를 생성한 후 childElement를 추가한 후 divContainer에 추가한다.
-			 *
-			 * @param {Object} divContainer
-			 * @param {Object} childElement
-			 */
-			_createElementContainer: function(divContainer, childElement) {
-				rowDiv = document.createElement('div');
-				rowDiv.setAttribute('class', 'layout horizontal');
-				if(childElement) rowDiv.appendChild(childElement);
-				divContainer.appendChild(rowDiv);
-				return rowDiv;
-			},
+      /**
+       * 모든 Form Element를 리턴
+       * ********
+       */
+      getFormElements: function () {
+        var formElements = [];
+        var allDivs = this.$.fields.childNodes;
+        if (!allDivs || allDivs.length == 0) return formElements;
 
-			/**
-			 * 모든 Form Element를 리턴
-			 * ********
-			 */
-			getFormElements: function() {
-				var formElements = [];
-				var allDivs = this.$.fields.childNodes;
-				if(!allDivs || allDivs.length == 0) return formElements;
+        for (var i = 0; i < allDivs.length; i++) {
+          var divContainer = allDivs[i];
+          var divElements = divContainer.childNodes ? divContainer.childNodes : [];
+          for (var j = 0; j < divElements.length; j++) {
+            formElements.push(divElements[j]);
+          }
+        }
 
-				for(var i = 0 ; i < allDivs.length; i++) {
-					var divContainer = allDivs[i];
-					var divElements = divContainer.childNodes ? divContainer.childNodes : [];
-					for(var j = 0 ; j < divElements.length ; j++) {
-						formElements.push(divElements[j]);
-					}
-				}
+        return formElements;
+      },
 
-				return formElements;
-			},
+      /**
+       * Save Form
+       *******
+       * @param {Object} e 버튼 클릭 이벤트
+       */
+      submitMyForm: function (e) {
+        var evt = this.fire("things-form-submit", this.getMyForm(), { cancelable: true });
 
-			/**
-			 * Save Form
-			 *******
-			 * @param {Object} e 버튼 클릭 이벤트
-			 */
-			submitMyForm: function(e) {
-				var evt = this.fire('things-form-submit', this.getMyForm(), { cancelable: true });
+        if (!evt.defaultPrevented) {
+          if (this.validationCheck()) {
+            this.startSpinner();
+            this.saveResource();
+          }
+        }
+      },
 
-				if(!evt.defaultPrevented) {
-					if(this.validationCheck()) {
-						this.startSpinner();
-						this.saveResource();
-					}
-				}
-			},
+      /**
+       * validation check before save
+       * 필드들의 isValid 속성을 통해 valdation 체크를 수행 합니다.
+       * ******
+       */
+      validationCheck: function () {
+        let formElements = this.getFormElements();
+        for (let ele of formElements) {
+          if (ele.isValid === false) {
+            if (ele.name === "id") continue;
+            if (this.removeFieldsOnSave.includes(ele.name)) continue;
+            let msg = "[" + ele.label + "] " + Things.DataGlobal.t("text.info_invalid");
+            this.openConfirmMsg(
+              {
+                title: Things.DataGlobal.t("text.invalid_input"),
+                text: msg,
+                type: "info",
+                timer: 5000,
+              },
+              () => this.async(() => ele.focus(), 500)
+            );
+            return false;
+          }
+        }
 
-			/**
-			 * validation check before save
-			 * 필드들의 isValid 속성을 통해 valdation 체크를 수행 합니다.
-			 * ******
-			 */
-			 validationCheck: function() {
-				let formElements = this.getFormElements();
-				for (let ele of formElements) {
-					if (ele.isValid === false) {
-						if (ele.name === 'id')
-							continue;
-						if (this.removeFieldsOnSave.includes(ele.name))
-							continue;
-						let msg = '[' + ele.label + '] ' + Things.DataGlobal.t('text.info_invalid');
-						this.openConfirmMsg({
-							title : Things.DataGlobal.t('text.invalid_input'), text : msg, type : 'info', timer : 5000
-						}, () => this.async(() => ele.focus(), 500));
-						return false;
-					}
-				}
+        return true;
+      },
 
-				return true;
-			},
+      /**
+       * Successful response handler After form submits.
+       * this fires a 'things-form-submit-success' in this function
+       *
+       * @param {Object} event Successful response event
+       */
+      _successResponseHandler: function (event) {
+        this.stopSpinner();
+        var method = typeof event.detail === "string" ? event.detail : event.target.method.toUpperCase();
+        this.handleSuccessResponse(method);
+      },
 
-			/**
-			 * Successful response handler After form submits.
-			 * this fires a 'things-form-submit-success' in this function
-			 *
-			 * @param {Object} event Successful response event
-			 */
-			_successResponseHandler: function(event) {
-				this.stopSpinner();
-				var method = typeof(event.detail) === 'string' ? event.detail : event.target.method.toUpperCase();
-				this.handleSuccessResponse(method);
-			},
+      /**
+       * Error response handler After form submits.
+       * this fires a 'things-form-submit-error' in this function
+       *
+       * @param {Object} event Error response event
+       */
+      _errorResponseHandler: function (event) {
+        this.stopSpinner();
 
-			/**
-			 * Error response handler After form submits.
-			 * this fires a 'things-form-submit-error' in this function
-			 *
-			 * @param {Object} event Error response event
-			 */
-			_errorResponseHandler: function(event) {
-				this.stopSpinner();
+        var response = event.detail.request.xhr.response;
+        if (response && response.status == 401) {
+          this.handleUnauthorized();
+        } else {
+          if (response) {
+            this.openResponseError(response);
+          } else {
+            response = event.detail.request;
+            this.openUnkownError(response);
+          }
+        }
 
-				var response = event.detail.request.xhr.response;
-				if(response && response.status == 401) {
-					this.handleUnauthorized();
-				} else {
-					if(response) {
-						this.openResponseError(response);
-					} else {
-						response = event.detail.request;
-						this.openUnkownError(response);
-					}
-				}
+        this.handleErrorResponse(response);
+      },
 
-				this.handleErrorResponse(response);
-			},
+      /**
+       * detail item view를 구성하기 위한 필수 함수
+       * item view를 구성한다.
+       *******
+       * @return {Object} resource 리소스 데이터 (Object) 혹은 리소스 아이디 (Number)
+       */
+      loadDetailData: function (resource) {
+        this.resource = resource;
+      },
 
-			/**
-			 * detail item view를 구성하기 위한 필수 함수
-			 * item view를 구성한다.
-			 *******
-			 * @return {Object} resource 리소스 데이터 (Object) 혹은 리소스 아이디 (Number)
-			 */
-			loadDetailData: function(resource) {
-				this.resource = resource;
-			},
-
-			/**
-			 * 포커스
-			 * *******
-			 */
-			focus: function() {
-				var elements = this.getFormElements();
-				if(elements && elements.length > 0) {
-					for(var i = 0 ; i < elements.length ; i++) {
-						var element = elements[i];
-						if(element.tabIndex) {
-							element.focus();
-							return;
-						}
-					}
-				}
-			}
-		});
-	</script>
+      /**
+       * 포커스
+       * *******
+       */
+      focus: function () {
+        var elements = this.getFormElements();
+        if (elements && elements.length > 0) {
+          for (var i = 0; i < elements.length; i++) {
+            var element = elements[i];
+            if (element.tabIndex) {
+              element.focus();
+              return;
+            }
+          }
+        }
+      },
+    });
+  </script>
 </dom-module>
