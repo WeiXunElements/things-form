@@ -1,6 +1,6 @@
 {
     "name": "things-form",
-    "version": "v2.2.33",
+    "version": "v2.2.34",
     "authors": [
         "Shenzhen Weixun"
     ],
@@ -36,22 +36,22 @@
         "paper-toolbar": "PolymerElements/paper-toolbar#^1.1.4",
         "paper-tooltip": "PolymerElements/paper-tooltip#^1.1.2",
         "paper-toggle-button": "PolymerElements/paper-toggle-button#^1.1.2",
-        "things-button": "ThingsElements/things-button",
-        "things-msg-box-behavior": "ThingsElements/things-msg-box-behavior",
-        "things-spinner": "ThingsElements/things-spinner",
-        "things-global-behavior": "ThingsElements/things-global-behavior",
-        "things-date-picker": "ThingsElements/things-date-picker",
-        "things-resource-combo": "ThingsElements/things-resource-combo#",
-        "things-tristate-checkbox": "ThingsElements/things-tristate-checkbox",
-        "things-fullscreen": "ThingsElements/things-fullscreen",
-        "things-ajax": "ThingsElements/things-ajax",
-        "things-input-field": "ThingsElements/things-input-field",
-        "things-alarm": "ThingsElements/things-alarm"
+        "things-button": "WeiXunElements/things-button",
+        "things-msg-box-behavior": "WeiXunElements/things-msg-box-behavior",
+        "things-spinner": "WeiXunElements/things-spinner",
+        "things-global-behavior": "WeiXunElements/things-global-behavior",
+        "things-date-picker": "WeiXunElements/things-date-picker",
+        "things-resource-combo": "WeiXunElements/things-resource-combo#",
+        "things-tristate-checkbox": "WeiXunElements/things-tristate-checkbox",
+        "things-fullscreen": "WeiXunElements/things-fullscreen",
+        "things-ajax": "WeiXunElements/things-ajax",
+        "things-input-field": "WeiXunElements/things-input-field",
+        "things-alarm": "WeiXunElements/things-alarm"
     },
     "devDependencies": {
         "iron-component-page": "PolymerElements/iron-component-page#^1.0.0",
         "iron-demo-helpers": "^1.2.3",
         "web-component-tester": "^4.0.0",
-        "things-setting": "ThingsElements/things-setting"
+        "things-setting": "WeiXunElements/things-setting"
     }
 }
